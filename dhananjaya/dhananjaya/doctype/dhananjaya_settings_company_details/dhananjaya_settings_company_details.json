@@ -1,0 +1,168 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:company",
+ "creation": "2023-03-18 00:24:09.025634",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "kyc_required",
+  "donation_account",
+  "cash_account",
+  "bank_account",
+  "gateway_expense_account",
+  "column_break_lglek",
+  "default_seva_type",
+  "auto_create_journal_entries",
+  "receipt_print_details_section",
+  "logo",
+  "seal",
+  "contact_address",
+  "contact_no",
+  "contact_email",
+  "company_tagline",
+  "authority_name",
+  "authority_position",
+  "authority_signature",
+  "atg_lines",
+  "thanks_note"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "donation_account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Donation Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bank_account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Bank Account",
+   "options": "Bank Account"
+  },
+  {
+   "fieldname": "gateway_expense_account",
+   "fieldtype": "Link",
+   "label": "Default Gateway Expense Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "cash_account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Cash Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_lglek",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_seva_type",
+   "fieldtype": "Link",
+   "label": "Default Seva Type",
+   "options": "Seva Type"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_create_journal_entries",
+   "fieldtype": "Check",
+   "label": "Auto Create Journal Entries"
+  },
+  {
+   "fieldname": "receipt_print_details_section",
+   "fieldtype": "Section Break",
+   "label": "Receipt Print Details"
+  },
+  {
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
+  },
+  {
+   "fieldname": "contact_address",
+   "fieldtype": "Data",
+   "label": "Contact Address"
+  },
+  {
+   "fieldname": "contact_no",
+   "fieldtype": "Data",
+   "label": "Contact No."
+  },
+  {
+   "fieldname": "contact_email",
+   "fieldtype": "Data",
+   "label": "Contact Email"
+  },
+  {
+   "fieldname": "company_tagline",
+   "fieldtype": "Data",
+   "label": "Company Tagline"
+  },
+  {
+   "fieldname": "authority_name",
+   "fieldtype": "Data",
+   "label": "Authority Name"
+  },
+  {
+   "fieldname": "authority_position",
+   "fieldtype": "Data",
+   "label": "Authority Position"
+  },
+  {
+   "fieldname": "seal",
+   "fieldtype": "Attach Image",
+   "label": "Seal"
+  },
+  {
+   "fieldname": "authority_signature",
+   "fieldtype": "Attach Image",
+   "label": "Authority Signature"
+  },
+  {
+   "fieldname": "atg_lines",
+   "fieldtype": "HTML Editor",
+   "label": "80G Lines"
+  },
+  {
+   "default": "0",
+   "fieldname": "kyc_required",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "KYC Required"
+  },
+  {
+   "fieldname": "thanks_note",
+   "fieldtype": "HTML Editor",
+   "label": "Thanks Note"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-06-19 18:25:11.748215",
+ "modified_by": "Administrator",
+ "module": "Dhananjaya",
+ "name": "Dhananjaya Settings Company Details",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

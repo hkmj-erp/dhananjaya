@@ -1,0 +1,159 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-02-27 22:35:05.531985",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "admin_role",
+  "cash_mode",
+  "gateway_mode",
+  "company_details",
+  "upload_payment_gateway_data_section",
+  "pg_donor_reqd",
+  "column_break_xrzvk",
+  "pg_company",
+  "gateway",
+  "gateway_file",
+  "google_sheets_url",
+  "upload_gateway",
+  "other_section",
+  "public_fernet_key"
+ ],
+ "fields": [
+  {
+   "fieldname": "admin_role",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Admin Role",
+   "options": "Role",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cash_mode",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Cash Mode",
+   "options": "DJ Mode of Payment"
+  },
+  {
+   "fieldname": "gateway_mode",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Gateway Mode",
+   "options": "DJ Mode of Payment"
+  },
+  {
+   "fieldname": "upload_payment_gateway_data_section",
+   "fieldtype": "Section Break",
+   "label": "Upload Payment Gateway Data"
+  },
+  {
+   "depends_on": "eval:doc.gateway",
+   "fieldname": "gateway_file",
+   "fieldtype": "Attach",
+   "label": "Gateway File"
+  },
+  {
+   "depends_on": "eval:doc.gateway",
+   "fieldname": "upload_gateway",
+   "fieldtype": "Button",
+   "label": "Upload"
+  },
+  {
+   "depends_on": "eval:doc.gateway",
+   "fieldname": "google_sheets_url",
+   "fieldtype": "Data",
+   "label": "Import From Google Sheets URL"
+  },
+  {
+   "fieldname": "gateway",
+   "fieldtype": "Link",
+   "label": "Gateway",
+   "options": "Payment Gateway"
+  },
+  {
+   "fieldname": "column_break_xrzvk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "This will be checked when the Batch of Payment Gateway Entries will be processed for Donation Receipt Creation and Bank Statement Settlement.\n\nIf you keep it non-mandatory, then Donation will be booked in state <b>Suspense</b>",
+   "fieldname": "pg_donor_reqd",
+   "fieldtype": "Check",
+   "label": "Is Donor Required (DR Creation)"
+  },
+  {
+   "fieldname": "pg_company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company_details",
+   "fieldtype": "Table",
+   "label": "Details",
+   "options": "Dhananjaya Settings Company Details"
+  },
+  {
+   "fieldname": "other_section",
+   "fieldtype": "Section Break",
+   "label": "Other"
+  },
+  {
+   "fieldname": "public_fernet_key",
+   "fieldtype": "Data",
+   "label": "Public Fernet Key",
+   "read_only": 1
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-08-03 18:31:10.856590",
+ "modified_by": "Administrator",
+ "module": "Dhananjaya",
+ "name": "Dhananjaya Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "DCC Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "DCC Executive",
+   "share": 1
+  },
+  {
+   "read": 1,
+   "role": "DCC Preacher"
+  },
+  {
+   "read": 1,
+   "role": "DCC Cashier"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

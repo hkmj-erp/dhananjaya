@@ -1,0 +1,546 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2023-02-20 15:05:11.325520",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_lc36n",
+  "company",
+  "company_abbreviation",
+  "naming_series",
+  "receipt_date",
+  "realization_date",
+  "preacher",
+  "column_break_i6oxf",
+  "donor",
+  "full_name",
+  "patron",
+  "sevak_name",
+  "contact_details_section",
+  "contact",
+  "column_break_xmkgt",
+  "address",
+  "donation_details_section",
+  "payment_method",
+  "amount",
+  "payment_gateway_document",
+  "additional_charges",
+  "reference_no",
+  "remarks",
+  "payment_screenshot",
+  "print_remarks_on_receipt",
+  "column_break_1ovlz",
+  "seva_type",
+  "atg_required",
+  "seva_subtype",
+  "is_ecs",
+  "ecs_transaction_id",
+  "ecs_rejection_reason",
+  "cheque_details_section",
+  "cheque_number",
+  "cheque_date",
+  "ifsc_code",
+  "section_break_n1cuf",
+  "bank_name",
+  "cheque_branch",
+  "amended_from",
+  "old_details_section",
+  "old_dr_no",
+  "column_break_n01te",
+  "old_ar_no",
+  "old_ar_date",
+  "old_ins_bank",
+  "old_ins_account_number",
+  "old_ins_number",
+  "old_ins_date",
+  "realisation_section",
+  "bank_account",
+  "bank_transaction",
+  "bounce_transaction",
+  "cash_received_date",
+  "column_break_ddi0v",
+  "donation_account",
+  "cash_account",
+  "gateway_expense_account",
+  "extra_information_section",
+  "donor_creation_request"
+ ],
+ "fields": [
+  {
+   "allow_on_submit": 1,
+   "fieldname": "donor",
+   "fieldtype": "Link",
+   "label": "Donor",
+   "options": "Donor",
+   "search_index": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "columns": 4,
+   "fetch_from": "donor.full_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "donation_details_section",
+   "fieldtype": "Section Break",
+   "label": "Donation Details"
+  },
+  {
+   "fieldname": "payment_method",
+   "fieldtype": "Link",
+   "label": "Payment Method",
+   "options": "DJ Mode of Payment",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Amount",
+   "options": "Company:company:default_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Donation Receipt",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "default": ".company_abbreviation.-RC-.YY.-1.#######",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": ".company_abbreviation.-RC-.YY.-1.#######\nRC-.YY.-1.####"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fetch_from": "company.abbr",
+   "fieldname": "company_abbreviation",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Company Abbreviation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "receipt_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Receipt Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Reference No."
+  },
+  {
+   "fieldname": "cheque_details_section",
+   "fieldtype": "Section Break",
+   "label": "Cheque Details"
+  },
+  {
+   "fieldname": "bank_name",
+   "fieldtype": "Data",
+   "label": "Cheque Bank Name"
+  },
+  {
+   "fieldname": "ifsc_code",
+   "fieldtype": "Data",
+   "label": "IFSC Code"
+  },
+  {
+   "fieldname": "cheque_date",
+   "fieldtype": "Date",
+   "label": "Cheque Date"
+  },
+  {
+   "fieldname": "section_break_n1cuf",
+   "fieldtype": "Column Break",
+   "label": "Bank Details"
+  },
+  {
+   "fieldname": "cheque_branch",
+   "fieldtype": "Data",
+   "label": "Cheque Branch"
+  },
+  {
+   "fieldname": "seva_type",
+   "fieldtype": "Link",
+   "label": "Seva Type",
+   "mandatory_depends_on": "eval:doc.donor",
+   "options": "Seva Type",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "seva_subtype",
+   "fieldtype": "Link",
+   "label": "Seva Subtype",
+   "options": "Seva Subtype",
+   "print_hide": 1,
+   "report_hide": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_1ovlz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_i6oxf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fetch_from": "donor.llp_preacher",
+   "fetch_if_empty": 1,
+   "fieldname": "preacher",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Preacher",
+   "mandatory_depends_on": "eval:doc.donor",
+   "options": "LLP Preacher",
+   "search_index": 1
+  },
+  {
+   "fieldname": "old_details_section",
+   "fieldtype": "Section Break",
+   "label": "Old Details"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "old_dr_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Old DR No"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks",
+   "max_height": "100px"
+  },
+  {
+   "fieldname": "column_break_n01te",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "old_ar_no",
+   "fieldtype": "Data",
+   "label": "Old AR No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_ar_date",
+   "fieldtype": "Date",
+   "label": "Old AR Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_ins_bank",
+   "fieldtype": "Data",
+   "label": "Old INS Bank",
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_ins_number",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Old INS Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_ins_date",
+   "fieldtype": "Date",
+   "label": "Old INS Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cheque_number",
+   "fieldtype": "Data",
+   "label": "Cheque Number"
+  },
+  {
+   "fieldname": "old_ins_account_number",
+   "fieldtype": "Data",
+   "label": "Old INS Account Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bank_transaction",
+   "fieldtype": "Link",
+   "label": "Bank Transaction",
+   "options": "Bank Transaction"
+  },
+  {
+   "fieldname": "section_break_lc36n",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ddi0v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bank_account",
+   "fieldtype": "Link",
+   "label": "Bank Account",
+   "options": "Bank Account"
+  },
+  {
+   "depends_on": "eval:!doc.is_new",
+   "fieldname": "realisation_section",
+   "fieldtype": "Section Break",
+   "label": "Realisation"
+  },
+  {
+   "fieldname": "cash_account",
+   "fieldtype": "Link",
+   "label": "Cash Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "gateway_expense_account",
+   "fieldtype": "Link",
+   "label": "Gateway Expense Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "donation_account",
+   "fieldtype": "Link",
+   "label": "Donation Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "additional_charges",
+   "fieldtype": "Currency",
+   "label": "Additional Charges"
+  },
+  {
+   "depends_on": "eval:doc.payment_method == 'Gateway'",
+   "fieldname": "payment_gateway_document",
+   "fieldtype": "Link",
+   "label": "Payment Gateway Document",
+   "options": "Payment Gateway Transaction"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_ecs",
+   "fieldtype": "Check",
+   "label": "Is ECS"
+  },
+  {
+   "fieldname": "extra_information_section",
+   "fieldtype": "Section Break",
+   "label": "Extra Information"
+  },
+  {
+   "fieldname": "donor_creation_request",
+   "fieldtype": "Link",
+   "label": "Donor Creation Request",
+   "options": "Donor Creation Request"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "patron",
+   "fieldtype": "Link",
+   "label": "Patron",
+   "options": "Patron"
+  },
+  {
+   "description": "If the Donor wishes to do seva in the name of someone else.",
+   "fieldname": "sevak_name",
+   "fieldtype": "Data",
+   "label": "In the name of"
+  },
+  {
+   "fieldname": "ecs_rejection_reason",
+   "fieldtype": "Data",
+   "label": "ECS Rejection Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ecs_transaction_id",
+   "fieldtype": "Data",
+   "label": "ECS Transaction ID"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "realization_date",
+   "fieldtype": "Date",
+   "label": "Realization Date",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "contact",
+   "fieldtype": "Data",
+   "label": "Contact No."
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "address",
+   "fieldtype": "Data",
+   "label": "Address",
+   "length": 500,
+   "max_height": "50px"
+  },
+  {
+   "fieldname": "contact_details_section",
+   "fieldtype": "Section Break",
+   "label": "Contact Details"
+  },
+  {
+   "fieldname": "column_break_xmkgt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cash_received_date",
+   "fieldtype": "Date",
+   "label": "Cash Received Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "atg_required",
+   "fieldtype": "Check",
+   "label": "80G Required"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "bounce_transaction",
+   "fieldtype": "Link",
+   "label": "Bounce Transaction",
+   "options": "Bank Transaction"
+  },
+  {
+   "default": "0",
+   "fieldname": "print_remarks_on_receipt",
+   "fieldtype": "Check",
+   "label": "Print Remarks On Receipt"
+  },
+  {
+   "fieldname": "payment_screenshot",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "Payment Screenshot"
+  }
+ ],
+ "image_field": "payment_screenshot",
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-08-17 13:14:20.581862",
+ "modified_by": "Administrator",
+ "module": "Dhananjaya",
+ "name": "Donation Receipt",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Executive",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Cashier",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Preacher",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "donor",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "full_name",
+ "track_changes": 1,
+ "track_views": 1
+}
