@@ -25,6 +25,13 @@ fields = {
             fieldtype="Check",
             insert_after="default_indian_state",
         ),
+        dict(
+            fieldname="default_company",
+            label="Default Company",
+            fieldtype="Link",
+            options="Company",
+            insert_after="print_reference_id",
+        ),
     ],
 }
 

@@ -37,6 +37,11 @@ def update_last_donation():
     frappe.db.commit()
 
 
+@frappe.whitelist()
+def hourly():
+    update_realization_date()
+
+
 def update_realization_date():
     receipts = frappe.db.sql(
         """

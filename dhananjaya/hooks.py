@@ -140,6 +140,7 @@ doc_events = {
 # }
 scheduler_events = {
     "daily": ["dhananjaya.tasks.daily"],
+    "hourly": ["dhananjaya.tasks.hourly"],
     "cron": {
         "* * * * *": ["dhananjaya.tasks.every_minute"],
         "0 8 * * *": ["dhananjaya.tasks.every_day_daytime"],

@@ -86,3 +86,4 @@ def fetch_donor_by_contact(contact):
 
                 return donor_dict
     return None
+

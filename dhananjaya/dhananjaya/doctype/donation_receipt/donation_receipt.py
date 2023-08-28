@@ -286,8 +286,8 @@ class DonationReceipt(Document):
                     {
                         "account": self.cash_account,
                         "debit_in_account_currency": self.amount,
-                        # As it not compulsory. It will pick up the default.
-                        # 'cost_center': 'Main - HKMJ'
+                        # As it not compulsory. It will pick up the default.--> But now it is picking of other company, so explicitly declared.
+                        "cost_center": accounts_details.cost_center,
                     },
                 ],
             )
@@ -319,7 +319,7 @@ class DonationReceipt(Document):
                         "bank_account": self.bank_account,
                         "debit_in_account_currency": self.amount
                         - (0 if not self.additional_charges else self.additional_charges),
-                        # 'cost_center': 'Main - HKMJ'
+                        "cost_center": accounts_details.cost_center,
                     },
                 ],
             )
@@ -331,6 +331,7 @@ class DonationReceipt(Document):
                         "cost_center": accounts_details.cost_center,
                     }
                 )
+
         je_doc = frappe.get_doc(je)
         je_doc.insert()
         return je_doc
@@ -631,7 +632,7 @@ def process_batch_gateway_payments(batch):
                 frappe.throw("Set Donor compulsorily in all batch gateway payments.")
 
     seva_account = frappe.db.get_value("Seva Type", tx["seva_type"], "account")
-    ## Best Address Contact 
+    ## Best Address Contact
     address, contact, email = get_best_contact_address(tx["donor"])
     for tx in payment_txs:
         dr = {
@@ -643,8 +644,8 @@ def process_batch_gateway_payments(batch):
             "workflow_state": "Draft",
             "donor": tx["donor"],
             # Rest of Data
-            "contact":contact,
-            "address":address,
+            "contact": contact,
+            "address": address,
             "seva_type": tx["seva_type"],
             "donation_account": seva_account,
             "receipt_date": bank_tx_doc.date,
