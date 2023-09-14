@@ -25,7 +25,7 @@
     :root{
         --size1: 40px;
         --size2: 30px;
-        --size3: 20px;
+        --size3: 18px;
         --size4: 15px;
     }
     /* @import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@600;900&display=swap');
@@ -72,20 +72,6 @@
         /* column-gap: 2px; */
         /* place-items:center; */
     }
-
-    .dr_details {
-        width: 100% !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: start !important;
-        /* grid: 1fr 1fr 1fr/ 1fr 1fr 1fr; */
-        /* grid-auto-rows: minmax(30px, auto); */
-        /* grid-template-rows: repeat(2,1fr); */
-        /* grid-template-columns: repeat(3,1fr);
-        grid-auto-flow: row;
-        grid-gap: 5px; */
-    }
-
     .dr_details_column {
         margin: 5px;
         /* min-width: 200px; */
@@ -105,8 +91,7 @@
     }
 
     #receipt_header_details {
-        padding-left: 50px;
-        /* width: 500px !important; */
+        padding-left: 10px;
         display: flex !important;
         flex-direction: column;
         justify-content: start;
@@ -175,8 +160,13 @@
     </div>
     <div style="min-height: 10px;"></div>
     <div style="text-align: center;">
-            This is to acknowledge that <b>{{doc.company.upper()}}</b> has received a donation of
+        This is to acknowledge that <b>{{doc.company.upper()}}</b> has received a donation of
     </div>
+    <!-- HARE KRISHNA MOVEMENT UDAIPUR -->
+    <!-- <div style="text-align: center; font-size: small;">
+            <b>{{doc.company.upper()}}</b> has received a donation of
+    </div> -->
+    
 
     <!-- Amount BOX -->
     <div style="

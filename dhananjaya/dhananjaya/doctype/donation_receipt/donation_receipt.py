@@ -86,8 +86,6 @@ class DonationReceipt(Document):
                         "account",
                         seva_doc.account,
                     )
-
-            frappe.errprint(old_account)
             gl_entry = frappe.get_all(
                 "GL Entry",
                 filters={"voucher_no": je.name, "credit": [">", 0]},

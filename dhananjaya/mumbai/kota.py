@@ -235,7 +235,6 @@ def create_receipt_from_bank_suspense():
 
 
 def check_donor_or_create(t):
-    frappe.errprint(t["donor_name"])
     donor = None
     clean_contact = None
     if t["mobile"]:

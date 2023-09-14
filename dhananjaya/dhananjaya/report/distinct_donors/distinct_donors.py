@@ -9,8 +9,6 @@ import frappe
 def execute(filters=None):
     filters.company = frappe.parse_json(filters.get("company"))
 
-    # frappe.errprint(filters.company)
-
     contacts_map = get_contacts_map()
     donors_map = get_donors_map()
 
@@ -59,7 +57,6 @@ def execute(filters=None):
         cummulative_donation = 0
         last_donation = datetime.strptime("01-01-2001", "%m-%d-%Y").date()
         first_donation = None
-        # frappe.errprint(filtered_donors)
         for fd in filtered_donors:
             donor_names.append(filtered_donors[fd]["full_name"])
 

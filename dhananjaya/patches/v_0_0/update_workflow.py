@@ -209,6 +209,18 @@ def get_workflow():
                 "parenttype": "Workflow",
                 "doctype": "Workflow Transition",
             },
+            {
+                "idx": 9,
+                "state": "Cheque Collected",
+                "action": "Trash",
+                "next_state": "Trashed",
+                "allowed": "DCC Executive",
+                "allow_self_approval": 1,
+                "parent": "Donation Receipt Workflow",
+                "parentfield": "transitions",
+                "parenttype": "Workflow",
+                "doctype": "Workflow Transition",
+            },
         ],
         "states": [
             {

@@ -4,7 +4,7 @@ dhananjaya.patches.v_0_0.update_contact_address_dr #new
 
 [post_model_sync]
 dhananjaya.patches.v_0_0.update_user_allocation
-dhananjaya.patches.v_0_0.update_workflow #new7
+dhananjaya.patches.v_0_0.update_workflow #new8
 dhananjaya.patches.v_0_0.update_address_strings
 dhananjaya.patches.v_0_0.delete_incomplete_address
 dhananjaya.patches.v_0_0.create_custom_fields #new3

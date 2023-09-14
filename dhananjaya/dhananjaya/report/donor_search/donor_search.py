@@ -31,7 +31,6 @@ def execute(filters=None):
     #         f""" AND td.last_donation IS NOT NULL AND td.last_donation != '' """
     #     )
     
-    frappe.errprint(where_string)
 
     if filters.get("contact_no"):
         # where_string += f" and tdc.contact_no LIKE '%{filters.get("contact_no")}%'"

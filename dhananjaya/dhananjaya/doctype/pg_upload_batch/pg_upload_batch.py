@@ -62,8 +62,6 @@ def try_razorpay_pattern(batch):
     for tx in txs:
         notes = json.loads(tx["extra_data"])["notes"]
         notes = json.loads(notes)
-        frappe.errprint(notes)
-        frappe.errprint("HEr")
         if not notes:
             frappe.throw("Extra Data in not Proper.")
         donor_found = razorpay_identify_and_update_donor(notes)

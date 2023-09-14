@@ -149,9 +149,7 @@ def merge_donors(donor_first, donor_second, priority_first,	priority_second, add
 
 	merge_to.reload()
 	merge_from.reload()
-
-	frappe.errprint(merge_to.name)
-	frappe.errprint(merge_from.name)
+	
 	frappe.rename_doc("Donor", merge_from.name, merge_to.name, merge=1)
 
 def if_none(val):

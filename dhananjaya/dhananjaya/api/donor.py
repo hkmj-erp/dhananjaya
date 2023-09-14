@@ -54,8 +54,6 @@ def memebers_search(filters):
 
     members = {}
 
-    frappe.errprint(filters.get("search_type"))
-
     if not filters.get("search_type"):
         search_doctype = "Donor"
     else:

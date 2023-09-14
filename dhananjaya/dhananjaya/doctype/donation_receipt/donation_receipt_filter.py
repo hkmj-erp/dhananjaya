@@ -2,8 +2,7 @@ import frappe
 
 from dhananjaya.dhananjaya.utils import get_preachers
 
-DCC_ADMIN_ROLES = ["DCC Manager", "DCC Executive", "DCC Cashier"]
-
+DCC_EXCLUDE_ROLES = ["DCC Manager", "DCC Executive", "DCC Cashier", "Auditor"]
 
 def query(user):
     if not user:
@@ -11,7 +10,7 @@ def query(user):
 
     user_roles = frappe.get_roles(user)
 
-    full_access = any(role in DCC_ADMIN_ROLES for role in user_roles)
+    full_access = any(role in DCC_EXCLUDE_ROLES for role in user_roles)
 
     if full_access:
         return "( 1 )"
