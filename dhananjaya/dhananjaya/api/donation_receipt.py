@@ -8,6 +8,17 @@ from frappe.utils.data import today
 from frappe.utils.image import optimize_image
 from dhananjaya.dhananjaya.utils import get_preachers
 
+
+@frappe.whitelist()
+def validate_patronship(seva_type, seva_subtype):
+    seva_type_status = frappe.get_value("Seva Type", seva_type, "patronship_allowed")
+    sevasub_type_status = frappe.get_value("Seva Subtype", seva_subtype, "patronship_allowed")
+    if seva_type_status and sevasub_type_status:
+        return True
+    else:
+        return False
+
+
 @frappe.whitelist()
 def get_fields():
     metadata = frappe.get_meta("Donation Receipt")

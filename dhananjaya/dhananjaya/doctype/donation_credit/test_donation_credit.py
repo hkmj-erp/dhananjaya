@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestAppNotification(FrappeTestCase):
+class TestDonationCredit(FrappeTestCase):
 	pass

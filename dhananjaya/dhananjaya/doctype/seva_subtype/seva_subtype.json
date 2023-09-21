@@ -9,7 +9,14 @@
  "engine": "InnoDB",
  "field_order": [
   "enabled",
-  "seva_name"
+  "seva_name",
+  "lft",
+  "rgt",
+  "old_parent",
+  "parent_seva_subtype",
+  "is_group",
+  "patronship_allowed",
+  "include_in_analysis"
  ],
  "fields": [
   {
@@ -23,15 +30,64 @@
    "fieldtype": "Data",
    "label": "Seva Name",
    "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "patronship_allowed",
+   "fieldtype": "Check",
+   "label": "Patronship Allowed"
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "label": "Old Parent",
+   "options": "Seva Subtype",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_seva_subtype",
+   "fieldtype": "Link",
+   "label": "Parent Seva Subtype",
+   "options": "Seva Subtype"
+  },
+  {
+   "default": "1",
+   "fieldname": "include_in_analysis",
+   "fieldtype": "Check",
+   "label": "Include in Analysis"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_tree": 1,
  "links": [],
- "modified": "2023-04-03 15:43:18.662665",
+ "modified": "2023-09-20 10:57:27.206686",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Subtype",
  "naming_rule": "By fieldname",
+ "nsm_parent_field": "parent_seva_subtype",
  "owner": "Administrator",
  "permissions": [
   {

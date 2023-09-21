@@ -8,6 +8,29 @@ from frappe.www.printview import validate_print_permission
 from frappe import local
 from cryptography.fernet import Fernet
 
+from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
+
+
+def check_user_notify(user, tag):
+    user_doc = frappe.get_doc("User", user)
+    if tag == DJNotificationTags.DONOR_CREATION_TAG and user_doc.donor_creation_notification:
+        return True
+    if tag == DJNotificationTags.SPECIAL_PUJA_TAG and user_doc.special_puja_notification:
+        return True
+    if tag == DJNotificationTags.DONOR_CLAIM_TAG and user_doc.donor_claim_notification:
+        return True
+    if tag == DJNotificationTags.DONATION_RECEIPT_TAG and user_doc.donation_receipt_notification:
+        return True
+    if tag == DJNotificationTags.DONOR_REMINDER_TAG and user_doc.donor_reminder_notification:
+        return True
+    return False
+
+
+# def get_dhananjaya_firebase_app():
+#     settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
+#     fa_doc = frappe.get_doc("Firebase Admin App", settings_doc.firebase_admin_app)
+#     return fa_doc.instance
+
 
 @frappe.whitelist()
 def get_short_url(long_url):

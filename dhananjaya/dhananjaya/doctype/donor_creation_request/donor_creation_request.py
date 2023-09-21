@@ -1,8 +1,9 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
 
-from dhananjaya.dhananjaya.api.utils import send_app_notification
+from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
 from dhananjaya.dhananjaya.utils import (
+    check_user_notify,
     get_donor_details,
     is_valid_pan_number,
     is_valid_aadhar_number,
@@ -203,10 +204,13 @@ def update_donor(donor, request):
     data = {"route": "true", "target_route": f"/donor/{donor.name}"}
 
     erp_user = request_doc.owner
-    # response = send_app_notification(erp_user, title, message, data)
+    settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
     doc = frappe.get_doc(
         {
             "doctype": "App Notification",
+            "app": settings_doc.firebase_admin_app,
+            "tag": DJNotificationTags.DONOR_CREATION_TAG,
+            "notify": check_user_notify(erp_user, DJNotificationTags.DONOR_CREATION_TAG),
             "user": erp_user,
             "subject": title,
             "message": message,

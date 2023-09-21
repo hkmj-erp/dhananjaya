@@ -11,7 +11,9 @@
   "company",
   "seva_name",
   "account",
-  "80g_applicable"
+  "80g_applicable",
+  "patronship_allowed",
+  "include_in_analysis"
  ],
  "fields": [
   {
@@ -47,11 +49,23 @@
    "label": "Account",
    "options": "Account",
    "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "patronship_allowed",
+   "fieldtype": "Check",
+   "label": "Patronship Allowed"
+  },
+  {
+   "default": "1",
+   "fieldname": "include_in_analysis",
+   "fieldtype": "Check",
+   "label": "Include in Analysis"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-04 10:03:13.365038",
+ "modified": "2023-09-20 10:56:41.836794",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Type",

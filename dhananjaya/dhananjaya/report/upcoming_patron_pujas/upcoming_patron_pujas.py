@@ -1,10 +1,12 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
 
+# import frappe
+
 from datetime import datetime
-from dhananjaya.dhananjaya.report.upcoming_special_pujas.puja_calculator import (
-    get_puja_dates,
-)
+
+from dhananjaya.dhananjaya.report.upcoming_patron_pujas.patron_puja_calculator import get_patron_puja_dates
+
 
 def execute(filters=None):
     columns = get_columns()
@@ -13,7 +15,7 @@ def execute(filters=None):
     preacher = []
     if filters.get("preacher"):
         preacher = [filters.get("preacher")]
-    upcoming_pujas = get_puja_dates(from_date, to_date, preacher)
+    upcoming_pujas = get_patron_puja_dates(from_date, to_date, preacher)
     return columns, upcoming_pujas
 
 
@@ -26,40 +28,28 @@ def get_columns():
             "width": 120,
         },
         {
-            "fieldname": "donor_id",
-            "label": "Donor ID",
+            "fieldname": "patron_id",
+            "label": "Patron ID",
             "fieldtype": "Link",
-            "options": "Donor",
-            "width": 120,
+            "options": "Patron",
+            "width": 150,
         },
         {
-            "fieldname": "donor_name",
+            "fieldname": "patron_name",
             "label": "Full Name",
             "fieldtype": "Data",
-            "width": 120,
+            "width": 200,
         },
         {
             "fieldname": "occasion",
             "label": "Occasion",
             "fieldtype": "Data",
-            "width": 120,
+            "width": 200,
         },
         {
             "fieldname": "llp_preacher",
             "label": "Preacher",
             "fieldtype": "Data",
-            "width": 120,
-        },
-        {
-            "fieldname": "total_donation",
-            "label": "Total Donation",
-            "fieldtype": "Currency",
-            "width": 120,
-        },
-        {
-            "fieldname": "last_donation",
-            "label": "Last Donation",
-            "fieldtype": "Currency",
             "width": 120,
         },
     ]

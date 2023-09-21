@@ -227,7 +227,8 @@
    "fieldname": "ecs_id",
    "fieldtype": "Data",
    "label": "ECS ID",
-   "mandatory_depends_on": "eval:doc.ecs_active"
+   "mandatory_depends_on": "eval:doc.ecs_active",
+   "unique": 1
   },
   {
    "fieldname": "introducer_preacher",
@@ -325,7 +326,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-13 12:33:52.994001",
+ "modified": "2023-09-17 13:23:48.509845",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor",

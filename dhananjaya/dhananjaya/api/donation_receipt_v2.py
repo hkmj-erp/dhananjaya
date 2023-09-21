@@ -19,7 +19,13 @@ def create_receipt():
         donor_doc.save(ignore_permissions=True)
         preacher = donor_doc.llp_preacher
     else:
-        donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donorCreation"])
+        if "donorCreation" in donation:
+            donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donorCreation"])
+        else:
+            donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donor_creation"])
+        donor_request_doc.pan_number = donation["pan_no"]
+        donor_request_doc.aadhar_number = donation["aadhar_no"]
+        donor_request_doc.save(ignore_permissions=True)
         preacher = donor_request_doc.llp_preacher
 
     ##### Create Receipt #####
@@ -125,6 +131,7 @@ def get_receipts_of_patron(patron):
     return frappe.get_all("Donation Receipt", fields=["*"], filters=[["docstatus", "!=", "2"], ["patron", "=", patron]])
 
 
+### Will be depreciated soon
 @frappe.whitelist()
 def get_receipts_of_a_month(filters, order_by, limit_start, limit):
     filters = json.loads(filters)
@@ -145,7 +152,16 @@ def get_receipts_of_a_month(filters, order_by, limit_start, limit):
             where_string += f""" AND tdr.full_name LIKE '%{ftr[2]}%' """
         if "specific_month" in ftr and ftr[2] != "":
             where_string += f""" AND MONTH(tdr.receipt_date) = {ftr[2]} """
-
+        if "company" in ftr:
+            companies_str = ", ".join([f"'{f}'" for f in ftr[2]])
+            where_string += f""" AND company {ftr[1]} ({companies_str}) """
+        if "receipt_date" in ftr:
+            where_string += f""" AND receipt_date {ftr[1]} '{ftr[2]}' """
+        if "seva_type" in ftr:
+            where_string += f""" AND seva_type {ftr[1]} '{ftr[2]}' """
+        if "seva_subtype" in ftr:
+            where_string += f""" AND seva_subtype {ftr[1]} '{ftr[2]}' """
+    frappe.errprint(where_string)
     # if filters.get("company") and filters.get("company") != "All":
     #     where_string += f""" AND tdr.company = '{filters.get("company")}' """
 
@@ -167,4 +183,76 @@ def get_receipts_of_a_month(filters, order_by, limit_start, limit):
         as_dict=1,
     ):
         receipts.append(i)
+
     return receipts
+
+
+### New Function for Receipts Search
+@frappe.whitelist()
+def search_receipts(filters, order_by, limit_start, limit):
+    filters = json.loads(filters)
+
+    where_string = ""
+
+    order_by_string = " ORDER BY receipt_date desc"
+
+    if order_by:
+        order_by_string = f""" ORDER BY {order_by} """
+
+    limit_string = " LIMIT 1000"
+    if limit_start:
+        limit_string = f" LIMIT {limit_start}, {limit}"
+
+    for ftr in filters:
+        if "full_name" in ftr:
+            where_string += f""" AND tdr.full_name LIKE '%{ftr[2]}%' """
+        if "specific_month" in ftr and ftr[2] != "":
+            where_string += f""" AND MONTH(tdr.receipt_date) = {ftr[2]} """
+        if "company" in ftr:
+            companies_str = ", ".join([f"'{f}'" for f in ftr[2]])
+            where_string += f""" AND company {ftr[1]} ({companies_str}) """
+        if "receipt_date" in ftr:
+            where_string += f""" AND receipt_date {ftr[1]} '{ftr[2]}' """
+        if "seva_type" in ftr:
+            where_string += f""" AND seva_type {ftr[1]} '{ftr[2]}' """
+        if "seva_subtype" in ftr:
+            where_string += f""" AND seva_subtype {ftr[1]} '{ftr[2]}' """
+        if "docstatus" in ftr:
+            where_string += f""" AND docstatus {ftr[1]} {ftr[2]} """
+        else:
+            where_string += f""" AND tdr.docstatus != 2 """
+
+    # if filters.get("company") and filters.get("company") != "All":
+    #     where_string += f""" AND tdr.company = '{filters.get("company")}' """
+
+    preachers = get_preachers()
+
+    preachers = ", ".join(f"'{p}'" for p in preachers)
+
+    receipts = []
+
+    for i in frappe.db.sql(
+        f"""
+					select *
+					from `tabDonation Receipt` tdr
+					where preacher IN ({preachers})
+					{where_string}
+                    {order_by_string}
+                    {limit_string}
+					""",
+        as_dict=1,
+    ):
+        receipts.append(i)
+
+    analysis = frappe.db.sql(
+        f"""
+					select count(*) as count_receipts,sum(amount) as total_amount
+					from `tabDonation Receipt` tdr
+					where tdr.workflow_state != 'Trashed'
+                    AND preacher IN ({preachers})
+					{where_string}
+					""",
+        as_dict=1,
+    )
+
+    return frappe._dict(receipts=receipts, count=analysis[0]["count_receipts"], sum=analysis[0]["total_amount"])

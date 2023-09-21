@@ -1,7 +1,8 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
-from dhananjaya.dhananjaya.api.utils import send_app_notification
+from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
 from dhananjaya.dhananjaya.utils import (
+    check_user_notify,
     get_best_contact_address,
     get_default_bank_accounts,
     get_pdf_dr,
@@ -126,10 +127,14 @@ class DonationReceipt(Document):
                 #     "LLP Preacher", self.preacher, "erp_user"
                 # )
                 erp_users = get_preacher_users(self.preacher)
+            settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
             for erp_user in erp_users:
                 doc = frappe.get_doc(
                     {
                         "doctype": "App Notification",
+                        "app": settings_doc.firebase_admin_app,
+                        "tag": DJNotificationTags.DONATION_RECEIPT_TAG,
+                        "notify": check_user_notify(erp_user, DJNotificationTags.DONATION_RECEIPT_TAG),
                         "user": erp_user,
                         "subject": title,
                         "message": message,
@@ -138,7 +143,6 @@ class DonationReceipt(Document):
                     }
                 )
                 doc.insert(ignore_permissions=True)
-                # send_app_notification(erp_user, title, message, data)
 
     ############## BEFORE SAVE #############
 

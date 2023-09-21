@@ -15,44 +15,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Payment Gateway",
-   "link_count": 3,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Import Entries",
-   "link_count": 0,
-   "link_to": "Dhananjaya Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Gateway Batch",
-   "link_count": 0,
-   "link_to": "PG Upload Batch",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Payment Gateway Transaction",
-   "link_count": 0,
-   "link_to": "Payment Gateway Transaction",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Bank",
    "link_count": 4,
    "onboard": 0,
@@ -365,10 +327,48 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Gateway",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Import Entries",
+   "link_count": 0,
+   "link_to": "PG Upload Tool",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Gateway Batch",
+   "link_count": 0,
+   "link_to": "PG Upload Batch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Gateway Transaction",
+   "link_count": 0,
+   "link_to": "Payment Gateway Transaction",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-08-02 17:34:27.010628",
- "modified_by": "ajad@hkm-group.org",
+ "modified": "2023-09-21 12:32:18.171117",
+ "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "DCC",
  "number_cards": [],

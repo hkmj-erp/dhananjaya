@@ -27,6 +27,7 @@ def user_stats(based_on="receipt_date"):
                     group by company_abbreviation, DATE_FORMAT({based_on}, '%b-%y')
                     order by company,YEAR({based_on}) asc,MONTH({based_on}) asc   
                     """
+    frappe.errprint(query_string)
     return frappe.db.sql(query_string, as_dict=1)
 
 
@@ -87,3 +88,18 @@ def fetch_donor_by_contact(contact):
                 return donor_dict
     return None
 
+
+@frappe.whitelist(allow_guest=True)
+def get_oauth_client_id(app_name):
+    clients = frappe.get_all("OAuth Client", filters=[["app_name", "=", app_name]], fields=["name", "client_id"])
+    if len(clients) == 0:
+        frappe.throw("There is no OAuth Setup associated with this App.")
+    else:
+        return clients[0]["client_id"]
+
+
+@frappe.whitelist(allow_guest=True)
+def get_erp_domains():
+    return frappe.get_all(
+        "ERP Domain", filters=[["active", "=", 1]], fields=["name", "erp_title", "erp_address"], order_by="name asc"
+    )

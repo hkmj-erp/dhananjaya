@@ -1,7 +1,6 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
-
-from dhananjaya.dhananjaya.api.utils import send_app_notification
+from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
 from dhananjaya.dhananjaya.doctype.donor.ecs_utils import count_of_ecs, get_ecs_months
 import frappe
 import re
@@ -10,9 +9,7 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.utils import strip, sbool
 from frappe.model.document import Document
 
-from dhananjaya.dhananjaya.utils import (
-    get_preacher_users
-)
+from dhananjaya.dhananjaya.utils import check_user_notify, get_preacher_users
 
 
 class Donor(Document):
@@ -48,16 +45,21 @@ class Donor(Document):
         data = {"route": "true", "target_route": f"/donor/{self.name}"}
         # erp_user = frappe.db.get_value("LLP Preacher", self.llp_preacher, "erp_user")
         erp_users = get_preacher_users(self.llp_preacher)
+        settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
         for erp_user in erp_users:
-            response = send_app_notification(erp_user, title, message, data)
-            doc = frappe.get_doc({
-                    'doctype': 'App Notification',
-                    'user': erp_user,
-                    'subject': title,
-                    'message':message,
-                    'is_route':1,
-                    'route':f"/donor/{self.name}"
-                })
+            doc = frappe.get_doc(
+                {
+                    "doctype": "App Notification",
+                    "app": settings_doc.firebase_admin_app,
+                    "tag": DJNotificationTags.DONOR_CREATION_TAG,
+                    "notify":check_user_notify(erp_user, DJNotificationTags.DONOR_CREATION_TAG),
+                    "user": erp_user,
+                    "subject": title,
+                    "message": message,
+                    "is_route": 1,
+                    "route": f"/donor/{self.name}",
+                }
+            )
             doc.insert(ignore_permissions=True)
 
     def validate(self):
@@ -67,19 +69,11 @@ class Donor(Document):
 
     def before_save(self):
         # Preacher Change
-        if (
-            not self.is_new()
-            and self.has_value_changed("llp_preacher")
-            and "DCC Manager" not in frappe.get_roles()
-        ):
-            frappe.throw(
-                "Only DCC Manager is allowed to change the Preacher of a Donor."
-            )
+        if not self.is_new() and self.has_value_changed("llp_preacher") and "DCC Manager" not in frappe.get_roles():
+            frappe.throw("Only DCC Manager is allowed to change the Preacher of a Donor.")
 
             ####
-        self.full_name = self.first_name + (
-            "" if not self.last_name else f" {self.last_name}"
-        )
+        self.full_name = self.first_name + ("" if not self.last_name else f" {self.last_name}")
         return
 
     def validate_address(self):
@@ -90,9 +84,7 @@ class Donor(Document):
                 frappe.throw(_("Only one address can be set Preferred."))
             if address.preferred:
                 preferred_flag = True
-            if (strip(address.pin_code) != "") and (
-                not is_valid_pincode(address.pin_code)
-            ):
+            if (strip(address.pin_code) != "") and (not is_valid_pincode(address.pin_code)):
                 frappe.throw(_(f"Row #{i+1} contains an invalid PIN Code."))
             # if address.type in types:
             # 	frappe.throw(_(f"Row #{i+1} is a <b>Duplicate</b> of address type {address.type}. Please remove it."))
@@ -104,9 +96,7 @@ class Donor(Document):
         for i, contact in enumerate(self.contacts):
             if contact.contact_no in contact_numbers:
                 frappe.throw(
-                    _(
-                        f"Row #{i+1} is a <b>Duplicate</b> of contact_no number {contact.contact_no}. Please remove it."
-                    )
+                    _(f"Row #{i+1} is a <b>Duplicate</b> of contact_no number {contact.contact_no}. Please remove it.")
                 )
             contact_numbers.append(contact.contact_no)
         return
@@ -115,11 +105,7 @@ class Donor(Document):
         emails = []
         for i, email in enumerate(self.emails):
             if email.email in emails:
-                frappe.throw(
-                    _(
-                        f"Row #{i+1} is a <b>Duplicate</b> of email {email.email}. Please remove it."
-                    )
-                )
+                frappe.throw(_(f"Row #{i+1} is a <b>Duplicate</b> of email {email.email}. Please remove it."))
             emails.append(email.email)
 
     @property

@@ -8,22 +8,24 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "active",
   "full_name",
   "initial",
   "whatsapp_no",
-  "allowed_users"
+  "allowed_users",
+  "include_in_analysis"
  ],
  "fields": [
   {
    "fieldname": "full_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Full Name",
    "reqd": 1
   },
   {
    "fieldname": "initial",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Initial",
    "reqd": 1,
    "unique": 1
@@ -40,17 +42,15 @@
    "options": "LLP Preacher User"
   },
   {
-   "default": "0",
-   "fieldname": "active",
+   "default": "1",
+   "fieldname": "include_in_analysis",
    "fieldtype": "Check",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Active"
+   "label": "Include in Analysis"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-13 12:21:31.113492",
+ "modified": "2023-09-20 10:58:11.291689",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "LLP Preacher",

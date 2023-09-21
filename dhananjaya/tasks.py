@@ -1,17 +1,19 @@
 from datetime import datetime, timedelta
+from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
 from dhananjaya.dhananjaya.doctype.donor_suggestion.task import donor_suggestions_task
 from dhananjaya.dhananjaya.report.upcoming_special_pujas.puja_calculator import (
     get_puja_dates,
 )
-from dhananjaya.dhananjaya.utils import get_preachers, get_preachers
+from dhananjaya.dhananjaya.utils import check_user_notify, get_preachers, get_preachers
 import frappe
 
 
 @frappe.whitelist()
 def daily():
     update_last_donation()
-    update_realization_date()
     donor_suggestions_task()
+    delete_old_receipts_links()
+    delete_old_notifications()
 
 
 def update_last_donation():
@@ -81,9 +83,13 @@ def special_puja_notify():
     for u in users:
         preachers = get_preachers(u)
         for puja in get_puja_dates(tomorrow, tomorrow, preachers):
+            settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
             doc = frappe.get_doc(
                 {
                     "doctype": "App Notification",
+                    "app": settings_doc.firebase_admin_app,
+                    "tag": DJNotificationTags.SPECIAL_PUJA_TAG,
+                    "notify": check_user_notify(u, DJNotificationTags.SPECIAL_PUJA_TAG),
                     "user": u,
                     "subject": puja["occasion"],
                     "message": f"Special Puja Tomorrow for {puja['donor_name']}",
@@ -101,6 +107,7 @@ def every_minute():
 
 
 def show_reminders():
+    settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
     for i in frappe.db.sql(
         """
                     select *
@@ -112,6 +119,9 @@ def show_reminders():
         doc = frappe.get_doc(
             {
                 "doctype": "App Notification",
+                "app": settings_doc.firebase_admin_app,
+                "tag": DJNotificationTags.DONOR_REMINDER_TAG,
+                "notify": check_user_notify(i["user"], DJNotificationTags.DONOR_REMINDER_TAG),
                 "user": i["user"],
                 "subject": "Reminder",
                 "message": i["message"],
@@ -120,6 +130,34 @@ def show_reminders():
             }
         )
         doc.insert(ignore_permissions=True)
+    frappe.db.commit()
+
+
+def delete_old_receipts_links():
+    three_days_ago = (datetime.now() - timedelta(days=3)).strftime("%Y-%m-%d")
+    eligible_links = frappe.get_all(
+        "DCC Redirect",
+        filters=[["creation", "<", three_days_ago]],
+        page_length=300,
+        order_by="creation",
+        pluck="name",
+    )
+    for link in eligible_links:
+        frappe.delete_doc("DCC Redirect", link)
+    frappe.db.commit()
+
+
+def delete_old_notifications():
+    one_month_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    eligible_notiifcations = frappe.get_all(
+        "App Notification",
+        filters=[["creation", "<", one_month_ago]],
+        page_length=300,
+        order_by="creation",
+        pluck="name",
+    )
+    for n in eligible_notiifcations:
+        frappe.delete_doc("App Notification", n)
     frappe.db.commit()
 
 

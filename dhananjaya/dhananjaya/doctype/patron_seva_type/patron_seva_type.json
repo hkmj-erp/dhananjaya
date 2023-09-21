@@ -10,9 +10,9 @@
   "enabled",
   "seva_code",
   "seva_name",
-  "company",
-  "type",
-  "seva_amount"
+  "seva_amount",
+  "facilites_section",
+  "privilege_pujas"
  ],
  "fields": [
   {
@@ -25,6 +25,7 @@
    "fieldname": "seva_code",
    "fieldtype": "Data",
    "label": "Seva Code",
+   "set_only_once": 1,
    "unique": 1
   },
   {
@@ -33,25 +34,24 @@
    "label": "Seva Name"
   },
   {
-   "fieldname": "company",
-   "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company"
-  },
-  {
    "fieldname": "seva_amount",
    "fieldtype": "Currency",
    "label": "Seva Amount"
   },
   {
-   "fieldname": "type",
-   "fieldtype": "Data",
-   "label": "Type"
+   "fieldname": "facilites_section",
+   "fieldtype": "Section Break",
+   "label": "Facilites"
+  },
+  {
+   "fieldname": "privilege_pujas",
+   "fieldtype": "Int",
+   "label": "Privilege Pujas"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-05 12:37:46.120260",
+ "modified": "2023-09-20 12:37:31.069024",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron Seva Type",

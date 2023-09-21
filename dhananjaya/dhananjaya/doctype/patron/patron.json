@@ -196,7 +196,8 @@
    "fieldname": "seva_type",
    "fieldtype": "Link",
    "label": "Seva Type",
-   "options": "Patron Seva Type"
+   "options": "Patron Seva Type",
+   "reqd": 1
   },
   {
    "fieldname": "issued_card_no",
@@ -240,7 +241,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-06-15 11:35:37.125527",
+ "modified": "2023-09-20 12:53:45.463745",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron",

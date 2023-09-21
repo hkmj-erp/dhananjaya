@@ -2,7 +2,11 @@
 # For license information, please see license.txt
 
 # import frappe
-from frappe.model.document import Document
+from frappe.utils.nestedset import NestedSet
 
-class SevaSubtype(Document):
-	pass
+# from frappe.model.document import Document
+
+
+class SevaSubtype(NestedSet):
+    nsm_parent_field = "parent_seva_subtype"
+    pass

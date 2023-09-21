@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-09-21 12:14:02.990174",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "pg_donor_reqd",
+  "company",
+  "gateway",
+  "gateway_file",
+  "google_sheets_url"
+ ],
+ "fields": [
+  {
+   "default": "1",
+   "description": "This will be checked when the Batch of Payment Gateway Entries will be processed for Donation Receipt Creation and Bank Statement Settlement.\n\nIf you keep it non-mandatory, then Donation will be booked in state <b>Suspense</b>",
+   "fieldname": "pg_donor_reqd",
+   "fieldtype": "Check",
+   "label": "Is Donor Required (DR Creation)"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gateway",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Gateway",
+   "options": "Payment Gateway",
+   "reqd": 1
+  },
+  {
+   "fieldname": "google_sheets_url",
+   "fieldtype": "Data",
+   "label": "Import From Google Sheets URL"
+  },
+  {
+   "fieldname": "gateway_file",
+   "fieldtype": "Attach",
+   "label": "Gateway File"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-09-21 12:37:56.406868",
+ "modified_by": "Administrator",
+ "module": "Dhananjaya",
+ "name": "PG Upload Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "DCC Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "DCC Executive",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

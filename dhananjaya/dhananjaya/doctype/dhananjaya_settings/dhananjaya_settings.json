@@ -8,16 +8,9 @@
  "field_order": [
   "admin_role",
   "cash_mode",
+  "firebase_admin_app",
   "gateway_mode",
   "company_details",
-  "upload_payment_gateway_data_section",
-  "pg_donor_reqd",
-  "column_break_xrzvk",
-  "pg_company",
-  "gateway",
-  "gateway_file",
-  "google_sheets_url",
-  "upload_gateway",
   "other_section",
   "public_fernet_key"
  ],
@@ -45,53 +38,6 @@
    "options": "DJ Mode of Payment"
   },
   {
-   "fieldname": "upload_payment_gateway_data_section",
-   "fieldtype": "Section Break",
-   "label": "Upload Payment Gateway Data"
-  },
-  {
-   "depends_on": "eval:doc.gateway",
-   "fieldname": "gateway_file",
-   "fieldtype": "Attach",
-   "label": "Gateway File"
-  },
-  {
-   "depends_on": "eval:doc.gateway",
-   "fieldname": "upload_gateway",
-   "fieldtype": "Button",
-   "label": "Upload"
-  },
-  {
-   "depends_on": "eval:doc.gateway",
-   "fieldname": "google_sheets_url",
-   "fieldtype": "Data",
-   "label": "Import From Google Sheets URL"
-  },
-  {
-   "fieldname": "gateway",
-   "fieldtype": "Link",
-   "label": "Gateway",
-   "options": "Payment Gateway"
-  },
-  {
-   "fieldname": "column_break_xrzvk",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "description": "This will be checked when the Batch of Payment Gateway Entries will be processed for Donation Receipt Creation and Bank Statement Settlement.\n\nIf you keep it non-mandatory, then Donation will be booked in state <b>Suspense</b>",
-   "fieldname": "pg_donor_reqd",
-   "fieldtype": "Check",
-   "label": "Is Donor Required (DR Creation)"
-  },
-  {
-   "fieldname": "pg_company",
-   "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
-   "reqd": 1
-  },
-  {
    "fieldname": "company_details",
    "fieldtype": "Table",
    "label": "Details",
@@ -105,15 +51,23 @@
   {
    "fieldname": "public_fernet_key",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Public Fernet Key",
    "read_only": 1
+  },
+  {
+   "fieldname": "firebase_admin_app",
+   "fieldtype": "Link",
+   "label": "Firebase Admin App",
+   "options": "Firebase Admin App",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-03 18:31:10.856590",
+ "modified": "2023-09-21 12:38:34.600203",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",

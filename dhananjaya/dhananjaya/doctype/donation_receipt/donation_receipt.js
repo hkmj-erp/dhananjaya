@@ -20,6 +20,14 @@ frappe.ui.form.on('Donation Receipt', {
 				}
 			}
 		});
+		frm.set_query('seva_subtype',()=> {
+			return {
+				filters: {
+					enabled : 1,
+					is_group : 0
+				}
+			}
+		});
 		frm.set_query('bank_transaction', () => {
 			return {
 				filters: {

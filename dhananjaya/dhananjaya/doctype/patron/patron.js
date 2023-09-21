@@ -24,16 +24,16 @@ frappe.ui.form.on('Patron', {
 						<h3>Status</h3>
 						<div style="display:flex; justify-content: space-between;font-size:1em">
 							<div style = "width : 150px">Commited Donation</div>
-							<div style = "color:#ff15a4">${data[1]}</div>
+							<div style = "color:#ff15a4">${data['commited']}</div>
 						</div>
 						<div style="display:flex; justify-content: space-between;font-size:1em">
 							<div style = "width : 150px">Collected Donation</div>
-							<div style= "color:#448b00"> ${data[0]}</div>
+							<div style= "color:#448b00"> ${data['completed']}</div>
 						</div>
 						<hr>
 						<div style="display:flex; justify-content: space-between;font-size:1em">
 							<div style = "width : 150px">Remaining</div>
-							<div style= "color:#a57f00; font-weight:bold"> ${data[2]}</div>
+							<div style= "color:#a57f00; font-weight:bold"> ${data['commited']-data['completed']}</div>
 						</div>
 					</div>
 					`

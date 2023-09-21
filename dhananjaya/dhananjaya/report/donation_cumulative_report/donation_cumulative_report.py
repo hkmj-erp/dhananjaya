@@ -51,6 +51,19 @@ def get_conditions(filters):
         conditions += f' AND tdr.receipt_date BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"'
     else:
         conditions += f' AND tdr.realization_date BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"'
+
+    seva_types = frappe.get_all("Seva Type", filters=[["include_in_analysis", "=", 1]], pluck="name")
+    seva_subtypes = frappe.get_all("Seva Subtype", filters=[["include_in_analysis", "=", 1]], pluck="name")
+    preachers = frappe.get_all("LLP Preacher", filters=[["include_in_analysis", "=", 1]], pluck="name")
+
+    seva_types_str = ",".join([f"'{s}'" for s in seva_types])
+    seva_subtypes_str = ",".join([f"'{s}'" for s in seva_subtypes])
+    preachers_str = ",".join([f"'{p}'" for p in preachers])
+
+    conditions += f" AND seva_type IN ({seva_types_str}) "
+    conditions += f" AND seva_subtype IN ({seva_subtypes_str}) "
+    conditions += f" AND preacher IN ({preachers_str}) "
+
     return conditions
 
 

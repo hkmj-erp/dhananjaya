@@ -42,16 +42,4 @@ frappe.ui.form.on('Dhananjaya Settings', {
 			}
 		});
 	},
-	upload_gateway:function(frm){
-		frappe.call({
-			freeze:true,
-			freeze_message:"Uploading Trasactions.",
-			method: "dhananjaya.dhananjaya.doctype.dhananjaya_settings.dhananjaya_settings.upload_gateway_transactions",
-			callback: function(r) {
-				if(!r.exc){
-					frappe.msgprint("Uploaded. Please Check Once.");
-				}
-			}
-		});
-	}
 });
