@@ -46,6 +46,8 @@ def get_include_in_analysis_conditions():
 def user_stats(based_on="receipt_date"):
     include_conditions = get_include_in_analysis_conditions()
     preachers = get_preachers()
+    if len(preachers) == 0:
+        return {}
     preachers_string = ",".join([f"'{p}'" for p in preachers])
     total_donations = {}
     for i in frappe.db.sql(
@@ -63,7 +65,7 @@ def user_stats(based_on="receipt_date"):
     ):
         key = i["company"] + "|" + i["month"]
         total_donations.setdefault(key, i)
-
+    # Calculate Credits
     for i in frappe.db.sql(
         f"""
                     select  company_abbreviation as company, company as company_full, DATE_FORMAT(posting_date, '%b-%y') as month, SUM(credits) as credits
