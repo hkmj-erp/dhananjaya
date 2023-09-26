@@ -9,7 +9,7 @@ def get_patron_puja_dates(from_date, to_date, preachers=[]):
         priviledge_pujas = frappe.db.sql(
             """ select * 
                 from `tabPatron Privilege Puja`
-                where active = 1
+                where 1
             """,
             as_dict=1,
         )
@@ -69,19 +69,20 @@ def get_patron_data(patrons):
     patrons = list(set(patrons))
     patrons_string = ",".join([f"'{p}'" for p in patrons])
     patron_details = {}
-    for i in frappe.db.sql(
-        f"""
-					select td.name as patron_id, td.llp_preacher,
-					GROUP_CONCAT(DISTINCT tda.address_line_1,tda.address_line_2,tda.city SEPARATOR' | ') as address,
-					GROUP_CONCAT(DISTINCT tdc.contact_no SEPARATOR' , ') as contact
-					from `tabPatron` td
-					left join `tabDonor Contact` tdc on tdc.parent = td.name
-					left join `tabDonor Address` tda on tda.parent = td.name
-					where 1
-					and td.name IN ({patrons_string})
-					group by td.name
-					""",
-        as_dict=1,
-    ):
-        patron_details.setdefault(i["patron_id"], i)
+    if len(patrons) > 0:
+        for i in frappe.db.sql(
+            f"""
+                        select td.name as patron_id, td.llp_preacher,
+                        GROUP_CONCAT(DISTINCT tda.address_line_1,tda.address_line_2,tda.city SEPARATOR' | ') as address,
+                        GROUP_CONCAT(DISTINCT tdc.contact_no SEPARATOR' , ') as contact
+                        from `tabPatron` td
+                        left join `tabDonor Contact` tdc on tdc.parent = td.name
+                        left join `tabDonor Address` tda on tda.parent = td.name
+                        where 1
+                        and td.name IN ({patrons_string})
+                        group by td.name
+                        """,
+            as_dict=1,
+        ):
+            patron_details.setdefault(i["patron_id"], i)
     return patron_details

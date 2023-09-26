@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
-from dhananjaya.dhananjaya.utils import get_donation_companies
+from dhananjaya.dhananjaya.utils import get_credits_equivalent, get_donation_companies
 
 
 def execute(filters=None):
@@ -13,13 +13,14 @@ def execute(filters=None):
 
     donations = []
 
-    for p in frappe.get_all("LLP Preacher", pluck="name"):
+    for p in frappe.get_all("LLP Preacher", filters={"include_in_analysis": 1}, pluck="name"):
         donation_row = {"preacher": p}
         for c in companies:
             donation_row.setdefault(c, 0)
         # donation_row.extend([0]*len(com))
 
-        total_donation_row = 0
+        ### Regular Donations
+        preacher_total_donation = 0
         for i in frappe.db.sql(
             f"""
                             select company, SUM(amount) as total
@@ -31,11 +32,26 @@ def execute(filters=None):
             as_dict=1,
         ):
             donation_row[i["company"]] = i["total"]
-            total_donation_row += i["total"]
+            preacher_total_donation += i["total"]
 
-        donation_row.setdefault("total_preacher", total_donation_row)
+        ### Credit Donations
+        for i in frappe.db.sql(
+            f"""
+                            select company, SUM(credits) as credits
+                            from `tabDonation Credit` tdc
+                            where tdc.preacher = '{p}'
+                            AND posting_date BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"
+                            group by tdc.company
+                            """,
+            as_dict=1,
+        ):
+            credits_amount = get_credits_equivalent(i["company"], i["credits"])
+            donation_row[i["company"]] += credits_amount  ## Add this to regular
+            preacher_total_donation += credits_amount
 
-        if total_donation_row > 0:
+        donation_row.setdefault("total_preacher", preacher_total_donation)
+
+        if preacher_total_donation > 0:
             donations.append(donation_row)
 
     data = donations
@@ -52,17 +68,30 @@ def get_conditions(filters):
     else:
         conditions += f' AND tdr.realization_date BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"'
 
-    seva_types = frappe.get_all("Seva Type", filters=[["include_in_analysis", "=", 1]], pluck="name")
-    seva_subtypes = frappe.get_all("Seva Subtype", filters=[["include_in_analysis", "=", 1]], pluck="name")
-    preachers = frappe.get_all("LLP Preacher", filters=[["include_in_analysis", "=", 1]], pluck="name")
+    seva_types = frappe.get_all(
+        "Seva Type",
+        filters={
+            "include_in_analysis": 1,
+        },
+        pluck="name",
+    )
+    seva_subtypes = frappe.get_all(
+        "Seva Subtype",
+        filters={
+            "include_in_analysis": 1,
+        },
+        pluck="name",
+    )
+    # preachers = frappe.get_all("LLP Preacher", filters=[["include_in_analysis", "=", 1]], pluck="name")
 
     seva_types_str = ",".join([f"'{s}'" for s in seva_types])
     seva_subtypes_str = ",".join([f"'{s}'" for s in seva_subtypes])
-    preachers_str = ",".join([f"'{p}'" for p in preachers])
+    # preachers_str = ",".join([f"'{p}'" for p in preachers])
 
     conditions += f" AND seva_type IN ({seva_types_str}) "
     conditions += f" AND seva_subtype IN ({seva_subtypes_str}) "
-    conditions += f" AND preacher IN ({preachers_str}) "
+    if filters.get("only_realized"):
+        conditions += f" AND docstatus = 1 "
 
     return conditions
 

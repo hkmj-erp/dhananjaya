@@ -8,15 +8,18 @@
  "engine": "InnoDB",
  "field_order": [
   "company",
-  "kyc_required",
+  "section_break_2i7zo",
   "preacher_allowed_receipt_creation",
+  "column_break_nql5z",
+  "auto_create_journal_entries",
+  "accounts_section",
   "donation_account",
   "cash_account",
+  "column_break_lglek",
   "bank_account",
   "gateway_expense_account",
-  "column_break_lglek",
-  "default_seva_type",
-  "auto_create_journal_entries",
+  "donation_credit_section",
+  "credit_value",
   "receipt_print_details_section",
   "logo",
   "seal",
@@ -75,13 +78,8 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "default_seva_type",
-   "fieldtype": "Link",
-   "label": "Default Seva Type",
-   "options": "Seva Type"
-  },
-  {
    "default": "0",
+   "description": "If this option is selected, when the Donation Receipt is finalized, a Journal Entry will be automatically generated using the receipt's information.",
    "fieldname": "auto_create_journal_entries",
    "fieldtype": "Check",
    "label": "Auto Create Journal Entries"
@@ -139,19 +137,14 @@
   {
    "fieldname": "atg_lines",
    "fieldtype": "HTML Editor",
-   "label": "80G Lines"
-  },
-  {
-   "default": "0",
-   "fieldname": "kyc_required",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "KYC Required"
+   "label": "80G Lines",
+   "max_height": "100px"
   },
   {
    "fieldname": "thanks_note",
    "fieldtype": "HTML Editor",
-   "label": "Thanks Note"
+   "label": "Thanks Note",
+   "max_height": "100px"
   },
   {
    "fieldname": "column_break_cahhm",
@@ -159,15 +152,40 @@
   },
   {
    "default": "1",
+   "description": "When this checkbox is enabled during the creation of a Donation Receipt, it grants permission to the DCC Preacher to create receipts within this specific company.\nThis feature serves as a means to control and limit the ability of Mobile Apps to generate Donation Receipts for specific companies.",
    "fieldname": "preacher_allowed_receipt_creation",
    "fieldtype": "Check",
    "label": "Preacher Allowed Receipt Creation"
+  },
+  {
+   "fieldname": "accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Accounts"
+  },
+  {
+   "fieldname": "section_break_2i7zo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_nql5z",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "donation_credit_section",
+   "fieldtype": "Section Break",
+   "label": "Donation Credit"
+  },
+  {
+   "default": "100",
+   "fieldname": "credit_value",
+   "fieldtype": "Int",
+   "label": "Credit Value"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-08-26 13:53:44.923324",
+ "modified": "2023-09-21 15:52:10.036953",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings Company Details",

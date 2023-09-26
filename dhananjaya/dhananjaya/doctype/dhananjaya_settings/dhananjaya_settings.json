@@ -12,7 +12,9 @@
   "gateway_mode",
   "company_details",
   "other_section",
-  "public_fernet_key"
+  "public_fernet_key",
+  "patron_settings_section",
+  "display_names_allowed"
  ],
  "fields": [
   {
@@ -61,13 +63,25 @@
    "label": "Firebase Admin App",
    "options": "Firebase Admin App",
    "reqd": 1
+  },
+  {
+   "fieldname": "patron_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Patron Settings"
+  },
+  {
+   "default": "3",
+   "fieldname": "display_names_allowed",
+   "fieldtype": "Int",
+   "label": "Display Names Allowed",
+   "non_negative": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-21 12:38:34.600203",
+ "modified": "2023-09-25 13:49:13.882486",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",

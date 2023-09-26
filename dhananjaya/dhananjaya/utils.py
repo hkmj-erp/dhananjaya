@@ -353,3 +353,34 @@ def get_donation_companies():
     for c in settings.company_details:
         companies.append(c.company)
     return companies
+
+
+def get_credits_equivalent(company: str, credits: float):
+    settings = frappe.get_cached_doc("Dhananjaya Settings")
+    for s in settings.company_details:
+        if s.company == company:
+            return credits * s.credit_value
+    return credits
+
+
+def get_credit_values(companies: list):
+    values = {}
+    settings = frappe.get_cached_doc("Dhananjaya Settings")
+    for s in settings.company_details:
+        if s.company in companies:
+            values.setdefault(s.company, s.credit_value)
+    if len(values) == len(companies):
+        return values
+    frappe.throw("One of the Companies' configuration is missing in Dhananjaya Settings.")
+
+def is_null_or_blank(value):
+    """
+    Check if a string is either None, empty, or consists only of whitespace characters.
+    
+    Args:
+        value (str): The string to check.
+        
+    Returns:
+        bool: True if the string is None, empty, or blank; otherwise, False.
+    """
+    return value is None or (isinstance(value, str) and value.strip() == '')

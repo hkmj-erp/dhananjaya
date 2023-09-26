@@ -26,5 +26,12 @@ frappe.query_reports["Donation Cumulative Report"] = {
       reqd: 1,
       width: 80,
     },
+    {
+      fieldname: "only_realized",
+      label: __("Only Realized"),
+      fieldtype: "Check",
+      default: 1,
+      width: 80,
+    },
   ],
 };

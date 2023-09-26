@@ -8,7 +8,6 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 def execute():
     make_custom_records()
 
-
 def make_custom_records():
     records = [
         {"doctype": "Role", "role_name": "DCC Preacher"},

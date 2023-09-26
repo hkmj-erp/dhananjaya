@@ -16,7 +16,6 @@
   "date_of_birth",
   "column_break_x7ksb",
   "llp_preacher",
-  "last_donation",
   "remarks",
   "section_break_iejjm",
   "addresses",
@@ -36,6 +35,7 @@
   "ecs_details",
   "ecs_active",
   "ecs_bank",
+  "ecs_type",
   "ecs_id",
   "introducer_preacher",
   "opening_date",
@@ -54,6 +54,10 @@
   "account_holder",
   "special_puja_section",
   "puja_details",
+  "donation_calculation_section",
+  "last_donation",
+  "times_donated",
+  "total_donated",
   "spiritual_status_tab",
   "ashraya_level"
  ],
@@ -105,7 +109,8 @@
    "fieldname": "old_donor_id",
    "fieldtype": "Data",
    "in_standard_filter": 1,
-   "label": "Old Donor ID"
+   "label": "Old Donor ID",
+   "permlevel": 1
   },
   {
    "fieldname": "date_of_birth",
@@ -144,13 +149,15 @@
    "in_standard_filter": 1,
    "label": "LLP Preacher",
    "options": "LLP Preacher",
+   "permlevel": 1,
    "reqd": 1
   },
   {
    "fieldname": "full_name",
    "fieldtype": "Data",
    "label": "Full Name",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "salutation",
@@ -168,12 +175,14 @@
    "fieldname": "unresolved_fax_column",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Unresolved Fax Column"
+   "label": "Unresolved Fax Column",
+   "permlevel": 1
   },
   {
    "fieldname": "old_trust_code",
    "fieldtype": "Int",
-   "label": "Old Trust Code"
+   "label": "Old Trust Code",
+   "permlevel": 1
   },
   {
    "bold": 1,
@@ -191,25 +200,29 @@
    "fieldname": "settlement_day",
    "fieldtype": "Select",
    "label": "Settlement Day",
-   "options": "7\n14\n21"
+   "options": "7\n14\n21",
+   "permlevel": 1
   },
   {
    "fieldname": "opening_date",
    "fieldtype": "Date",
    "label": "Opening Date",
-   "mandatory_depends_on": "eval:doc.ecs_active"
+   "mandatory_depends_on": "eval:doc.ecs_active",
+   "permlevel": 1
   },
   {
    "fieldname": "closing_date",
    "fieldtype": "Date",
    "label": "Closing Date",
-   "mandatory_depends_on": "eval:doc.ecs_active"
+   "mandatory_depends_on": "eval:doc.ecs_active",
+   "permlevel": 1
   },
   {
    "fieldname": "periodicity",
    "fieldtype": "Select",
    "label": "Periodicity",
-   "options": "Y\nH\nQ\nM"
+   "options": "Y\nH\nQ\nM",
+   "permlevel": 1
   },
   {
    "fieldname": "number_of_ecs",
@@ -228,12 +241,14 @@
    "fieldtype": "Data",
    "label": "ECS ID",
    "mandatory_depends_on": "eval:doc.ecs_active",
+   "permlevel": 1,
    "unique": 1
   },
   {
    "fieldname": "introducer_preacher",
    "fieldtype": "Data",
-   "label": "Introducer Preacher"
+   "label": "Introducer Preacher",
+   "permlevel": 1
   },
   {
    "fieldname": "column_break_m5slb",
@@ -243,7 +258,8 @@
    "default": "0",
    "fieldname": "ecs_active",
    "fieldtype": "Check",
-   "label": "Is Active"
+   "label": "Is Active",
+   "permlevel": 1
   },
   {
    "fieldname": "bank_details_section",
@@ -253,12 +269,14 @@
   {
    "fieldname": "bank",
    "fieldtype": "Data",
-   "label": "Bank"
+   "label": "Bank",
+   "permlevel": 1
   },
   {
    "fieldname": "ifsc_code",
    "fieldtype": "Data",
-   "label": "IFSC Code"
+   "label": "IFSC Code",
+   "permlevel": 1
   },
   {
    "fieldname": "column_break_fxfhp",
@@ -267,17 +285,20 @@
   {
    "fieldname": "ecs_bank_ac_no",
    "fieldtype": "Data",
-   "label": "Bank A/c No."
+   "label": "Bank A/c No.",
+   "permlevel": 1
   },
   {
    "fieldname": "account_holder",
    "fieldtype": "Data",
-   "label": "Account Holder"
+   "label": "Account Holder",
+   "permlevel": 1
   },
   {
    "fieldname": "ecs_amount",
    "fieldtype": "Currency",
-   "label": "ECS Amount Commited"
+   "label": "ECS Amount Commited",
+   "permlevel": 1
   },
   {
    "fieldname": "extra_section",
@@ -288,13 +309,15 @@
    "fieldname": "donor_creation_request",
    "fieldtype": "Link",
    "label": "Donor Creation Request",
-   "options": "Donor Creation Request"
+   "options": "Donor Creation Request",
+   "permlevel": 1
   },
   {
    "fieldname": "ecs_bank",
    "fieldtype": "Link",
    "label": "ECS Bank",
-   "options": "Bank"
+   "options": "Bank",
+   "permlevel": 1
   },
   {
    "fieldname": "special_puja_section",
@@ -321,12 +344,38 @@
    "fieldname": "ashraya_level",
    "fieldtype": "Select",
    "label": "Ashraya Level",
-   "options": "\n20\n16\n12\n8\n4\n1"
+   "options": "\n20\n16\n12\n8\n4\n1",
+   "search_index": 1
+  },
+  {
+   "fieldname": "donation_calculation_section",
+   "fieldtype": "Tab Break",
+   "label": "Donation Calculation"
+  },
+  {
+   "fieldname": "times_donated",
+   "fieldtype": "Int",
+   "label": "Times Donated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_donated",
+   "fieldtype": "Currency",
+   "label": "Total Donated",
+   "read_only": 1
+  },
+  {
+   "default": "E-NACH",
+   "fieldname": "ecs_type",
+   "fieldtype": "Select",
+   "label": "ECS Type",
+   "options": "Physical Mandate\nE-NACH",
+   "permlevel": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-17 13:23:48.509845",
+ "modified": "2023-09-25 19:50:02.274661",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor",
@@ -388,14 +437,26 @@
    "write": 1
   },
   {
-   "create": 1,
    "delete": 1,
    "email": 1,
    "export": 1,
+   "permlevel": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Auditor",
+   "role": "DCC Executive",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Manager",
    "share": 1,
    "write": 1
   }

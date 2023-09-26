@@ -139,11 +139,16 @@ doc_events = {
 # 	],
 # }
 scheduler_events = {
-    "daily": ["dhananjaya.tasks.daily"],
-    "hourly": ["dhananjaya.tasks.hourly"],
+    "daily": ["dhananjaya.tasks.daily.execute"],
+    "daily_long": ["dhananjaya.tasks.daily_long.execute"],
+    "hourly_long": ["dhananjaya.tasks.hourly_long.execute"],
     "cron": {
-        "* * * * *": ["dhananjaya.tasks.every_minute"],
-        "0 8 * * *": ["dhananjaya.tasks.every_day_daytime"],
+        "* * * * *": ["dhananjaya.tasks.every_minute.execute"],
+        "0 8 * * *": ["dhananjaya.tasks.every_day_8_am.execute"],
+        # Hourly but offset by 30 minutes
+        "30 * * * *": [
+            "dhananjaya.tasks.hourly.execute",
+        ],
     },
 }
 

@@ -11,6 +11,8 @@
   "user",
   "donor",
   "full_name",
+  "patron",
+  "patron_name",
   "preacher_claimed"
  ],
  "fields": [
@@ -28,8 +30,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Donor",
-   "options": "Donor",
-   "reqd": 1
+   "options": "Donor"
   },
   {
    "fieldname": "status",
@@ -44,18 +45,31 @@
    "fetch_from": "donor.full_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
-   "label": "Full Name"
+   "label": "Donor Name"
   },
   {
    "fieldname": "preacher_claimed",
    "fieldtype": "Link",
    "label": "Preacher Claimed",
    "options": "LLP Preacher"
+  },
+  {
+   "fieldname": "patron",
+   "fieldtype": "Link",
+   "label": "Patron",
+   "options": "Patron"
+  },
+  {
+   "fetch_from": "patron.full_name",
+   "fieldname": "patron_name",
+   "fieldtype": "Data",
+   "label": "Patron Name",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-06-06 12:40:12.141204",
+ "modified": "2023-09-24 15:32:43.765286",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor Claim Request",

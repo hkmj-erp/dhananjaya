@@ -19,7 +19,6 @@
   "date_of_birth",
   "column_break_x7ksb",
   "llp_preacher",
-  "last_donation",
   "section_break_iejjm",
   "addresses",
   "contacts",
@@ -38,12 +37,16 @@
   "card_valid_from",
   "gifts",
   "section_break_zajlf",
-  "family_members",
+  "display_names",
   "kyc_tab",
   "pan_no",
   "aadhar_no",
   "driving_license",
-  "passport"
+  "passport",
+  "donation_calculation_tab",
+  "last_donation",
+  "times_donated",
+  "total_donated"
  ],
  "fields": [
   {
@@ -74,7 +77,8 @@
    "fieldname": "full_name",
    "fieldtype": "Data",
    "label": "Full Name",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "date_of_birth",
@@ -92,6 +96,7 @@
    "in_standard_filter": 1,
    "label": "LLP Preacher",
    "options": "LLP Preacher",
+   "permlevel": 1,
    "reqd": 1
   },
   {
@@ -133,29 +138,26 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Old Patron ID"
+   "label": "Old Patron ID",
+   "permlevel": 1
   },
   {
    "fieldname": "old_trust_code",
    "fieldtype": "Int",
-   "label": "Old Trust Code"
+   "label": "Old Trust Code",
+   "permlevel": 1
   },
   {
    "fieldname": "unresolved_fax_column",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Unresolved Fax Column"
+   "label": "Unresolved Fax Column",
+   "permlevel": 1
   },
   {
    "fieldname": "patron_details_tab",
    "fieldtype": "Tab Break",
    "label": "Patron Details"
-  },
-  {
-   "fieldname": "family_members",
-   "fieldtype": "Table",
-   "label": "Family Members",
-   "options": "Donor Family Relation"
   },
   {
    "fieldname": "kyc_tab",
@@ -197,23 +199,28 @@
    "fieldtype": "Link",
    "label": "Seva Type",
    "options": "Patron Seva Type",
+   "permlevel": 1,
    "reqd": 1
   },
   {
    "fieldname": "issued_card_no",
    "fieldtype": "Data",
-   "label": "Issued Card No"
+   "label": "Issued Card No",
+   "permlevel": 1,
+   "unique": 1
   },
   {
    "fieldname": "card_valid_from",
    "fieldtype": "Date",
-   "label": "Card Valid From"
+   "label": "Card Valid From",
+   "permlevel": 1
   },
   {
    "fieldname": "gifts",
    "fieldtype": "Table",
    "label": "Gifts",
-   "options": "Patron Gift Issue"
+   "options": "Patron Gift Issue",
+   "permlevel": 1
   },
   {
    "fieldname": "column_break_pf6qx",
@@ -236,12 +243,37 @@
   {
    "fieldname": "patron_card_sr",
    "fieldtype": "Data",
-   "label": "Patron Card Serial"
+   "label": "Patron Card Serial",
+   "permlevel": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "donation_calculation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Donation Calculation"
+  },
+  {
+   "fieldname": "times_donated",
+   "fieldtype": "Int",
+   "label": "Times Donated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_donated",
+   "fieldtype": "Currency",
+   "label": "Total Donated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "display_names",
+   "fieldtype": "Table",
+   "label": "Names List",
+   "options": "Patron Display Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-20 12:53:45.463745",
+ "modified": "2023-09-25 19:44:26.826678",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron",
@@ -299,7 +331,42 @@
    "read": 1,
    "report": 1,
    "role": "DCC Preacher",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Preacher",
    "share": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Executive",
+   "share": 1,
+   "write": 1
   }
  ],
  "search_fields": "llp_preacher,last_donation",

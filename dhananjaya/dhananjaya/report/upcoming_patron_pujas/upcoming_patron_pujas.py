@@ -28,6 +28,13 @@ def get_columns():
             "width": 120,
         },
         {
+            "fieldname": "puja_id",
+            "label": "Privilege Puja",
+            "fieldtype": "Link",
+            "options": "Patron Privilege Puja",
+            "width": 150,
+        },
+        {
             "fieldname": "patron_id",
             "label": "Patron ID",
             "fieldtype": "Link",

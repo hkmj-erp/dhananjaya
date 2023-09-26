@@ -3,9 +3,22 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils.data import cint
+
+from dhananjaya.dhananjaya.utils import get_credit_values, get_credits_equivalent
 
 
 class Patron(Document):
+    def validate(self):
+        self.validate_display_names()
+
+    def validate_display_names(self):
+        allowed = frappe.get_value(
+            "Dhananjaya Settings", "Dhananjaya Settings", "display_names_allowed"
+        )
+        if len(self.display_names) > cint(allowed):
+            frappe.throw(f"Only {allowed} names are allowed.")
+
     def before_save(self):
         self.full_name = self.first_name + ("" if not self.last_name else f" {self.last_name}")
         return
@@ -17,8 +30,13 @@ class Patron(Document):
 
     @property
     def total_credits_donation(self):
-        donations = frappe.db.get_all("Donation Credit", filters={"patron": self.name}, pluck="amount")
-        return sum(donations)
+        total_donation = 0
+        credits = frappe.db.get_all("Donation Credit", filters={"patron": self.name}, fields=["company", "credits"])
+        unique_companies = list(set([c["company"] for c in credits]))
+        credit_values_map = get_credit_values(unique_companies)
+        for credit_doc in credits:
+            total_donation += credit_values_map[credit_doc["company"]] * credit_doc["credits"]
+        return total_donation
 
     @property
     def commitment(self):
@@ -30,4 +48,5 @@ class Patron(Document):
 @frappe.whitelist()
 def get_patron_status(patron):
     doc = frappe.get_doc("Patron", patron)
-    return frappe._dict(completed=doc.total_donation, commited=doc.commitment)
+    credits = doc.total_credits_donation
+    return frappe._dict(completed=doc.total_donation + credits, commited=doc.commitment, credits=credits)

@@ -2,31 +2,9 @@ import json
 import frappe
 from dhananjaya.dhananjaya.utils import get_preachers, get_donor_details, is_null_or_blank
 
-# @frappe.whitelist()
-# def donor_stats(donor):
-# 	user  = frappe.session.user
-# 	query_string = """
-# 					select  company_abbreviation as company, SUM(amount) as amount
-# 					from `tabDonation Receipt` dr
-# 					where {}
-# 					and workflow_state = 'Realized'
-# 					and donor = '{}'
-# 					group by company_abbreviation
-# 					order by company,YEAR(receipt_date) desc,MONTH(receipt_date) desc
-# 					"""
-# 	last_year_query_string = query_string.format(' receipt_date > (NOW() - INTERVAL 12 MONTH)',donor)
-# 	total_query_string = query_string.format(' 1 ',donor)
-# 	return {
-# 				'last_year':frappe.db.sql(last_year_query_string,as_dict=1),
-# 				'total':frappe.db.sql(total_query_string,as_dict=1)
-# 			}
-
 
 @frappe.whitelist()
-def memebers_search(filters, limit_start=None, limit=None):
-    # preachers = frappe.get_all(
-    #     "LLP Preacher", filters={"erp_user": frappe.session.user}, pluck="name"
-    # )
+def members_search(filters, limit_start=None, limit=None):
     preachers = get_preachers()
     preachers_string = ",".join([f"'{p}'" for p in preachers])
 
@@ -86,17 +64,25 @@ def memebers_search(filters, limit_start=None, limit=None):
             where_string += f""" AND td.seva_type = '{filters.get("patron_seva_type")}' """
     for i in frappe.db.sql(
         f"""
-					select td.name as {search_doctype_lc}_id,td.full_name as {search_doctype_lc}_name, td.llp_preacher,
-                    {ashraya_level_select} {patron_level_select}
-					TRIM(BOTH ',' 
-                        FROM CONCAT_WS(",",
-                            IF(td.pan_no is not null and TRIM(td.pan_no) != '','✅ PAN',''), 
-                            IF(td.aadhar_no is not null and TRIM(td.aadhar_no) != '','✅ Aadhar','')
-                            )
-                        ) as kyc,
-					GROUP_CONCAT(DISTINCT tda.address_line_1,tda.address_line_2,tda.city SEPARATOR' | ') as address,
-					GROUP_CONCAT(DISTINCT tdc.contact_no SEPARATOR' , ') as contact,
-					td.pan_no,td.aadhar_no
+					select 
+                        td.name as {search_doctype_lc}_id,
+                        td.full_name as {search_doctype_lc}_name, 
+                        td.llp_preacher,
+                        {ashraya_level_select} 
+                        {patron_level_select}
+                        TRIM(BOTH ',' 
+                            FROM CONCAT_WS(",",
+                                IF(td.pan_no is not null and TRIM(td.pan_no) != '','✅ PAN',''), 
+                                IF(td.aadhar_no is not null and TRIM(td.aadhar_no) != '','✅ Aadhar','')
+                                )
+                            ) as kyc,
+					    GROUP_CONCAT(DISTINCT tda.address_line_1,tda.address_line_2,tda.city SEPARATOR' | ') as address,
+					    GROUP_CONCAT(DISTINCT tdc.contact_no SEPARATOR' , ') as contact,
+					    td.pan_no,
+                        td.aadhar_no,
+                        td.last_donation,
+                        td.times_donated,
+                        td.total_donated
 					from `tab{search_doctype}` td
 					left join `tabDonor Contact` tdc on tdc.parent = td.name
 					left join `tabDonor Address` tda on tda.parent = td.name
@@ -110,48 +96,42 @@ def memebers_search(filters, limit_start=None, limit=None):
         as_dict=1,
     ):
         members.setdefault(i[f"{search_doctype_lc}_id"], i)
-    donation_details = {}
+
+    requested_members = []
     if len(members.keys()) > 0:
         for i in frappe.db.sql(
             f"""
-						select 
-                            tdr.{search_doctype_lc}, 
-                            count(*) as times, 
-                            sum(tdr.amount) as total_donation, 
-                            MAX(tdr.receipt_date) as last_donation,
-						    IF(MAX(tdr.receipt_date) > NOW() - INTERVAL 2 year,"active","non_active") as status
-						from `tabDonation Receipt` tdr
-						where 
-                            tdr.docstatus = 1 
-                            and tdr.{search_doctype_lc} IN ({",".join([f"'{name}'" for name in members.keys()])})
-						group by {search_doctype_lc}
-						""",
+                        select tdc.{search_doctype_lc}
+                        from `tabDonor Claim Request` tdc
+                        where tdc.status = ""
+                        AND tdc.preacher_claimed IN ({preachers_string})
+                        AND tdc.{search_doctype_lc} IN ({",".join([f"'{name}'" for name in members.keys()])})
+                            """,
             as_dict=1,
         ):
-            donation_details.setdefault(i[search_doctype_lc], i)
+            requested_members.append(i[search_doctype_lc])
 
-    for d in members:
+    for i in members:
         not_related = False
-        donation = {"times": 0, "total_donation": 0, "last_donation": None}
-        if d in donation_details:
-            donation = donation_details[d]
-        members[d].update(donation)
-        if members[d]["llp_preacher"] not in preachers:
-            members[d]["contact"] = "***********"
+        requested = False
+        if members[i]["llp_preacher"] not in preachers:
+            members[i]["contact"] = "***********"
             not_related = True
+        if i in requested_members:
+            requested = True
 
-        members[d]["not_related"] = not_related
+        members[i]["not_related"] = not_related
+        members[i]["requested"] = requested
 
     data = list(members.values())
 
-    data.sort(key=lambda x: (x["llp_preacher"] in preachers, x["times"]), reverse=True)  #
+    data.sort(key=lambda x: (x["llp_preacher"] in preachers, x["times_donated"]), reverse=True)  #
 
     return data
 
 
 @frappe.whitelist()
 def member_stats(member, type="donor"):
-    user = frappe.session.user
     query_string = """
 					select  company_abbreviation as company, SUM(amount) as amount
 					from `tabDonation Receipt` dr

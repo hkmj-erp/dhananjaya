@@ -87,7 +87,7 @@ def upload_gateway_transactions(*args, **kwargs):
 
     # Batch Details Capture
     batch_doc = frappe.new_doc("PG Upload Batch")
-    batch_doc.company = pg_upload_tool.pg_company
+    batch_doc.company = pg_upload_tool.company
     batch_doc.gateway = pg_upload_tool.gateway
     batch_doc.insert()
 
@@ -97,7 +97,7 @@ def upload_gateway_transactions(*args, **kwargs):
         data = {
             "doctype": "Payment Gateway Transaction",
             "gateway": pg_upload_tool.gateway,
-            "company": pg_upload_tool.pg_company,
+            "company": pg_upload_tool.company,
         }
         for field in STANDARD_FIELDS:
             data.setdefault(field, row[std_indices[field]])

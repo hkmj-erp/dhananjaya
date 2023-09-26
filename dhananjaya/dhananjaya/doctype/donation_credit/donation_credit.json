@@ -10,7 +10,7 @@
   "naming_series",
   "company",
   "company_abbreviation",
-  "date",
+  "posting_date",
   "donor",
   "patron",
   "preacher",
@@ -41,12 +41,6 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Company Abbreviation"
-  },
-  {
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date",
-   "reqd": 1
   },
   {
    "fetch_from": "donor.llp_preacher",
@@ -92,10 +86,16 @@
    "fieldname": "remarks",
    "fieldtype": "Data",
    "label": "Remarks"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "reqd": 1
   }
  ],
  "links": [],
- "modified": "2023-09-21 12:07:08.278283",
+ "modified": "2023-09-21 16:11:21.957448",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Credit",

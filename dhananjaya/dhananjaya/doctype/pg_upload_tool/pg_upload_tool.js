@@ -11,7 +11,7 @@ frappe.ui.form.on('PG Upload Tool', {
 				frappe.call({
 					freeze: true,
 					freeze_message: "Uploading Trasactions.",
-					method: "dhananjaya.dhananjaya.doctype.dhananjaya_settings.dhananjaya_settings.upload_gateway_transactions",
+					method: "dhananjaya.dhananjaya.doctype.pg_upload_tool.pg_upload_tool.upload_gateway_transactions",
 					callback: function (r) {
 						if (!r.exc) {
 							frappe.msgprint("Uploaded. Please Check Once.");

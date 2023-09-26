@@ -1,39 +1,38 @@
 {
  "actions": [],
- "creation": "2023-02-19 16:30:45.954894",
+ "allow_rename": 1,
+ "creation": "2023-09-25 13:45:12.321207",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "contact_no",
-  "is_whatsapp"
+  "full_name",
+  "type"
  ],
  "fields": [
   {
-   "default": "0",
-   "fieldname": "is_whatsapp",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "in_list_view": 1,
-   "label": "Is Whatsapp?"
-  },
-  {
-   "fieldname": "contact_no",
+   "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Contact No.",
-   "reqd": 1,
-   "search_index": 1
+   "label": "Full Name",
+   "reqd": 1
+  },
+  {
+   "default": "Person",
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "Person\nCompany"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-09-23 10:10:56.405239",
+ "modified": "2023-09-25 16:25:45.332447",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
- "name": "Donor Contact",
+ "name": "Patron Display Name",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",
