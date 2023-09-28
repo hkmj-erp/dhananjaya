@@ -82,7 +82,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2023-09-20 10:57:27.206686",
+ "modified": "2023-09-28 18:32:58.135330",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Subtype",
@@ -127,18 +127,18 @@
    "email": 1,
    "export": 1,
    "print": 1,
-   "read": 1,
    "report": 1,
    "role": "DCC Preacher",
+   "select": 1,
    "share": 1
   },
   {
    "email": 1,
    "export": 1,
    "print": 1,
-   "read": 1,
    "report": 1,
    "role": "DCC Cashier",
+   "select": 1,
    "share": 1
   }
  ],

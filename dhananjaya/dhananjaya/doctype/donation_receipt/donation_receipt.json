@@ -20,6 +20,7 @@
   "donor",
   "full_name",
   "patron",
+  "patron_name",
   "sevak_name",
   "contact_details_section",
   "contact",
@@ -125,6 +126,7 @@
    "default": ".company_abbreviation.-RC-.YY.-1.#######",
    "fieldname": "naming_series",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Series",
    "options": ".company_abbreviation.-RC-.YY.-1.#######\nRC-.YY.-1.####"
   },
@@ -299,7 +301,8 @@
    "fieldname": "bank_transaction",
    "fieldtype": "Link",
    "label": "Bank Transaction",
-   "options": "Bank Transaction"
+   "options": "Bank Transaction",
+   "permlevel": 3
   },
   {
    "fieldname": "section_break_lc36n",
@@ -313,7 +316,8 @@
    "fieldname": "bank_account",
    "fieldtype": "Link",
    "label": "Bank Account",
-   "options": "Bank Account"
+   "options": "Bank Account",
+   "permlevel": 3
   },
   {
    "depends_on": "eval:!doc.is_new",
@@ -325,19 +329,22 @@
    "fieldname": "cash_account",
    "fieldtype": "Link",
    "label": "Cash Account",
-   "options": "Account"
+   "options": "Account",
+   "permlevel": 3
   },
   {
    "fieldname": "gateway_expense_account",
    "fieldtype": "Link",
    "label": "Gateway Expense Account",
-   "options": "Account"
+   "options": "Account",
+   "permlevel": 3
   },
   {
    "fieldname": "donation_account",
    "fieldtype": "Link",
    "label": "Donation Account",
-   "options": "Account"
+   "options": "Account",
+   "permlevel": 3
   },
   {
    "fieldname": "additional_charges",
@@ -366,7 +373,8 @@
    "fieldname": "donor_creation_request",
    "fieldtype": "Link",
    "label": "Donor Creation Request",
-   "options": "Donor Creation Request"
+   "options": "Donor Creation Request",
+   "permlevel": 3
   },
   {
    "allow_on_submit": 1,
@@ -413,6 +421,7 @@
    "max_height": "50px"
   },
   {
+   "description": "On saving this Document Receipt, if Donor has contact and addresses set, it will fetch them.",
    "fieldname": "contact_details_section",
    "fieldtype": "Section Break",
    "label": "Contact Details"
@@ -424,7 +433,8 @@
   {
    "fieldname": "cash_received_date",
    "fieldtype": "Date",
-   "label": "Cash Received Date"
+   "label": "Cash Received Date",
+   "permlevel": 3
   },
   {
    "default": "0",
@@ -437,7 +447,8 @@
    "fieldname": "bounce_transaction",
    "fieldtype": "Link",
    "label": "Bounce Transaction",
-   "options": "Bank Transaction"
+   "options": "Bank Transaction",
+   "permlevel": 3
   },
   {
    "default": "0",
@@ -450,13 +461,20 @@
    "fieldtype": "Attach Image",
    "hidden": 1,
    "label": "Payment Screenshot"
+  },
+  {
+   "fetch_from": "patron.full_name",
+   "fieldname": "patron_name",
+   "fieldtype": "Data",
+   "label": "Patron Name",
+   "read_only": 1
   }
  ],
  "image_field": "payment_screenshot",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-13 12:22:10.072854",
+ "modified": "2023-09-28 18:41:44.627901",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Receipt",
@@ -525,6 +543,14 @@
    "write": 1
   },
   {
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Auditor",
+   "select": 1,
+   "share": 1
+  },
+  {
    "delete": 1,
    "email": 1,
    "export": 1,
@@ -580,12 +606,48 @@
    "write": 1
   },
   {
+   "email": 1,
+   "export": 1,
+   "permlevel": 3,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Auditor",
-   "select": 1,
+   "role": "DCC Preacher",
    "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 3,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Cashier",
+   "share": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 3,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Executive",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 3,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "DCC Manager",
+   "share": 1,
+   "write": 1
   }
  ],
  "search_fields": "donor",

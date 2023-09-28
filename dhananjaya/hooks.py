@@ -87,8 +87,18 @@ jinja = {
 # Permissions evaluated in scripted ways
 
 permission_query_conditions = {
-    "Donation Receipt": "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt_filter.query"
+    "Donation Receipt": "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt_filter.list",
+    "Donor": "dhananjaya.dhananjaya.doctype.donor.donor_filter.list",
+    "Patron": "dhananjaya.dhananjaya.doctype.patron.patron_filter.list",
 }
+
+has_permission = {
+    "Donation Receipt": "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt_filter.single",
+    "Donor": "dhananjaya.dhananjaya.doctype.donor.donor_filter.single",
+    "Patron": "dhananjaya.dhananjaya.doctype.patron.patron_filter.single",
+}
+
+
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",

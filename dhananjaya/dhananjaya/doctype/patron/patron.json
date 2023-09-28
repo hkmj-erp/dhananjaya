@@ -267,13 +267,13 @@
   {
    "fieldname": "display_names",
    "fieldtype": "Table",
-   "label": "Names List",
+   "label": "Display Names List",
    "options": "Patron Display Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-25 19:44:26.826678",
+ "modified": "2023-09-28 18:58:51.007783",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron",

@@ -20,8 +20,8 @@ def create_receipt():
         donor_doc.save(ignore_permissions=True)
         preacher = donor_doc.llp_preacher
     else:
-        if "donorCreation" in donation:
-            donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donorCreation"])
+        if "donor_creation" in donation:
+            donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donor_creation"])
         else:
             donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donor_creation"])
         donor_request_doc.pan_number = donation["pan_no"]
@@ -59,7 +59,7 @@ def create_receipt():
     if donation["mode"] == "exisitingDonor":
         doc.donor = donation["donor"]
     else:
-        doc.donor_creation_request = donation["donorCreation"]
+        doc.donor_creation_request = donation["donor_creation"]
 
     if "patron" in donation and donation["patron"]:
         doc.patron = donation["patron"]
@@ -130,6 +130,7 @@ def get_receipts_of_patron(patron):
     if preacher not in preachers:
         frappe.throw("Not Allowed")
     return frappe.get_all("Donation Receipt", fields=["*"], filters=[["docstatus", "!=", "2"], ["patron", "=", patron]])
+
 
 ### New Function for Receipts Search
 @frappe.whitelist()

@@ -37,3 +37,5 @@ INDIAN_STATES = [
     "Telangana",
     "Andhra Pradesh",
 ]
+
+DCC_EXCLUDE_ROLES = ["DCC Manager", "DCC Executive", "DCC Cashier", "Auditor"]

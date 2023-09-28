@@ -616,7 +616,7 @@ def process_batch_gateway_payments(batch):
     if not (batch_doc.final_amount == batch_doc.bank_amount):
         frappe.throw("This Batch processing is not eligible due to amount mismatch.")
     bank_tx_doc = frappe.get_doc("Bank Transaction", batch_doc.bank_transaction)
-    settings = frappe.get_cached_doc("Dhananjaya Settings")
+    settings = frappe.get_cached_doc("PG Upload Tool")
     payment_txs = frappe.db.get_all(
         "Payment Gateway Transaction",
         filters={"batch": batch, "receipt_created": 0},
