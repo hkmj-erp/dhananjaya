@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2023-04-26 20:58:14.985206",
+ "modified": "2023-09-28 19:06:24.362015",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Donation Receipt",
@@ -27,12 +27,6 @@
   },
   {
    "role": "DCC Executive"
-  },
-  {
-   "role": "DCC Cashier"
-  },
-  {
-   "role": "DCC Preacher"
   }
  ]
 }

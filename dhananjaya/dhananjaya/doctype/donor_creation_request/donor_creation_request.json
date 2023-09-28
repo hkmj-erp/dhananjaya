@@ -100,6 +100,7 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "hidden": 1,
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Draft\nCreated\nOpen\nRejected"
@@ -136,7 +137,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-18 11:37:31.683687",
+ "modified": "2023-09-28 19:10:24.510266",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor Creation Request",
@@ -162,6 +163,7 @@
    "create": 1,
    "email": 1,
    "export": 1,
+   "if_owner": 1,
    "print": 1,
    "read": 1,
    "report": 1,
@@ -186,13 +188,15 @@
    "write": 1
   },
   {
+   "create": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
    "role": "DCC Executive",
-   "share": 1
+   "share": 1,
+   "write": 1
   }
  ],
  "sort_field": "modified",

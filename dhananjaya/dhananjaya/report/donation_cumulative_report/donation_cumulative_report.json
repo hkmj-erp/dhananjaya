@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2023-05-15 12:01:19.796857",
+ "modified": "2023-09-28 19:07:14.289521",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Cumulative Report",
@@ -27,12 +27,6 @@
   },
   {
    "role": "DCC Executive"
-  },
-  {
-   "role": "DCC Cashier"
-  },
-  {
-   "role": "DCC Preacher"
   }
  ]
 }

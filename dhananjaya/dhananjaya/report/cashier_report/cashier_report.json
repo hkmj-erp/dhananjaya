@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2023-04-19 16:06:29.925064",
+ "modified": "2023-09-28 19:06:48.935286",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Cashier Report",
@@ -30,9 +30,6 @@
   },
   {
    "role": "DCC Cashier"
-  },
-  {
-   "role": "DCC Preacher"
   }
  ]
 }

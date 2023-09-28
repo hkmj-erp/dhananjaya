@@ -30,6 +30,8 @@ class DonorCreationRequest(Document):
 
 @frappe.whitelist()
 def get_donor_from_request(request):
+    if not is_user_allowed():
+        frappe.throw("You are not allowed.")
     request = frappe.get_doc("Donor Creation Request", request)
 
     addresses = []
@@ -182,8 +184,21 @@ def get_similar_donors(request):
     return results
 
 
+def is_user_allowed():
+    ALLOWED_ROLES = ["DCC Executive", "DCC Manager"]
+    user_roles = frappe.get_roles(frappe.session.user)
+
+    for role in ALLOWED_ROLES:
+        if role in user_roles:
+            return True
+    return False
+
+
 @frappe.whitelist()
 def update_donor(donor, request):
+    if not is_user_allowed():
+        frappe.throw("You are not allowed.")
+
     request_doc = frappe.get_doc("Donor Creation Request", request)
     frappe.db.set_value("Donor Creation Request", request, "status", "Closed")
     donations = frappe.get_all("Donation Receipt", filters={"donor_creation_request": request}, pluck="name")
