@@ -144,7 +144,8 @@ class DonationReceipt(Document):
                 )
                 doc.insert(ignore_permissions=True)
 
-    ############## BEFORE SAVE #############
+    ################################################################
+    ###### BEFORE SAVE : SETTINGS DEFAULT ACCOUNTS OF COMPANY ######
 
     def before_save(self):
         self.amount_in_words = money_in_words(self.amount, main_currency="Rupees")
@@ -159,11 +160,20 @@ class DonationReceipt(Document):
             self.address = "" if address is None else address
 
         company_detail = get_default_bank_accounts(self.company)
+        if not company_detail:
+            frappe.throw("There are no settings available for this Company. Please check Dhananjaya Settings")
         account = frappe.db.get_value("Seva Type", self.seva_type, "account")
         if account is None:
             self.donation_account = company_detail.donation_account
         else:
             self.donation_account = account
+
+        if not self.bank_account:
+            self.bank_account = company_detail.bank_account
+        if self.payment_method == CASH_PAYMENT_MODE and not self.cash_account:
+            self.cash_account = company_detail.cash_account
+        if self.payment_method == PAYMENT_GATWEWAY_MODE and not self.gateway_expense_account:
+            self.gateway_expense_account = company_detail.gateway_expense_account
 
         return
 
@@ -207,33 +217,6 @@ class DonationReceipt(Document):
                 self.reconcile_bank_transaction(je_doc)
             if self.payment_method == PAYMENT_GATWEWAY_MODE and self.payment_gateway_document:
                 self.reconcile_gateway_transaction()
-
-    ########################################
-    ###### BEFORE INSERT : SETTINGS DEFAULT ACCOUNTS OF COMPANY ######
-
-    def before_insert(self):
-        # set default donation account
-        company_detail = get_default_bank_accounts(self.company)
-        if not company_detail:
-            frappe.throw("There are no settings available for this Company. Please check Dhananjaya Settings")
-        # if not self.donation_account:
-        #     account = frappe.db.get_value("Seva Type", self.seva_type, "account")
-        #     if account is None:
-        #         self.donation_account = company_detail.donation_account
-        #     else:
-        #         self.donation_account = account
-        if not self.bank_account:
-            self.bank_account = company_detail.bank_account
-        if not self.cash_account:
-            self.cash_account = company_detail.cash_account
-        if not self.gateway_expense_account:
-            self.gateway_expense_account = company_detail.gateway_expense_account
-
-    # def after_insert(self):
-    #     if self.donor:
-    #         self.preacher = frappe.db.get_value(
-    #             "Donor", self.donor, "llp_preacher")
-    #         self.save()
 
     ###### JOURNAL ENTRY AUTOMATION ######
 
@@ -454,57 +437,58 @@ def receipt_bounce_operations(receipt):
 
     receipt_doc = frappe.get_doc("Donation Receipt", receipt)
 
-    if not receipt_doc.bounce_transaction:
-        frappe.throw("Bounced Transaction is Required.")
+    if receipt_doc.docstatus == 1:
+        if not receipt_doc.bounce_transaction:
+            frappe.throw("Bounced Transaction is Required for Realised Receipts.")
 
-    je = frappe.get_all(
-        "Journal Entry",
-        fields="name",
-        filters={"donation_receipt": receipt_doc.name, "docstatus": 1},
-    )
+        je = frappe.get_all(
+            "Journal Entry",
+            fields="name",
+            filters={"donation_receipt": receipt_doc.name, "docstatus": 1},
+        )
 
-    if len(je) != 1:
-        frappe.throw("There is no JE associated or are more than one entry.")
-    je = je[0]
-    je_dict = frappe.get_doc("Journal Entry", je["name"]).as_dict()
-    bank_tx_doc = frappe.get_doc("Bank Transaction", receipt_doc.bounce_transaction)
+        if len(je) != 1:
+            frappe.throw("There is no JE associated or are more than one entry.")
+        je = je[0]
+        je_dict = frappe.get_doc("Journal Entry", je["name"]).as_dict()
+        bank_tx_doc = frappe.get_doc("Bank Transaction", receipt_doc.bounce_transaction)
 
-    transaction_amount = je_dict["total_debit"]
+        transaction_amount = je_dict["total_debit"]
 
-    for a in je_dict["accounts"]:
-        if a["debit"] == 0:
-            a["debit"] = transaction_amount
-            a["debit_in_account_currency"] = transaction_amount
-            a["credit"] = 0
-            a["credit_in_account_currency"] = 0
-        elif a["credit"] == 0:
-            a["credit"] = transaction_amount
-            a["credit_in_account_currency"] = transaction_amount
-            a["debit"] = 0
-            a["debit_in_account_currency"] = 0
+        for a in je_dict["accounts"]:
+            if a["debit"] == 0:
+                a["debit"] = transaction_amount
+                a["debit_in_account_currency"] = transaction_amount
+                a["credit"] = 0
+                a["credit_in_account_currency"] = 0
+            elif a["credit"] == 0:
+                a["credit"] = transaction_amount
+                a["credit_in_account_currency"] = transaction_amount
+                a["debit"] = 0
+                a["debit_in_account_currency"] = 0
 
-    del je_dict["clearance_date"]
-    del je_dict["bank_statement_name"]
-    del je_dict["name"]
+        del je_dict["clearance_date"]
+        del je_dict["bank_statement_name"]
+        del je_dict["name"]
 
-    je_dict["posting_date"] = bank_tx_doc.date
-    je_dict["user_remark"] = je_dict["user_remark"].replace("BEING AMOUNT RECEIVED", "BEING CHEQUE RETURNED")
+        je_dict["posting_date"] = bank_tx_doc.date
+        je_dict["user_remark"] = je_dict["user_remark"].replace("BEING AMOUNT RECEIVED", "BEING CHEQUE RETURNED")
 
-    reverse_je = frappe.get_doc(je_dict)
-    reverse_je.submit()
-    voucher = {
-        "payment_doctype": reverse_je.doctype,
-        "payment_name": reverse_je.name,
-        "amount": reverse_je.total_debit,
-    }
-    add_payment_entry(bank_tx_doc, voucher)
-    ## Add Clearance Date
-    frappe.db.set_value(
-        "Journal Entry",
-        reverse_je.name,
-        "clearance_date",
-        bank_tx_doc.date.strftime("%Y-%m-%d"),
-    )
+        reverse_je = frappe.get_doc(je_dict)
+        reverse_je.submit()
+        voucher = {
+            "payment_doctype": reverse_je.doctype,
+            "payment_name": reverse_je.name,
+            "amount": reverse_je.total_debit,
+        }
+        add_payment_entry(bank_tx_doc, voucher)
+        ## Add Clearance Date
+        frappe.db.set_value(
+            "Journal Entry",
+            reverse_je.name,
+            "clearance_date",
+            bank_tx_doc.date.strftime("%Y-%m-%d"),
+        )
 
     # Finally Bounce Donation Receipt
     frappe.db.set_value(

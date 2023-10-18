@@ -11,8 +11,8 @@
   "full_name",
   "initial",
   "whatsapp_no",
-  "allowed_users",
-  "include_in_analysis"
+  "include_in_analysis",
+  "allowed_users"
  ],
  "fields": [
   {
@@ -51,7 +51,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-28 18:26:42.963224",
+ "modified": "2023-10-01 19:28:44.658047",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "LLP Preacher",
@@ -104,9 +104,9 @@
    "email": 1,
    "export": 1,
    "print": 1,
+   "read": 1,
    "report": 1,
    "role": "DCC Preacher",
-   "select": 1,
    "share": 1
   },
   {

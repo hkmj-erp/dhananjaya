@@ -2,92 +2,93 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('ECS Upload Portal', {
-	refresh: function(frm) {
-		
-		frm.set_query('seva_type',()=> {
+	refresh: function (frm) {
+
+		frm.set_query('seva_type', () => {
 			return {
 				filters: {
-					company : frm.doc.company,
-					enabled : 1
+					company: frm.doc.company,
+					enabled: 1
 				}
 			}
 		});
-		
+
 		frm.events.fetch_sheets_data(frm);
-		if( frm.doc.bank_transaction && frm.google_sheets_url){
+		if (frm.doc.bank_transaction && frm.google_sheets_url) {
 			frm.page.set_primary_action(__('Process'), () => frm.events.process_data(frm));
 		}
 		frm.set_query('bank_transaction', () => {
 			return {
 				filters: {
 					status: 'Unreconciled',
-					deposit:frm.doc.final_amount
+					deposit: frm.doc.final_amount
 					// date: ['>=',frm.doc.receipt_date]
 				}
 			}
 		});
 	},
-	process_data(frm){
+	process_data(frm) {
 		frm.call({
-			freeze:true,
+			freeze: true,
 			freeze_message: "Processing",
-			method:'dhananjaya.dhananjaya.doctype.ecs_upload_portal.ecs_upload_portal.process_ecs_data',
-			callback:function(r){
-				if(!r.exc){
+			method: 'dhananjaya.dhananjaya.doctype.ecs_upload_portal.ecs_upload_portal.process_ecs_data',
+			callback: function (r) {
+				if (!r.exc) {
 					frappe.msgprint(__('Successfully Done.'));
-				}else{
+				} else {
+					console.log(r.data);
 					frappe.msgprint(__('Failed.'));
 				}
 			}
 		});
 	},
-	google_sheets_url(frm){
+	google_sheets_url(frm) {
 		console.log("calling");
 		frm.events.fetch_sheets_data(frm);
 	},
 
-	fetch_sheets_data(frm){
+	fetch_sheets_data(frm) {
 		frm.call({
-			freeze:true,
+			freeze: true,
 			freeze_message: "Loading",
-			method:'dhananjaya.dhananjaya.doctype.ecs_upload_portal.ecs_upload_portal.fetch_data',
-			callback:function(r){
-				if(!r.exc){
+			method: 'dhananjaya.dhananjaya.doctype.ecs_upload_portal.ecs_upload_portal.fetch_data',
+			callback: function (r) {
+				if (!r.exc) {
 
-					var html = frm.events.get_html_data(frm,r.message);
+					var html = frm.events.get_html_data(frm, r.message);
 					frm.set_df_property('data_view', 'options', html);
-					
+
 				}
 			}
 		});
 	},
 
-	get_html_data(frm,data){
+	get_html_data(frm, data) {
 		var data = JSON.parse(data);
 		var headers = Object.keys(data[0]);
 		var header_html = "";
-		headers.forEach((v)=>{
+		headers.forEach((v) => {
 			header_html += `<th>${v}</th>`;
 		});
 
 		var analysis = {
-			"total_count" : 0,
-			"success" : 0,
-			"total_success_amount" : 0
+			"total_count": 0,
+			"success": 0,
+			"total_success_amount": 0
 		}
 
 		var data_html = "";
-		for(let d in data){
+		for (let d in data) {
 			let row_html = "";
 			let failed_style = "";
-			analysis['total_count'] += 1; 
-			if(data[d]['Reason Code'] != 0){
+			analysis['total_count'] += 1;
+			if (data[d]['Reason Code'] != 0) {
 				failed_style = ` style = 'background-color:red; color: white '`;
-			}else{
-				analysis['success'] += 1; 
-				analysis['total_success_amount'] += parseInt(data[d]['Amount']); 
+			} else {
+				analysis['success'] += 1;
+				analysis['total_success_amount'] += parseInt(data[d]['Amount']);
 			}
-			Object.values(data[d]).forEach((v)=>{
+			Object.values(data[d]).forEach((v) => {
 				row_html += `<td>${v}</td>`;
 			});
 			row_html = `<tr${failed_style}>${row_html}</tr>`;
@@ -130,13 +131,13 @@ frappe.ui.form.on('ECS Upload Portal', {
 								${data_html}
 						</tbody>
 					</table>`
-		if(analysis['success'] > 0){
+		if (analysis['success'] > 0) {
 			frm.set_df_property('bank_transaction', 'hidden', false);
 			frm.page.set_primary_action(__('Process'), () => frm.events.process_data(frm));
-			frm.set_value("final_amount",analysis['total_success_amount']);
+			frm.set_value("final_amount", analysis['total_success_amount']);
 			frm.refresh_field('final_amount');
 		}
 		return html;
-		
+
 	}
 });

@@ -20,10 +20,9 @@ def create_receipt():
         donor_doc.save(ignore_permissions=True)
         preacher = donor_doc.llp_preacher
     else:
-        if "donor_creation" in donation:
-            donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donor_creation"])
-        else:
-            donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donor_creation"])
+        if "donor_creation_request" not in donation:
+            frappe.throw("Donor Creation Request Reference is missing")
+        donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donor_creation_request"])
         donor_request_doc.pan_number = donation["pan_no"]
         donor_request_doc.aadhar_number = donation["aadhar_no"]
         donor_request_doc.save(ignore_permissions=True)
@@ -59,7 +58,7 @@ def create_receipt():
     if donation["mode"] == "exisitingDonor":
         doc.donor = donation["donor"]
     else:
-        doc.donor_creation_request = donation["donor_creation"]
+        doc.donor_creation_request = donation["donor_creation_request"]
 
     if "patron" in donation and donation["patron"]:
         doc.patron = donation["patron"]
@@ -73,9 +72,8 @@ def create_receipt():
         doc.bank_name = donation["bank_name"]
         cheque_image_name = "_" + donation["cheque_date"] + "_" + donation["cheque_number"]
 
-    doc.insert()
-
-    doc.db_set("workflow_state", "Acknowledged")
+    doc.save()
+    # doc.insert()
 
     files = frappe.request.files
     fileref = frappe.form_dict.file_name
@@ -109,6 +107,7 @@ def create_receipt():
         ).save(ignore_permissions=1)
         doc.payment_screenshot = image_doc.file_url
     doc.save()
+    doc.db_set("workflow_state", "Acknowledged")
     return doc
 
 
@@ -119,7 +118,12 @@ def get_receipts_of_donor(donor):
     preacher = frappe.db.get_value("Donor", donor, "llp_preacher")
     if preacher not in preachers:
         frappe.throw("Not Allowed")
-    return frappe.get_all("Donation Receipt", fields=["*"], filters=[["docstatus", "!=", "2"], ["donor", "=", donor]])
+    return frappe.get_all(
+        "Donation Receipt",
+        fields=["*"],
+        filters=[["docstatus", "!=", "2"], ["donor", "=", donor]],
+        order_by="receipt_date desc",
+    )
 
 
 ## This feature is created to bypass permissions issue while fetching the receipts.

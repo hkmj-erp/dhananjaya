@@ -117,9 +117,9 @@ def process_ecs_data():
             # States as per Donor
             "docstatus": 0,
             "workflow_state": "Draft",
-            # "donor": ecs["donor_id"],
             # Rest of Data
-            # "seva_type": ecs_portal.seva_type,
+            "donor": ecs["donor"],
+            "seva_type": ecs["seva_type"],
             "receipt_date": datetime.datetime.strptime(ecs["Date"], "%d-%m-%Y %H:%M:%S").strftime("%Y-%m-%d"),
             "payment_method": ECS_PAYMENT_GATWEWAY_MODE,
             "amount": float(ecs["Amount"]),
