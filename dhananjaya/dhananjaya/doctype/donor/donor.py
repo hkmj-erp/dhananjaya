@@ -9,7 +9,7 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.utils import strip, sbool
 from frappe.model.document import Document
 
-from dhananjaya.dhananjaya.utils import check_user_notify, get_preacher_users
+from dhananjaya.dhananjaya.utils import check_user_notify, get_preacher_users, sanitise_str
 
 
 class Donor(Document):
@@ -52,7 +52,7 @@ class Donor(Document):
                     "doctype": "App Notification",
                     "app": settings_doc.firebase_admin_app,
                     "tag": DJNotificationTags.DONOR_CREATION_TAG,
-                    "notify":check_user_notify(erp_user, DJNotificationTags.DONOR_CREATION_TAG),
+                    "notify": check_user_notify(erp_user, DJNotificationTags.DONOR_CREATION_TAG),
                     "user": erp_user,
                     "subject": title,
                     "message": message,
@@ -72,8 +72,12 @@ class Donor(Document):
         if not self.is_new() and self.has_value_changed("llp_preacher") and "DCC Manager" not in frappe.get_roles():
             frappe.throw("Only DCC Manager is allowed to change the Preacher of a Donor.")
 
-            ####
-        self.full_name = self.first_name + ("" if not self.last_name else f" {self.last_name}")
+        ####
+        self.first_name = sanitise_str(self.first_name)
+        self.full_name = self.first_name
+        if self.last_name is not None:
+            self.last_name = sanitise_str(self.last_name)
+            self.full_name += " " + self.last_name
         return
 
     def validate_address(self):

@@ -4,3 +4,4 @@ class DJNotificationTags:
     DONOR_CLAIM_TAG = "donor_claim"
     DONATION_RECEIPT_TAG = "donation_receipt"
     DONOR_REMINDER_TAG = "donor_reminder"
+    ECS_CREATION_TAG = "ecs_creation"

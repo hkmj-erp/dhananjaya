@@ -52,6 +52,10 @@
   "column_break_fxfhp",
   "ecs_bank_ac_no",
   "account_holder",
+  "seva_booking_section",
+  "ecs_default_seva_type",
+  "column_break_hsp6w",
+  "ecs_default_patron",
   "special_puja_section",
   "puja_details",
   "donation_calculation_section",
@@ -371,11 +375,32 @@
    "label": "ECS Type",
    "options": "Physical Mandate\nE-NACH",
    "permlevel": 1
+  },
+  {
+   "fieldname": "seva_booking_section",
+   "fieldtype": "Section Break",
+   "label": "Seva Booking"
+  },
+  {
+   "fieldname": "ecs_default_seva_type",
+   "fieldtype": "Link",
+   "label": "Default Seva Type",
+   "options": "Seva Type"
+  },
+  {
+   "fieldname": "column_break_hsp6w",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ecs_default_patron",
+   "fieldtype": "Link",
+   "label": "ECS Default Patron",
+   "options": "Patron"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-28 16:14:04.664029",
+ "modified": "2023-10-08 08:47:59.213145",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor",

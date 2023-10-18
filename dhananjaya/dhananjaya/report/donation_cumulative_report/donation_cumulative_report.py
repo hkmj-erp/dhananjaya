@@ -77,9 +77,7 @@ def get_conditions(filters):
     )
     seva_subtypes = frappe.get_all(
         "Seva Subtype",
-        filters={
-            "include_in_analysis": 1,
-        },
+        filters={"include_in_analysis": 1, "is_group": 0},
         pluck="name",
     )
     # preachers = frappe.get_all("LLP Preacher", filters=[["include_in_analysis", "=", 1]], pluck="name")

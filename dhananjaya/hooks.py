@@ -223,3 +223,27 @@ scheduler_events = {
 # auth_hooks = [
 # 	"dhananjaya.auth.validate"
 # ]
+
+
+fixtures = [
+    "Workflow Action Master",
+    "Workflow State",
+    "Role",
+    {
+        "dt": "Workflow",
+        "filters": [
+            ["is_active", "=", 1],
+            [
+                "document_type",
+                "in",
+                [
+                    "Donation Receipt",
+                    "Item Creation Request",
+                    "Supplier Creation Request",
+                    "Purchase Order",
+                    "Donor ECS Creation Request",
+                ],
+            ],
+        ],
+    },
+]

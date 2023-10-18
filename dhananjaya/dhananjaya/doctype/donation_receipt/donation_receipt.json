@@ -46,7 +46,7 @@
   "cheque_number",
   "cheque_date",
   "ifsc_code",
-  "section_break_n1cuf",
+  "column_break_5zywm",
   "bank_name",
   "cheque_branch",
   "amended_from",
@@ -69,7 +69,9 @@
   "cash_account",
   "gateway_expense_account",
   "extra_information_section",
-  "donor_creation_request"
+  "donor_creation_request",
+  "column_break_3rw48",
+  "donor_creation_request_name"
  ],
  "fields": [
   {
@@ -183,11 +185,6 @@
    "label": "Cheque Date"
   },
   {
-   "fieldname": "section_break_n1cuf",
-   "fieldtype": "Column Break",
-   "label": "Bank Details"
-  },
-  {
    "fieldname": "cheque_branch",
    "fieldtype": "Data",
    "label": "Cheque Branch"
@@ -298,6 +295,7 @@
    "read_only": 1
   },
   {
+   "description": "<b>Donation Reconciliation</b>: Exact Bank Statement Entry which has received the donation.",
    "fieldname": "bank_transaction",
    "fieldtype": "Link",
    "label": "Bank Transaction",
@@ -313,6 +311,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "description": "<b>Donation Reconciliation</b>: Bank which has received the donation.",
    "fieldname": "bank_account",
    "fieldtype": "Link",
    "label": "Bank Account",
@@ -326,6 +325,7 @@
    "label": "Realisation"
   },
   {
+   "description": "In case of <b>Cash donation</b>, this account will be debited.",
    "fieldname": "cash_account",
    "fieldtype": "Link",
    "label": "Cash Account",
@@ -333,6 +333,7 @@
    "permlevel": 3
   },
   {
+   "description": "In case of <b>Gateway Donation</b>, this account will be debited. This is to book the charges by Gateway Provider.",
    "fieldname": "gateway_expense_account",
    "fieldtype": "Link",
    "label": "Gateway Expense Account",
@@ -340,6 +341,7 @@
    "permlevel": 3
   },
   {
+   "description": "This account will be credited when Journal Entry is created.",
    "fieldname": "donation_account",
    "fieldtype": "Link",
    "label": "Donation Account",
@@ -373,8 +375,7 @@
    "fieldname": "donor_creation_request",
    "fieldtype": "Link",
    "label": "Donor Creation Request",
-   "options": "Donor Creation Request",
-   "permlevel": 3
+   "options": "Donor Creation Request"
   },
   {
    "allow_on_submit": 1,
@@ -431,6 +432,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "description": "Generally in case of <b>Cash donation</b>, Journal Entries are booked as and when Cashier receives the cash. In case, if we wish to book Journal Entry of Cash in other date, this field is helpful.\nOnly allowed to DCC Manager",
    "fieldname": "cash_received_date",
    "fieldtype": "Date",
    "label": "Cash Received Date",
@@ -444,6 +446,7 @@
   },
   {
    "allow_on_submit": 1,
+   "description": "If a payment is returned from our bank, an automated process will generate a reverse journal entry based on the this bank statement entry.",
    "fieldname": "bounce_transaction",
    "fieldtype": "Link",
    "label": "Bounce Transaction",
@@ -463,10 +466,26 @@
    "label": "Payment Screenshot"
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "patron.full_name",
    "fieldname": "patron_name",
    "fieldtype": "Data",
    "label": "Patron Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_5zywm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_3rw48",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "donor_creation_request.full_name",
+   "fieldname": "donor_creation_request_name",
+   "fieldtype": "Data",
+   "label": "Donor Creation Request Name",
    "read_only": 1
   }
  ],
@@ -474,7 +493,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-28 18:41:44.627901",
+ "modified": "2023-10-07 17:40:13.873908",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Receipt",

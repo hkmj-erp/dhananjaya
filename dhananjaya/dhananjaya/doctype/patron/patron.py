@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils.data import cint
 
-from dhananjaya.dhananjaya.utils import get_credit_values, get_credits_equivalent
+from dhananjaya.dhananjaya.utils import get_credit_values, get_credits_equivalent, sanitise_str
 
 
 class Patron(Document):
@@ -13,14 +13,21 @@ class Patron(Document):
         self.validate_display_names()
 
     def validate_display_names(self):
-        allowed = frappe.get_value(
-            "Dhananjaya Settings", "Dhananjaya Settings", "display_names_allowed"
-        )
+        allowed = frappe.get_value("Dhananjaya Settings", "Dhananjaya Settings", "display_names_allowed")
         if len(self.display_names) > cint(allowed):
             frappe.throw(f"Only {allowed} names are allowed.")
 
     def before_save(self):
-        self.full_name = self.first_name + ("" if not self.last_name else f" {self.last_name}")
+        # Preacher Change
+        if not self.is_new() and self.has_value_changed("llp_preacher") and "DCC Manager" not in frappe.get_roles():
+            frappe.throw("Only DCC Manager is allowed to change the Preacher of a Donor.")
+
+        ####
+        self.first_name = sanitise_str(self.first_name)
+        self.full_name = self.first_name
+        if self.last_name is not None:
+            self.last_name = sanitise_str(self.last_name)
+            self.full_name += self.last_name
         return
 
     @property

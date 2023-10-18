@@ -23,6 +23,8 @@ def check_user_notify(user, tag):
         return True
     if tag == DJNotificationTags.DONOR_REMINDER_TAG and user_doc.donor_reminder_notification:
         return True
+    if tag in [DJNotificationTags.ECS_CREATION_TAG]:
+        return True
     return False
 
 
@@ -373,14 +375,19 @@ def get_credit_values(companies: list):
         return values
     frappe.throw("One of the Companies' configuration is missing in Dhananjaya Settings.")
 
+
 def is_null_or_blank(value):
     """
     Check if a string is either None, empty, or consists only of whitespace characters.
-    
+
     Args:
         value (str): The string to check.
-        
+
     Returns:
         bool: True if the string is None, empty, or blank; otherwise, False.
     """
-    return value is None or (isinstance(value, str) and value.strip() == '')
+    return value is None or (isinstance(value, str) and value.strip() == "")
+
+
+def sanitise_str(val: str):
+    return re.sub(r"\s+", " ", val).strip()

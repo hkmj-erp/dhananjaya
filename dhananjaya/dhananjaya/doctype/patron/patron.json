@@ -35,6 +35,7 @@
   "issued_card_no",
   "patron_card_sr",
   "card_valid_from",
+  "cards",
   "gifts",
   "section_break_zajlf",
   "display_names",
@@ -205,6 +206,7 @@
   {
    "fieldname": "issued_card_no",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Issued Card No",
    "permlevel": 1,
    "unique": 1
@@ -212,6 +214,7 @@
   {
    "fieldname": "card_valid_from",
    "fieldtype": "Date",
+   "hidden": 1,
    "label": "Card Valid From",
    "permlevel": 1
   },
@@ -243,6 +246,7 @@
   {
    "fieldname": "patron_card_sr",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Patron Card Serial",
    "permlevel": 1,
    "unique": 1
@@ -269,11 +273,17 @@
    "fieldtype": "Table",
    "label": "Display Names List",
    "options": "Patron Display Name"
+  },
+  {
+   "fieldname": "cards",
+   "fieldtype": "Table",
+   "label": "Issued Card Details",
+   "options": "Patron Card Detail"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-28 18:58:51.007783",
+ "modified": "2023-10-13 19:05:03.980879",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron",

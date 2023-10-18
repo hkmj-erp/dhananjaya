@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"Brm7GPSE0G\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">DCC</span>\",\"col\":12}},{\"id\":\"61Oz-SLqO7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Search Donor\",\"col\":3}},{\"id\":\"sXOVxTndbH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Receipt\",\"col\":3}},{\"id\":\"J20OA3LVbs\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Donor\",\"col\":3}},{\"id\":\"BgU6FrCQ9w\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation Report\",\"col\":3}},{\"id\":\"uLGJsEDf95\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cashier Report\",\"col\":3}},{\"id\":\"ROhPKNaJRW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation Cumulative Report\",\"col\":3}},{\"id\":\"MqSbfdlFuS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Special Pujas\",\"col\":3}},{\"id\":\"OSZm6K86_R\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"DCC Dashboard\",\"col\":3}},{\"id\":\"lCX_1BTgj1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Distinct Donors\",\"col\":3}},{\"id\":\"Oa_WhDoM_u\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NHdqKXHwuP\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"XZ9lDAjiKO\",\"type\":\"card\",\"data\":{\"card_name\":\"Donation\",\"col\":4}},{\"id\":\"fmP4yBBO3D\",\"type\":\"card\",\"data\":{\"card_name\":\"Patron\",\"col\":4}},{\"id\":\"VdXCKhKmQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Payment Gateway\",\"col\":4}},{\"id\":\"2AjZtCMG7C\",\"type\":\"card\",\"data\":{\"card_name\":\"Bank\",\"col\":4}},{\"id\":\"GiiGry_-BR\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"pp6hNBwsEk\",\"type\":\"card\",\"data\":{\"card_name\":\"ECS\",\"col\":4}},{\"id\":\"a9FEMZ9e15\",\"type\":\"card\",\"data\":{\"card_name\":\"Festival\",\"col\":4}}]",
+ "content": "[{\"id\":\"Brm7GPSE0G\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">DCC</span>\",\"col\":12}},{\"id\":\"61Oz-SLqO7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Search Donor\",\"col\":3}},{\"id\":\"sXOVxTndbH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Receipt\",\"col\":3}},{\"id\":\"J20OA3LVbs\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Donor\",\"col\":3}},{\"id\":\"BgU6FrCQ9w\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation Report\",\"col\":3}},{\"id\":\"uLGJsEDf95\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cashier Report\",\"col\":3}},{\"id\":\"ROhPKNaJRW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation Cumulative Report\",\"col\":3}},{\"id\":\"MqSbfdlFuS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Special Pujas\",\"col\":3}},{\"id\":\"OSZm6K86_R\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"DCC Dashboard\",\"col\":3}},{\"id\":\"lCX_1BTgj1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Distinct Donors\",\"col\":3}},{\"id\":\"ATw4uVkCs7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Patron Puja Report\",\"col\":3}},{\"id\":\"Oa_WhDoM_u\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NHdqKXHwuP\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"XZ9lDAjiKO\",\"type\":\"card\",\"data\":{\"card_name\":\"Donation\",\"col\":4}},{\"id\":\"fmP4yBBO3D\",\"type\":\"card\",\"data\":{\"card_name\":\"Patron\",\"col\":4}},{\"id\":\"VdXCKhKmQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Payment Gateway\",\"col\":4}},{\"id\":\"2AjZtCMG7C\",\"type\":\"card\",\"data\":{\"card_name\":\"Bank\",\"col\":4}},{\"id\":\"GiiGry_-BR\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"pp6hNBwsEk\",\"type\":\"card\",\"data\":{\"card_name\":\"ECS\",\"col\":4}},{\"id\":\"a9FEMZ9e15\",\"type\":\"card\",\"data\":{\"card_name\":\"Festival\",\"col\":4}}]",
  "creation": "2023-03-22 12:34:40.537714",
  "custom_blocks": [],
  "docstatus": 0,
@@ -63,44 +63,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Patron",
-   "link_count": 3,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Patron",
-   "link_count": 0,
-   "link_to": "Patron",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Patron Seva Type",
-   "link_count": 0,
-   "link_to": "Patron Seva Type",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Patron Gift",
-   "link_count": 0,
-   "link_to": "Patron Gift",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "ECS",
    "link_count": 2,
    "onboard": 0,
@@ -123,74 +85,6 @@
    "link_count": 0,
    "link_to": "ECS Apply Data",
    "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Masters",
-   "link_count": 6,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "LLP Preacher",
-   "link_count": 0,
-   "link_to": "LLP Preacher",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Seva Type",
-   "link_count": 0,
-   "link_to": "Seva Type",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Seva Subtype",
-   "link_count": 0,
-   "link_to": "Seva Subtype",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Mode of Payment",
-   "link_count": 0,
-   "link_to": "DJ Mode of Payment",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Gateway",
-   "link_count": 0,
-   "link_to": "Payment Gateway",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Donor Creation Request",
-   "link_count": 0,
-   "link_to": "Donor Creation Request",
-   "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   },
@@ -365,10 +259,136 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Masters",
+   "link_count": 7,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "LLP Preacher",
+   "link_count": 0,
+   "link_to": "LLP Preacher",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Seva Type",
+   "link_count": 0,
+   "link_to": "Seva Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Seva Subtype",
+   "link_count": 0,
+   "link_to": "Seva Subtype",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Mode of Payment",
+   "link_count": 0,
+   "link_to": "DJ Mode of Payment",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Gateway",
+   "link_count": 0,
+   "link_to": "Payment Gateway",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Donor Creation Request",
+   "link_count": 0,
+   "link_to": "Donor Creation Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Mode",
+   "link_count": 0,
+   "link_to": "DJ Payment Detail",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Patron",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Patron",
+   "link_count": 0,
+   "link_to": "Patron",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Patron Seva Type",
+   "link_count": 0,
+   "link_to": "Patron Seva Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Patron Gift",
+   "link_count": 0,
+   "link_to": "Patron Gift",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Patron Pujas",
+   "link_count": 0,
+   "link_to": "Patron Privilege Puja",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-09-28 16:52:40.431713",
- "modified_by": "nrhd@hkm-group.org",
+ "modified": "2023-10-14 12:13:23.707320",
+ "modified_by": "ajad@hkm-group.org",
  "module": "Dhananjaya",
  "name": "DCC",
  "number_cards": [],
@@ -391,7 +411,7 @@
    "role": "DCC Preacher"
   }
  ],
- "sequence_id": 4.0,
+ "sequence_id": 6.0,
  "shortcuts": [
   {
    "color": "Grey",
@@ -406,6 +426,13 @@
    "label": "DCC Dashboard",
    "link_to": "DCC",
    "type": "Dashboard"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Patron Puja Report",
+   "link_to": "Upcoming Patron Pujas",
+   "type": "Report"
   },
   {
    "color": "Grey",

@@ -11,4 +11,6 @@ dhananjaya.patches.v_0_0.create_custom_fields #new4
 dhananjaya.patches.v_0_0.create_mobileapp_oauth #new2
 dhananjaya.patches.v_0_0.delete_old_firebase_tokens #new2
 dhananjaya.patches.v_0_0.create_custom_perm #8
+dhananjaya.patches.v_0_0.update_donor_creation_requests #1
+dhananjaya.patches.v_0_0.revamp_patron_card #1
 
