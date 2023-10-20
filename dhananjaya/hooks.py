@@ -119,10 +119,11 @@ has_permission = {
 # Hook on document methods and events
 
 doc_events = {
-    "Journal Entry": {
-        "on_submit": "dhananjaya.dhananjaya.statement_utils.reconcile_bank_transaction_for_entries_from_statement"
+    # "Journal Entry": {
+    #     "on_submit": "dhananjaya.dhananjaya.statement_utils.reconcile_bank_transaction_for_entries_from_statement",
+    #     "before_cancel": "dhananjaya.dhananjaya.statement_utils.unallocate_bank_transaction"
         # "on_cancel" : "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.cancel_connected_donation_docs",
-    }
+    # }
     # "*": {
     # 	"on_update": "method",
     # 	"on_cancel": "method",

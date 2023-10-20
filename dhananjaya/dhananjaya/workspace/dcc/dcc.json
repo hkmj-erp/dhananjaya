@@ -63,34 +63,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "ECS",
-   "link_count": 2,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Upload ECS",
-   "link_count": 0,
-   "link_to": "ECS Upload Portal",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "ECS Apply Data",
-   "link_count": 0,
-   "link_to": "ECS Apply Data",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Donation",
    "link_count": 4,
    "onboard": 0,
@@ -385,9 +357,47 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ECS",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Upload ECS",
+   "link_count": 0,
+   "link_to": "ECS Upload Portal",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "ECS Apply Data",
+   "link_count": 0,
+   "link_to": "ECS Apply Data",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Create ECS",
+   "link_count": 0,
+   "link_to": "Donor ECS Creation Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-10-14 12:13:23.707320",
+ "modified": "2023-10-20 16:29:55.620320",
  "modified_by": "ajad@hkm-group.org",
  "module": "Dhananjaya",
  "name": "DCC",

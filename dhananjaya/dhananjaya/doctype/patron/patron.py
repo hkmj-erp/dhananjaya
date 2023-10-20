@@ -27,7 +27,7 @@ class Patron(Document):
         self.full_name = self.first_name
         if self.last_name is not None:
             self.last_name = sanitise_str(self.last_name)
-            self.full_name += self.last_name
+            self.full_name += " "+self.last_name
         return
 
     @property
