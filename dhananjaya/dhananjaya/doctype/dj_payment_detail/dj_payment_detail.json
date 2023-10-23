@@ -20,7 +20,10 @@
   "gateway_details_section",
   "gateway_name",
   "gateway_message",
-  "gateway_image"
+  "gateway_image",
+  "document_details_section",
+  "document_name",
+  "document_attachment"
  ],
  "fields": [
   {
@@ -35,7 +38,7 @@
    "fieldname": "type",
    "fieldtype": "Select",
    "label": "Type",
-   "options": "Account\nUPI\nGateway",
+   "options": "Account\nUPI\nGateway\nDocument",
    "reqd": 1
   },
   {
@@ -108,11 +111,29 @@
    "fieldtype": "Long Text",
    "label": "Gateway Message",
    "mandatory_depends_on": "eval:doc.type == 'Gateway'"
+  },
+  {
+   "depends_on": "eval:doc.type == 'Document'",
+   "fieldname": "document_details_section",
+   "fieldtype": "Section Break",
+   "label": "Document Details"
+  },
+  {
+   "fieldname": "document_name",
+   "fieldtype": "Data",
+   "label": "Document Name",
+   "mandatory_depends_on": "eval:doc.type == 'Document'"
+  },
+  {
+   "fieldname": "document_attachment",
+   "fieldtype": "Attach",
+   "label": "Document Attachment",
+   "mandatory_depends_on": "eval:doc.type == 'Document'"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-26 13:22:06.916554",
+ "modified": "2023-10-23 15:17:15.697375",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "DJ Payment Detail",

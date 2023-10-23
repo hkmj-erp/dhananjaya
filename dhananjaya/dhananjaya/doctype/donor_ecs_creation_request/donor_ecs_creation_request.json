@@ -15,7 +15,9 @@
   "naming_series",
   "status",
   "donor",
+  "donor_name",
   "patron",
+  "patron_name",
   "ecs_details_section",
   "account_holder_name",
   "account_bank_name",
@@ -157,11 +159,25 @@
   {
    "fieldname": "column_break_nbznt",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "donor.full_name",
+   "fieldname": "donor_name",
+   "fieldtype": "Data",
+   "label": "Donor Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patron.full_name",
+   "fieldname": "patron_name",
+   "fieldtype": "Data",
+   "label": "Patron Name",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-10 11:36:22.165971",
+ "modified": "2023-10-23 19:29:52.079949",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor ECS Creation Request",
