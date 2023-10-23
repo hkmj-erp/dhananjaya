@@ -23,11 +23,11 @@ class DonorECSCreationRequest(Document):
         current_time = datetime.now().strftime("%d %B, %Y %I:%M %p")
         if self.status == "Completed":
             title = f"ECS Request Completed!"
-            message = f"ECS Request {self.name} ({self.account_holder_name}) is completed. Sit back & relax to observe auto-generation of receipts."
+            message = f"ECS Request {self.name} of {self.account_holder_name} is completed. Sit back & relax to observe auto-generation of receipts."
 
         elif self.status == "Rejected":
             title = f"ECS Request Rejected!"
-            message = f"ECS Request {self.name} ({self.account_holder_name}) is rejected. Please contact Administrator for resolution."
+            message = f"ECS Request {self.name} of {self.account_holder_name} is rejected. Please contact Administrator for resolution."
 
         # IF Message is Ready!
         if title is not None:
