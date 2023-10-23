@@ -50,11 +50,13 @@ class DonorECSCreationRequest(Document):
     ##########################################################
 
     def update_donor_ecs_details(self):
+        settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
         frappe.set_value(
             "Donor",
             self.donor,
             {
                 "ecs_active": 1,
+                "ecs_bank":settings_doc.default_ecs_bank,
                 "bank": self.account_bank_name,
                 "ecs_bank_ac_no": self.account_number,
                 "account_holder": self.account_holder_name,
