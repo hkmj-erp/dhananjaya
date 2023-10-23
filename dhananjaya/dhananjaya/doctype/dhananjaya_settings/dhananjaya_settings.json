@@ -14,7 +14,9 @@
   "other_section",
   "public_fernet_key",
   "patron_settings_section",
-  "display_names_allowed"
+  "display_names_allowed",
+  "ecs_settings_section",
+  "default_ecs_bank"
  ],
  "fields": [
   {
@@ -75,13 +77,24 @@
    "fieldtype": "Int",
    "label": "Display Names Allowed",
    "non_negative": 1
+  },
+  {
+   "fieldname": "ecs_settings_section",
+   "fieldtype": "Section Break",
+   "label": "ECS Settings"
+  },
+  {
+   "fieldname": "default_ecs_bank",
+   "fieldtype": "Link",
+   "label": "Default ECS Bank",
+   "options": "Bank"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-25 13:49:13.882486",
+ "modified": "2023-10-23 19:38:29.016234",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",
