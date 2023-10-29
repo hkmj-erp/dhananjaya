@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 import re
 import frappe, json
+from dhananjaya.dhananjaya.report.donation_cumulative_report.donation_cumulative_report import get_conditions
+from dhananjaya.dhananjaya.report.upcoming_patron_pujas.patron_puja_calculator import get_patron_puja_dates
 from dhananjaya.dhananjaya.utils import get_credits_equivalent, get_preachers
 from dhananjaya.dhananjaya.report.upcoming_special_pujas.puja_calculator import (
     get_puja_dates,
@@ -14,37 +16,9 @@ def get_user_profile():
     return {"user": doc.name, "full_name": doc.full_name}
 
 
-def get_include_in_analysis_conditions():
-    conditions = ""
-    seva_types = frappe.get_all(
-        "Seva Type",
-        filters={
-            "include_in_analysis": 1,
-        },
-        pluck="name",
-    )
-    seva_subtypes = frappe.get_all(
-        "Seva Subtype",
-        filters={
-            "include_in_analysis": 1,
-        },
-        pluck="name",
-    )
-    preachers = frappe.get_all("LLP Preacher", filters=[["include_in_analysis", "=", 1]], pluck="name")
-
-    seva_types_str = ",".join([f"'{s}'" for s in seva_types])
-    seva_subtypes_str = ",".join([f"'{s}'" for s in seva_subtypes])
-    preachers_str = ",".join([f"'{p}'" for p in preachers])
-
-    conditions += f" AND seva_type IN ({seva_types_str}) "
-    conditions += f" AND seva_subtype IN ({seva_subtypes_str}) "
-    conditions += f" AND preacher IN ({preachers_str}) "
-    return conditions
-
-
 @frappe.whitelist()
 def user_stats(based_on="receipt_date"):
-    include_conditions = get_include_in_analysis_conditions()
+    include_conditions = get_conditions(selective_preachers=True)
     preachers = get_preachers()
     if len(preachers) == 0:
         return {}
@@ -106,7 +80,11 @@ def get_upcoming_pujas():
     current_date = datetime.now().date()
     after_seven_days = current_date + timedelta(days=8)
     preachers = get_preachers()
-    return get_puja_dates(current_date, after_seven_days, preachers)
+    special_pujas = get_puja_dates(current_date, after_seven_days, preachers)
+    priviledge_pujas = get_patron_puja_dates(current_date, after_seven_days, preachers)
+    all_pujas = special_pujas + priviledge_pujas
+    all_pujas = sorted(all_pujas, key=lambda x: x["date"])
+    return all_pujas
 
 
 @frappe.whitelist()

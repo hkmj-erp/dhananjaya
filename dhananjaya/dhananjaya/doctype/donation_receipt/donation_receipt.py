@@ -4,7 +4,7 @@ from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
 from dhananjaya.dhananjaya.utils import (
     check_user_notify,
     get_best_contact_address,
-    get_default_bank_accounts,
+    get_company_defaults,
     get_pdf_dr,
     get_preacher_users,
 )
@@ -55,7 +55,7 @@ class DonationReceipt(Document):
                 self.seva_type,
             )
 
-            company_detail = get_default_bank_accounts(self.company)
+            company_detail = get_company_defaults(self.company)
             if company_detail.auto_create_journal_entries:
                 seva_doc = frappe.get_cached_doc("Seva Type", self.seva_type)
             if not seva_doc.account:
@@ -159,7 +159,7 @@ class DonationReceipt(Document):
             self.contact = "" if contact is None else contact
             self.address = "" if address is None else address
 
-        company_detail = get_default_bank_accounts(self.company)
+        company_detail = get_company_defaults(self.company)
         if not company_detail:
             frappe.throw("There are no settings available for this Company. Please check Dhananjaya Settings")
         account = frappe.db.get_value("Seva Type", self.seva_type, "account")
@@ -191,7 +191,7 @@ class DonationReceipt(Document):
     ###### BEFORE SUBMIT : CHECK WHETHER REQUIRED ACCOUNTS ARE SET ######
 
     def before_submit(self):
-        company_detail = get_default_bank_accounts(self.company)
+        company_detail = get_company_defaults(self.company)
         if not company_detail.auto_create_journal_entries:
             return
 
@@ -210,7 +210,7 @@ class DonationReceipt(Document):
     ###### ON INSERT : AUTO CREATE JOURNAL ENTRY CHECK ######
 
     def on_submit(self):
-        company_detail = get_default_bank_accounts(self.company)
+        company_detail = get_company_defaults(self.company)
         if company_detail.auto_create_journal_entries:
             je_doc = self.create_journal_entry()
             if self.payment_method != CASH_PAYMENT_MODE:

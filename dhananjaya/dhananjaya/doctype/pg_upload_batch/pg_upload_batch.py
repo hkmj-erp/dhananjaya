@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 import json
-from dhananjaya.dhananjaya.utils import get_default_bank_accounts
+from dhananjaya.dhananjaya.utils import get_company_defaults
 import frappe
 from frappe.model.document import Document
 from rapidfuzz import process, fuzz
@@ -11,7 +11,7 @@ from rapidfuzz import process, fuzz
 class PGUploadBatch(Document):
     def before_insert(self):
         # set default donation account
-        company_detail = get_default_bank_accounts(self.company)
+        company_detail = get_company_defaults(self.company)
         self.gateway_expense_account = company_detail.gateway_expense_account
 
 
@@ -33,9 +33,7 @@ def count_donor_linked(batch):
 
 @frappe.whitelist()
 def get_payment_entries(batch):
-    txs = frappe.db.get_all(
-        "Payment Gateway Transaction", filters={"batch": batch}, pluck="name"
-    )
+    txs = frappe.db.get_all("Payment Gateway Transaction", filters={"batch": batch}, pluck="name")
     return txs
 
 
@@ -77,9 +75,7 @@ def try_razorpay_pattern(batch):
                     "address_line_1": notes["address"],
                 },
             )
-            doc.append(
-                "contacts", {"contact_no": notes["whatsapp_number"], "is_whatsapp": 1}
-            )
+            doc.append("contacts", {"contact_no": notes["whatsapp_number"], "is_whatsapp": 1})
             doc.append(
                 "emails",
                 {
@@ -88,9 +84,7 @@ def try_razorpay_pattern(batch):
             )
             doc.save()
             donor_found = doc.name
-        frappe.db.set_value(
-            "Payment Gateway Transaction", tx["name"], "donor", donor_found
-        )
+        frappe.db.set_value("Payment Gateway Transaction", tx["name"], "donor", donor_found)
 
 
 def razorpay_identify_and_update_donor(notes):
@@ -150,20 +144,16 @@ def try_au_qr_pattern(batch):
         if donor_found is None:
             doc = frappe.new_doc("Donor")
             doc.first_name = extra_data["Customer Name"]
-            doc.llp_preacher = "DCC"
+            doc.llp_preacher = frappe.db.get_single_value("Dhananjaya Settings", "default_preacher")
             # doc.append('addresses', {
             # 		'preferred': 1,
             # 		'type':'Residential',
             # 		'address_line_1':notes['address']
             # 	})
-            doc.append(
-                "contacts", {"contact_no": extra_data["Mobile No"], "is_whatsapp": 1}
-            )
+            doc.append("contacts", {"contact_no": extra_data["Mobile No"], "is_whatsapp": 1})
             doc.save()
             donor_found = doc.name
-        frappe.db.set_value(
-            "Payment Gateway Transaction", tx["name"], "donor", donor_found
-        )
+        frappe.db.set_value("Payment Gateway Transaction", tx["name"], "donor", donor_found)
 
 
 def au_qr_identify_and_update_donor(extra_data):
@@ -186,9 +176,7 @@ def au_qr_identify_and_update_donor(extra_data):
 
         # Exactly finding by similar name
 
-        temp_token_ratio = fuzz.token_sort_ratio(
-            donor.full_name, extra_data["Customer Name"]
-        )
+        temp_token_ratio = fuzz.token_sort_ratio(donor.full_name, extra_data["Customer Name"])
         if temp_token_ratio > token_ratio:
             donor_found = donor.name
     return donor_found

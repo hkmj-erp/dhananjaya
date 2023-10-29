@@ -9,7 +9,11 @@
   "admin_role",
   "cash_mode",
   "firebase_admin_app",
+  "column_break_tvbte",
+  "default_preacher",
+  "default_marketing_preacher",
   "gateway_mode",
+  "section_break_uanlt",
   "company_details",
   "other_section",
   "public_fernet_key",
@@ -88,13 +92,35 @@
    "fieldtype": "Link",
    "label": "Default ECS Bank",
    "options": "Bank"
+  },
+  {
+   "fieldname": "column_break_tvbte",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_preacher",
+   "fieldtype": "Link",
+   "label": "Default Preacher",
+   "options": "LLP Preacher",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_marketing_preacher",
+   "fieldtype": "Link",
+   "label": "Default Marketing Preacher",
+   "options": "LLP Preacher",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_uanlt",
+   "fieldtype": "Section Break"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-23 19:38:29.016234",
+ "modified": "2023-10-29 16:44:56.985248",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",
@@ -131,6 +157,13 @@
   {
    "read": 1,
    "role": "DCC Cashier"
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "All",
+   "share": 1
   }
  ],
  "sort_field": "modified",

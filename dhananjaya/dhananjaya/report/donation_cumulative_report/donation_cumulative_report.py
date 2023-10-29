@@ -9,7 +9,7 @@ def execute(filters=None):
     companies = get_donation_companies()
 
     columns = get_columns(companies)
-    conditions = get_conditions(filters)
+    conditions = get_conditions()
 
     donations = []
 
@@ -61,13 +61,8 @@ def execute(filters=None):
     return columns, data
 
 
-def get_conditions(filters):
+def get_conditions(selective_preachers=False):
     conditions = ""
-    if filters.get("based_on") == "Receipt Date":
-        conditions += f' AND tdr.receipt_date BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"'
-    else:
-        conditions += f' AND tdr.realization_date BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"'
-
     seva_types = frappe.get_all(
         "Seva Type",
         filters={
@@ -77,19 +72,22 @@ def get_conditions(filters):
     )
     seva_subtypes = frappe.get_all(
         "Seva Subtype",
-        filters={"include_in_analysis": 1, "is_group": 0},
+        filters={
+            "include_in_analysis": 1,
+        },
         pluck="name",
     )
-    # preachers = frappe.get_all("LLP Preacher", filters=[["include_in_analysis", "=", 1]], pluck="name")
 
     seva_types_str = ",".join([f"'{s}'" for s in seva_types])
     seva_subtypes_str = ",".join([f"'{s}'" for s in seva_subtypes])
-    # preachers_str = ",".join([f"'{p}'" for p in preachers])
 
     conditions += f" AND seva_type IN ({seva_types_str}) "
-    conditions += f" AND seva_subtype IN ({seva_subtypes_str}) "
-    if filters.get("only_realized"):
-        conditions += f" AND docstatus = 1 "
+    conditions += f" AND ( seva_subtype IS NULL OR seva_subtype = '' OR seva_subtype IN ({seva_subtypes_str}) )"
+
+    if selective_preachers:
+        preachers = frappe.get_all("LLP Preacher", filters=[["include_in_analysis", "=", 1]], pluck="name")
+        preachers_str = ",".join([f"'{p}'" for p in preachers])
+        conditions += f" AND preacher IN ({preachers_str}) "
 
     return conditions
 

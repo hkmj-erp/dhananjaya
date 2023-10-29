@@ -28,22 +28,13 @@ def check_user_notify(user, tag):
     return False
 
 
-# def get_dhananjaya_firebase_app():
-#     settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
-#     fa_doc = frappe.get_doc("Firebase Admin App", settings_doc.firebase_admin_app)
-#     return fa_doc.instance
-
-
 @frappe.whitelist()
 def get_short_url(long_url):
-    doc = frappe.get_doc({"doctype": "DCC Redirect", "redirect_to": long_url})
+    doc = frappe.get_doc({"doctype": "HKM Redirect", "redirect_to": long_url})
     doc.insert()
     frappe.db.commit()
     short_url = local.request.host_url + "sl/" + doc.name
     return short_url
-
-
-receiptIDkey = "wiuhi12nr89evi328721ih32kj"
 
 
 @frappe.whitelist()
@@ -164,7 +155,7 @@ def get_default_income_account(company):
 
 
 @frappe.whitelist()
-def get_default_bank_accounts(company):
+def get_company_defaults(company):
     doc = frappe.get_cached_doc("Dhananjaya Settings")
     for d in doc.company_details:
         if d.company == company:

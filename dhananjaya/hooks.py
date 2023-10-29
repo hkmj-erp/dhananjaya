@@ -47,9 +47,9 @@ doctype_js = {"Bank Transaction": "public/js/bank_transaction.js"}
 # 	"Role": "home_page"
 # }
 
-website_route_rules = [
-    {"from_route": "/sl/<short_url>", "to_route": "redirect"},
-]
+# website_route_rules = [
+#     {"from_route": "/sl/<short_url>", "to_route": "redirect"},
+# ]
 
 # Generators
 # ----------
