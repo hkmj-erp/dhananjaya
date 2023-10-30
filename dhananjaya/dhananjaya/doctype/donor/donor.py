@@ -9,7 +9,7 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.utils import strip, sbool
 from frappe.model.document import Document
 
-from dhananjaya.dhananjaya.utils import check_user_notify, get_preacher_users, sanitise_str
+from dhananjaya.dhananjaya.utils import check_user_notify, get_preacher_users, is_valid_aadhar_number, is_valid_pan_number, is_valid_pincode, sanitise_str
 
 
 class Donor(Document):
@@ -66,6 +66,7 @@ class Donor(Document):
         self.validate_address()
         self.validate_contact()
         self.validate_email()
+        self.validate_kyc()
 
     def before_save(self):
         # Preacher Change
@@ -112,6 +113,18 @@ class Donor(Document):
                 frappe.throw(_(f"Row #{i+1} is a <b>Duplicate</b> of email {email.email}. Please remove it."))
             emails.append(email.email)
 
+    def validate_kyc(self):
+        if self.pan_no:
+            self.pan_no = re.sub(r"\s+", "", self.pan_no)
+            if not is_valid_pan_number(self.pan_no):
+                frappe.throw("PAN Number is Invalid.")
+
+        if self.aadhar_no:
+            self.aadhar_no = re.sub(r"\s+", "", self.aadhar_no)
+            if not is_valid_aadhar_number(self.aadhar_no):
+                frappe.throw("Aadhar Number is Invalid.")
+        return
+
     @property
     def months_to_apply(self):
         if self.opening_date and self.periodicity:
@@ -124,19 +137,6 @@ class Donor(Document):
         if self.opening_date and self.periodicity and self.closing_date:
             return count_of_ecs(self.opening_date, self.periodicity, self.closing_date)
         return "NA"
-
-
-def is_valid_pincode(pinCode):
-    return True
-    # Regex to check valid pin code of India.
-    regex = "^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$"
-    p = re.compile(regex)
-    m = re.match(p, pinCode)
-    if m is None:
-        return False
-    else:
-        return True
-
 
 @frappe.whitelist()
 def create_patron_from_donor(source_name, target_doc=None, args=None):
