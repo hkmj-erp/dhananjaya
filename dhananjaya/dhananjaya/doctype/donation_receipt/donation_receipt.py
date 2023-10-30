@@ -24,6 +24,17 @@ CUT_OFF_DATE = "2023-01-04"
 
 
 class DonationReceipt(Document):
+    def validate(self):
+        self.validate_atg_required()
+        return
+
+    def validate_atg_required(self):
+        if not self.atg_required:
+            return
+        pan, aadhar = frappe.db.get_value('Donor', self.donor, ['pan_no', 'aadhar_no'])
+        if not (pan or aadhar):
+            frappe.throw("At least one of the KYC ( PAN Number or Aadhar Number) is required for 80G Donation.")
+        return
     ###### ON CHANGE TRIGGERS ON EVERY CHANGE ON SAVE, SUBMIT & AFTER SUBMIT ALSO ######
     ###### UPDATE JOURNAL ENTRY & GL ENTRIES ON SEVA TYPE CHANGE #######################
     ###### UPDATE PAYMENT GATEWAY TRANSACTION ALSO TO HAVE SAME DONOR & SEVA TYPE ######

@@ -185,6 +185,17 @@ def is_valid_aadhar_number(aadhar_number):
         return True
     return False
 
+def is_valid_pincode(pinCode):
+    return True
+    # Regex to check valid pin code of India.
+    regex = "^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$"
+    p = re.compile(regex)
+    m = re.match(p, pinCode)
+    if m is None:
+        return False
+    else:
+        return True
+
 
 def get_pdf_dr(doctype, name, doc=None):
     doc = doc or frappe.get_doc(doctype, name)
