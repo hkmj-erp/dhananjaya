@@ -29,12 +29,15 @@ class DonationReceipt(Document):
         return
 
     def validate_atg_required(self):
-        if not self.atg_required:
+        if not (self.atg_required and self.donor):
             return
-        pan, aadhar = frappe.db.get_value('Donor', self.donor, ['pan_no', 'aadhar_no'])
+        pan, aadhar = frappe.db.get_value("Donor", self.donor, ["pan_no", "aadhar_no"])
         if not (pan or aadhar):
-            frappe.throw("At least one of the KYC ( PAN Number or Aadhar Number) is required for 80G Donation.")
+            frappe.throw(
+                "At least one of the KYC ( PAN Number or Aadhar Number) is required for 80G Donation."
+            )
         return
+
     ###### ON CHANGE TRIGGERS ON EVERY CHANGE ON SAVE, SUBMIT & AFTER SUBMIT ALSO ######
     ###### UPDATE JOURNAL ENTRY & GL ENTRIES ON SEVA TYPE CHANGE #######################
     ###### UPDATE PAYMENT GATEWAY TRANSACTION ALSO TO HAVE SAME DONOR & SEVA TYPE ######
@@ -80,7 +83,9 @@ class DonationReceipt(Document):
                 update_modified=False,
             )
 
-            old_account = frappe.db.get_value("Donation Receipt", self.name, "donation_account")
+            old_account = frappe.db.get_value(
+                "Donation Receipt", self.name, "donation_account"
+            )
 
             je = frappe.get_all(
                 "Journal Entry",
@@ -104,7 +109,9 @@ class DonationReceipt(Document):
                 fields=["name"],
             )
 
-            frappe.db.set_value("GL Entry", gl_entry[0]["name"], "account", seva_doc.account)
+            frappe.db.set_value(
+                "GL Entry", gl_entry[0]["name"], "account", seva_doc.account
+            )
 
         frappe.db.commit()
 
@@ -113,11 +120,17 @@ class DonationReceipt(Document):
     def notify_mobile_app_users(self):
         message = title = None
         current_time = datetime.now().strftime("%d %B, %Y %I:%M %p")
-        if self.workflow_state == "Received by Cashier" and self.payment_method == "Cash":
+        if (
+            self.workflow_state == "Received by Cashier"
+            and self.payment_method == "Cash"
+        ):
             title = f"{self.payment_method} Acknowledgement"
             message = f"This is to acknowledge that Cashier has received a cash of Rs. {self.amount} from you at {current_time}."
 
-        elif self.workflow_state == "Cheque Collected" and self.payment_method == "Cheque":
+        elif (
+            self.workflow_state == "Cheque Collected"
+            and self.payment_method == "Cheque"
+        ):
             title = f"{self.payment_method} Acknowledgement"
             message = f"This is to acknowledge that Cashier has collected a cheque of Rs. {self.amount} from you at {current_time}."
 
@@ -145,7 +158,9 @@ class DonationReceipt(Document):
                         "doctype": "App Notification",
                         "app": settings_doc.firebase_admin_app,
                         "tag": DJNotificationTags.DONATION_RECEIPT_TAG,
-                        "notify": check_user_notify(erp_user, DJNotificationTags.DONATION_RECEIPT_TAG),
+                        "notify": check_user_notify(
+                            erp_user, DJNotificationTags.DONATION_RECEIPT_TAG
+                        ),
                         "user": erp_user,
                         "subject": title,
                         "message": message,
@@ -162,8 +177,14 @@ class DonationReceipt(Document):
         self.amount_in_words = money_in_words(self.amount, main_currency="Rupees")
 
         # Check for Preacher Change
-        if not self.is_new() and self.has_value_changed("preacher") and "DCC Manager" not in frappe.get_roles():
-            frappe.throw("Only DCC Manager is allowed to change the Preacher of a Donor.")
+        if (
+            not self.is_new()
+            and self.has_value_changed("preacher")
+            and "DCC Manager" not in frappe.get_roles()
+        ):
+            frappe.throw(
+                "Only DCC Manager is allowed to change the Preacher of a Donor."
+            )
 
         if not self.contact:
             address, contact, email = get_best_contact_address(self.donor)
@@ -172,7 +193,9 @@ class DonationReceipt(Document):
 
         company_detail = get_company_defaults(self.company)
         if not company_detail:
-            frappe.throw("There are no settings available for this Company. Please check Dhananjaya Settings")
+            frappe.throw(
+                "There are no settings available for this Company. Please check Dhananjaya Settings"
+            )
         account = frappe.db.get_value("Seva Type", self.seva_type, "account")
         if account is None:
             self.donation_account = company_detail.donation_account
@@ -183,7 +206,10 @@ class DonationReceipt(Document):
             self.bank_account = company_detail.bank_account
         if self.payment_method == CASH_PAYMENT_MODE and not self.cash_account:
             self.cash_account = company_detail.cash_account
-        if self.payment_method == PAYMENT_GATWEWAY_MODE and not self.gateway_expense_account:
+        if (
+            self.payment_method == PAYMENT_GATWEWAY_MODE
+            and not self.gateway_expense_account
+        ):
             self.gateway_expense_account = company_detail.gateway_expense_account
 
         return
@@ -216,7 +242,9 @@ class DonationReceipt(Document):
             if not self.bank_account:
                 frappe.throw(_("Bank Account is not provided."))
             if not self.bank_transaction:
-                frappe.throw(_("Bank Transaction is required to be linked before realisation."))
+                frappe.throw(
+                    _("Bank Transaction is required to be linked before realisation.")
+                )
 
     ###### ON INSERT : AUTO CREATE JOURNAL ENTRY CHECK ######
 
@@ -226,7 +254,10 @@ class DonationReceipt(Document):
             je_doc = self.create_journal_entry()
             if self.payment_method != CASH_PAYMENT_MODE:
                 self.reconcile_bank_transaction(je_doc)
-            if self.payment_method == PAYMENT_GATWEWAY_MODE and self.payment_gateway_document:
+            if (
+                self.payment_method == PAYMENT_GATWEWAY_MODE
+                and self.payment_gateway_document
+            ):
                 self.reconcile_gateway_transaction()
 
     ###### JOURNAL ENTRY AUTOMATION ######
@@ -234,11 +265,17 @@ class DonationReceipt(Document):
     def create_journal_entry(self):
         seva_type_doc = frappe.get_cached_doc("Seva Type", self.seva_type)
         if (not seva_type_doc) or (not seva_type_doc.account):
-            frappe.throw(_("Either Seva Type not set or Account is not connected. It is required."))
+            frappe.throw(
+                _(
+                    "Either Seva Type not set or Account is not connected. It is required."
+                )
+            )
 
         je = {
             "doctype": "Journal Entry",
-            "voucher_type": "Cash Entry" if self.payment_method == CASH_PAYMENT_MODE else "Bank Entry",
+            "voucher_type": "Cash Entry"
+            if self.payment_method == CASH_PAYMENT_MODE
+            else "Bank Entry",
             "company": self.company,
             "donation_receipt": self.name,
             "docstatus": 1,
@@ -248,8 +285,12 @@ class DonationReceipt(Document):
 
         if not self.donor:
             if not self.donor_creation_request:
-                frappe.throw("At least one of Donor or Donation Creation Request document is must to process.")
-            donor_name = frappe.get_value("Donor Creation Request", self.donor_creation_request, "full_name")
+                frappe.throw(
+                    "At least one of Donor or Donation Creation Request document is must to process."
+                )
+            donor_name = frappe.get_value(
+                "Donor Creation Request", self.donor_creation_request, "full_name"
+            )
         else:
             donor_name = self.full_name
 
@@ -268,7 +309,11 @@ class DonationReceipt(Document):
 
         if self.payment_method == CASH_PAYMENT_MODE:
             # Jounrnal Entry date should be the day Cashier received the amount because it has to tally with Cashbook.
-            cash_date = self.cash_received_date if self.cash_received_date is not None else today()
+            cash_date = (
+                self.cash_received_date
+                if self.cash_received_date is not None
+                else today()
+            )
             je.setdefault("posting_date", cash_date)
             je.setdefault(
                 "accounts",
@@ -288,7 +333,9 @@ class DonationReceipt(Document):
                 ],
             )
         else:
-            bank_account_ledger = frappe.get_cached_doc("Bank Account", self.bank_account)
+            bank_account_ledger = frappe.get_cached_doc(
+                "Bank Account", self.bank_account
+            )
             transaction = frappe.get_doc("Bank Transaction", self.bank_transaction)
 
             if self.payment_method == CHEQUE_MODE:
@@ -314,12 +361,19 @@ class DonationReceipt(Document):
                         "account": bank_account_ledger.account,
                         "bank_account": self.bank_account,
                         "debit_in_account_currency": self.amount
-                        - (0 if not self.additional_charges else self.additional_charges),
+                        - (
+                            0
+                            if not self.additional_charges
+                            else self.additional_charges
+                        ),
                         "cost_center": accounts_details.cost_center,
                     },
                 ],
             )
-            if self.payment_method == PAYMENT_GATWEWAY_MODE and self.additional_charges > 0:
+            if (
+                self.payment_method == PAYMENT_GATWEWAY_MODE
+                and self.additional_charges > 0
+            ):
                 je["accounts"].append(
                     {
                         "account": self.gateway_expense_account,
@@ -339,7 +393,8 @@ class DonationReceipt(Document):
         voucher = {
             "payment_doctype": je_doc.doctype,
             "payment_name": je_doc.name,
-            "amount": self.amount - (0 if not self.additional_charges else self.additional_charges),
+            "amount": self.amount
+            - (0 if not self.additional_charges else self.additional_charges),
         }
         tx_doc = frappe.get_doc("Bank Transaction", self.bank_transaction)
         add_payment_entry(tx_doc, voucher)
@@ -354,7 +409,9 @@ class DonationReceipt(Document):
 
     # Reconciles Bank Transaction with Journal Entry and also updates the Clearance Date in Journal Entry
     def reconcile_gateway_transaction(self):
-        gateway_doc = frappe.get_doc("Payment Gateway Transaction", self.payment_gateway_document)
+        gateway_doc = frappe.get_doc(
+            "Payment Gateway Transaction", self.payment_gateway_document
+        )
         gateway_doc.donor = self.donor
         gateway_doc.seva_type = self.seva_type
         gateway_doc.receipt_created = 1
@@ -372,7 +429,10 @@ def add_payment_entry(tx_doc, voucher):
 
     found = False
     for pe in tx_doc.payment_entries:
-        if pe.payment_document == voucher["payment_doctype"] and pe.payment_entry == voucher["payment_name"]:
+        if (
+            pe.payment_document == voucher["payment_doctype"]
+            and pe.payment_entry == voucher["payment_name"]
+        ):
             found = True
 
     if not found:
@@ -483,7 +543,9 @@ def receipt_bounce_operations(receipt):
         del je_dict["name"]
 
         je_dict["posting_date"] = bank_tx_doc.date
-        je_dict["user_remark"] = je_dict["user_remark"].replace("BEING AMOUNT RECEIVED", "BEING CHEQUE RETURNED")
+        je_dict["user_remark"] = je_dict["user_remark"].replace(
+            "BEING AMOUNT RECEIVED", "BEING CHEQUE RETURNED"
+        )
 
         reverse_je = frappe.get_doc(je_dict)
         reverse_je.submit()
@@ -525,7 +587,10 @@ def receipt_cancel_operations(receipt):
 
     receipt_doc = frappe.get_doc("Donation Receipt", receipt)
 
-    if receipt_doc.payment_method == CASH_PAYMENT_MODE and "System Manager" not in frappe.get_roles():
+    if (
+        receipt_doc.payment_method == CASH_PAYMENT_MODE
+        and "System Manager" not in frappe.get_roles()
+    ):
         frappe.throw("Cash Receipts are strictly not allowed to cancel.")
 
     je = frappe.db.get_list(
@@ -588,7 +653,9 @@ def detach_bank_transaction(je):
         filters={"payment_document": "Journal Entry", "payment_entry": je},
     )
     if len(tx) != 1:
-        frappe.throw("There is not a SINGLE Bank Transaction Entry. Either 0 or more than 1. Contact Administrator.")
+        frappe.throw(
+            "There is not a SINGLE Bank Transaction Entry. Either 0 or more than 1. Contact Administrator."
+        )
     tx = tx[0]
     tx_doc = frappe.get_doc("Bank Transaction", tx)
     row = next(r for r in tx_doc.payment_entries if r.payment_entry == je)
@@ -660,7 +727,9 @@ def process_batch_gateway_payments(batch):
             dr_doc.db_set("workflow_state", "Realized")
         else:
             dr_doc.db_set("workflow_state", "Suspense")
-        frappe.db.set_value("Payment Gateway Transaction", tx["name"], "receipt_created", 1)
+        frappe.db.set_value(
+            "Payment Gateway Transaction", tx["name"], "receipt_created", 1
+        )
 
 
 ############ CLOSE ###############
@@ -678,7 +747,9 @@ def send_receipt(dr):
     # recipient = frappe.db.get_value("LLP Preacher", dr_doc.preacher, "erp_user")
     recipients = get_preacher_users(dr_doc.preacher)
     if len(recipients) == 0:
-        frappe.throw(_(f"There is no ERP User set in LLP Preacher Profile of {dr_doc.preacher}"))
+        frappe.throw(
+            _(f"There is no ERP User set in LLP Preacher Profile of {dr_doc.preacher}")
+        )
 
     ext = ".pdf"
     content = get_pdf_dr(doctype=dr_doc.doctype, name=dr_doc.name, doc=dr_doc)

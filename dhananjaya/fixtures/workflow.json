@@ -20,7 +20,8 @@
     "parenttype": "Workflow",
     "state": "Prepared",
     "update_field": "workflow_state",
-    "update_value": "Prepared"
+    "update_value": "Prepared",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -33,7 +34,8 @@
     "parenttype": "Workflow",
     "state": "Checked",
     "update_field": "workflow_state",
-    "update_value": "Checked"
+    "update_value": "Checked",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -46,7 +48,8 @@
     "parenttype": "Workflow",
     "state": "Recommended",
     "update_field": "workflow_state",
-    "update_value": "Recommended"
+    "update_value": "Recommended",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -59,7 +62,8 @@
     "parenttype": "Workflow",
     "state": "First Level Approved",
     "update_field": "workflow_state",
-    "update_value": "First Level Approved"
+    "update_value": "First Level Approved",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -72,7 +76,8 @@
     "parenttype": "Workflow",
     "state": "Final Level Approved",
     "update_field": "workflow_state",
-    "update_value": "Final Level Approved"
+    "update_value": "Final Level Approved",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "Purchase User",
@@ -85,7 +90,8 @@
     "parenttype": "Workflow",
     "state": "Cancelled",
     "update_field": "workflow_state",
-    "update_value": "Cancelled"
+    "update_value": "Cancelled",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -98,7 +104,8 @@
     "parenttype": "Workflow",
     "state": "Trashed",
     "update_field": "workflow_state",
-    "update_value": "Trashed"
+    "update_value": "Trashed",
+    "workflow_builder_id": null
    }
   ],
   "transitions": [
@@ -111,7 +118,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Prepared"
+    "state": "Prepared",
+    "workflow_builder_id": null
    },
    {
     "action": "Final Approve",
@@ -122,7 +130,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Checked"
+    "state": "Checked",
+    "workflow_builder_id": null
    },
    {
     "action": "First Approve",
@@ -133,7 +142,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Checked"
+    "state": "Checked",
+    "workflow_builder_id": null
    },
    {
     "action": "Recommend",
@@ -144,7 +154,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Checked"
+    "state": "Checked",
+    "workflow_builder_id": null
    },
    {
     "action": "Reject",
@@ -155,7 +166,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Checked"
+    "state": "Checked",
+    "workflow_builder_id": null
    },
    {
     "action": "Final Approve",
@@ -166,7 +178,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Recommended"
+    "state": "Recommended",
+    "workflow_builder_id": null
    },
    {
     "action": "First Approve",
@@ -177,7 +190,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Recommended"
+    "state": "Recommended",
+    "workflow_builder_id": null
    },
    {
     "action": "Reject",
@@ -188,7 +202,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Recommended"
+    "state": "Recommended",
+    "workflow_builder_id": null
    },
    {
     "action": "Final Approve",
@@ -199,7 +214,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "First Level Approved"
+    "state": "First Level Approved",
+    "workflow_builder_id": null
    },
    {
     "action": "Reject",
@@ -210,7 +226,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "First Level Approved"
+    "state": "First Level Approved",
+    "workflow_builder_id": null
    },
    {
     "action": "Cancel",
@@ -221,7 +238,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Final Level Approved"
+    "state": "Final Level Approved",
+    "workflow_builder_id": null
    },
    {
     "action": "Reject",
@@ -232,7 +250,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Checked"
+    "state": "Checked",
+    "workflow_builder_id": null
    },
    {
     "action": "Reject",
@@ -243,7 +262,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "First Level Approved"
+    "state": "First Level Approved",
+    "workflow_builder_id": null
    },
    {
     "action": "Cancel",
@@ -254,7 +274,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Final Level Approved"
+    "state": "Final Level Approved",
+    "workflow_builder_id": null
    },
    {
     "action": "Trash",
@@ -265,7 +286,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Prepared"
+    "state": "Prepared",
+    "workflow_builder_id": null
    },
    {
     "action": "Trash",
@@ -276,7 +298,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Checked"
+    "state": "Checked",
+    "workflow_builder_id": null
    },
    {
     "action": "Trash",
@@ -287,7 +310,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Recommended"
+    "state": "Recommended",
+    "workflow_builder_id": null
    },
    {
     "action": "Trash",
@@ -298,7 +322,8 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "First Level Approved"
+    "state": "First Level Approved",
+    "workflow_builder_id": null
    },
    {
     "action": "Prepare",
@@ -309,9 +334,11 @@
     "parent": "PO Approval New",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Trashed"
+    "state": "Trashed",
+    "workflow_builder_id": null
    }
   ],
+  "workflow_data": null,
   "workflow_name": "PO Approval New",
   "workflow_state_field": "workflow_state"
  },
@@ -336,7 +363,8 @@
     "parenttype": "Workflow",
     "state": "Draft",
     "update_field": null,
-    "update_value": "Draft"
+    "update_value": "Draft",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "Item & Supplier Creator",
@@ -349,7 +377,8 @@
     "parenttype": "Workflow",
     "state": "Approved",
     "update_field": null,
-    "update_value": "Approved"
+    "update_value": "Approved",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "Item & Supplier Creator",
@@ -362,7 +391,8 @@
     "parenttype": "Workflow",
     "state": "Rejected",
     "update_field": null,
-    "update_value": "Rejected"
+    "update_value": "Rejected",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "Item & Supplier Creator",
@@ -375,7 +405,8 @@
     "parenttype": "Workflow",
     "state": "Created",
     "update_field": null,
-    "update_value": "Created"
+    "update_value": "Created",
+    "workflow_builder_id": null
    }
   ],
   "transitions": [
@@ -388,7 +419,8 @@
     "parent": "Item Creation Process",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Draft"
+    "state": "Draft",
+    "workflow_builder_id": null
    },
    {
     "action": "Reject",
@@ -399,7 +431,8 @@
     "parent": "Item Creation Process",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Draft"
+    "state": "Draft",
+    "workflow_builder_id": null
    },
    {
     "action": "Confirm as Done",
@@ -410,7 +443,8 @@
     "parent": "Item Creation Process",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Approved"
+    "state": "Approved",
+    "workflow_builder_id": null
    },
    {
     "action": "Reject",
@@ -421,9 +455,11 @@
     "parent": "Item Creation Process",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Approved"
+    "state": "Approved",
+    "workflow_builder_id": null
    }
   ],
+  "workflow_data": null,
   "workflow_name": "Item Creation Process",
   "workflow_state_field": "workflow_state"
  },
@@ -448,7 +484,8 @@
     "parenttype": "Workflow",
     "state": "Draft",
     "update_field": null,
-    "update_value": "Draft"
+    "update_value": "Draft",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "Item & Supplier Creator",
@@ -461,7 +498,8 @@
     "parenttype": "Workflow",
     "state": "Created",
     "update_field": null,
-    "update_value": "Created"
+    "update_value": "Created",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "Item & Supplier Creator",
@@ -474,7 +512,8 @@
     "parenttype": "Workflow",
     "state": "Rejected",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    }
   ],
   "transitions": [
@@ -487,7 +526,8 @@
     "parent": "Supplier Creation Process",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Draft"
+    "state": "Draft",
+    "workflow_builder_id": null
    },
    {
     "action": "Reject",
@@ -498,7 +538,8 @@
     "parent": "Supplier Creation Process",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Draft"
+    "state": "Draft",
+    "workflow_builder_id": null
    },
    {
     "action": "Recreate",
@@ -509,9 +550,11 @@
     "parent": "Supplier Creation Process",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Created"
+    "state": "Created",
+    "workflow_builder_id": null
    }
   ],
+  "workflow_data": null,
   "workflow_name": "Supplier Creation Process",
   "workflow_state_field": "workflow_state"
  },
@@ -536,7 +579,8 @@
     "parenttype": "Workflow",
     "state": "Draft",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "DCC Executive",
@@ -549,7 +593,8 @@
     "parenttype": "Workflow",
     "state": "Acknowledged",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "DCC Executive",
@@ -562,7 +607,8 @@
     "parenttype": "Workflow",
     "state": "Cheque Collected",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "DCC Manager",
@@ -575,7 +621,8 @@
     "parenttype": "Workflow",
     "state": "Received by Cashier",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "DCC Manager",
@@ -588,7 +635,8 @@
     "parenttype": "Workflow",
     "state": "Realized",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "DCC Manager",
@@ -601,7 +649,8 @@
     "parenttype": "Workflow",
     "state": "Suspense",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "DCC Manager",
@@ -614,7 +663,8 @@
     "parenttype": "Workflow",
     "state": "Cancelled",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -627,7 +677,8 @@
     "parenttype": "Workflow",
     "state": "ECS Rejected",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -640,7 +691,8 @@
     "parenttype": "Workflow",
     "state": "Trashed",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -653,7 +705,8 @@
     "parenttype": "Workflow",
     "state": "Bounced",
     "update_field": null,
-    "update_value": null
+    "update_value": null,
+    "workflow_builder_id": null
    }
   ],
   "transitions": [
@@ -666,7 +719,8 @@
     "parent": "Donation Receipt Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Draft"
+    "state": "Draft",
+    "workflow_builder_id": null
    },
    {
     "action": "Receive Cash",
@@ -677,7 +731,8 @@
     "parent": "Donation Receipt Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Acknowledged"
+    "state": "Acknowledged",
+    "workflow_builder_id": null
    },
    {
     "action": "Collect Cheque",
@@ -688,7 +743,8 @@
     "parent": "Donation Receipt Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Acknowledged"
+    "state": "Acknowledged",
+    "workflow_builder_id": null
    },
    {
     "action": "Confirm",
@@ -699,7 +755,8 @@
     "parent": "Donation Receipt Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Cheque Collected"
+    "state": "Cheque Collected",
+    "workflow_builder_id": null
    },
    {
     "action": "Confirm",
@@ -710,7 +767,8 @@
     "parent": "Donation Receipt Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Acknowledged"
+    "state": "Acknowledged",
+    "workflow_builder_id": null
    },
    {
     "action": "Confirm",
@@ -721,7 +779,8 @@
     "parent": "Donation Receipt Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Draft"
+    "state": "Draft",
+    "workflow_builder_id": null
    },
    {
     "action": "Trash",
@@ -732,7 +791,8 @@
     "parent": "Donation Receipt Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Acknowledged"
+    "state": "Acknowledged",
+    "workflow_builder_id": null
    },
    {
     "action": "Prepare",
@@ -743,7 +803,8 @@
     "parent": "Donation Receipt Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Trashed"
+    "state": "Trashed",
+    "workflow_builder_id": null
    },
    {
     "action": "Trash",
@@ -754,9 +815,11 @@
     "parent": "Donation Receipt Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Cheque Collected"
+    "state": "Cheque Collected",
+    "workflow_builder_id": null
    }
   ],
+  "workflow_data": null,
   "workflow_name": "Donation Receipt Workflow",
   "workflow_state_field": "workflow_state"
  },
@@ -781,7 +844,8 @@
     "parenttype": "Workflow",
     "state": "Pending",
     "update_field": "status",
-    "update_value": "Pending"
+    "update_value": "Pending",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -794,7 +858,8 @@
     "parenttype": "Workflow",
     "state": "Completed",
     "update_field": "status",
-    "update_value": "Completed"
+    "update_value": "Completed",
+    "workflow_builder_id": null
    },
    {
     "allow_edit": "System Manager",
@@ -807,7 +872,8 @@
     "parenttype": "Workflow",
     "state": "Rejected",
     "update_field": "status",
-    "update_value": "Rejected"
+    "update_value": "Rejected",
+    "workflow_builder_id": null
    }
   ],
   "transitions": [
@@ -820,7 +886,8 @@
     "parent": "ECS Creation",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Pending"
+    "state": "Pending",
+    "workflow_builder_id": null
    },
    {
     "action": "Reject",
@@ -831,7 +898,8 @@
     "parent": "ECS Creation",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Pending"
+    "state": "Pending",
+    "workflow_builder_id": null
    },
    {
     "action": "Prepare",
@@ -842,7 +910,8 @@
     "parent": "ECS Creation",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Rejected"
+    "state": "Rejected",
+    "workflow_builder_id": null
    },
    {
     "action": "Prepare",
@@ -853,9 +922,11 @@
     "parent": "ECS Creation",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Completed"
+    "state": "Completed",
+    "workflow_builder_id": null
    }
   ],
+  "workflow_data": null,
   "workflow_name": "ECS Creation",
   "workflow_state_field": "status"
  }

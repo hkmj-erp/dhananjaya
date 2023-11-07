@@ -44,6 +44,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Occasion",
+   "length": 512,
    "reqd": 1
   },
   {
@@ -64,7 +65,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-25 14:30:57.484447",
+ "modified": "2023-11-07 14:38:49.648554",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron Privilege Puja",
