@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_rename": 1,
  "autoname": "field:seva_code",
  "creation": "2023-04-04 15:13:57.346533",
  "default_view": "List",
@@ -51,7 +52,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-20 12:37:31.069024",
+ "modified": "2023-11-08 11:39:52.088021",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron Seva Type",

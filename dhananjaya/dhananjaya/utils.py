@@ -13,15 +13,27 @@ from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
 
 def check_user_notify(user, tag):
     user_doc = frappe.get_doc("User", user)
-    if tag == DJNotificationTags.DONOR_CREATION_TAG and user_doc.donor_creation_notification:
+    if (
+        tag == DJNotificationTags.DONOR_CREATION_TAG
+        and user_doc.donor_creation_notification
+    ):
         return True
-    if tag == DJNotificationTags.SPECIAL_PUJA_TAG and user_doc.special_puja_notification:
+    if (
+        tag == DJNotificationTags.SPECIAL_PUJA_TAG
+        and user_doc.special_puja_notification
+    ):
         return True
     if tag == DJNotificationTags.DONOR_CLAIM_TAG and user_doc.donor_claim_notification:
         return True
-    if tag == DJNotificationTags.DONATION_RECEIPT_TAG and user_doc.donation_receipt_notification:
+    if (
+        tag == DJNotificationTags.DONATION_RECEIPT_TAG
+        and user_doc.donation_receipt_notification
+    ):
         return True
-    if tag == DJNotificationTags.DONOR_REMINDER_TAG and user_doc.donor_reminder_notification:
+    if (
+        tag == DJNotificationTags.DONOR_REMINDER_TAG
+        and user_doc.donor_reminder_notification
+    ):
         return True
     if tag in [DJNotificationTags.ECS_CREATION_TAG]:
         return True
@@ -44,7 +56,12 @@ def encode_donation_id(receiptId):
 
     if not settings.public_fernet_key:
         key = Fernet.generate_key()
-        frappe.db.set_value("Dhananjaya Settings", "Dhananjaya Settings", "public_fernet_key", key.decode())
+        frappe.db.set_value(
+            "Dhananjaya Settings",
+            "Dhananjaya Settings",
+            "public_fernet_key",
+            key.decode(),
+        )
         frappe.db.commit()
     else:
         key = settings.public_fernet_key.encode()
@@ -69,11 +86,15 @@ def download_pdf_public(
     if doc.docstatus == 2:
         return "This document is cancelled."
     # validate_print_permission(doc)
-    content = frappe.render_template("dhananjaya/templates/80g_receipt.html", is_path=True, context={"doc": doc})
+    content = frappe.render_template(
+        "dhananjaya/templates/80g_receipt.html", is_path=True, context={"doc": doc}
+    )
     # options={"password":"krishna"} if password required
     pdf_file = get_pdf(content)
 
-    frappe.local.response.filename = "{name}.pdf".format(name=receiptId.replace(" ", "-").replace("/", "-"))
+    frappe.local.response.filename = "{name}.pdf".format(
+        name=receiptId.replace(" ", "-").replace("/", "-")
+    )
     frappe.local.response.filecontent = pdf_file
     frappe.local.response.type = "pdf"
 
@@ -185,6 +206,7 @@ def is_valid_aadhar_number(aadhar_number):
         return True
     return False
 
+
 def is_valid_pincode(pinCode):
     return True
     # Regex to check valid pin code of India.
@@ -203,12 +225,12 @@ def get_pdf_dr(doctype, name, doc=None):
     if doc.docstatus == 2:
         return "This document is cancelled."
     validate_print_permission(doc)
-    content = frappe.render_template("dhananjaya/templates/80g_receipt.html", is_path=True, context={"doc": doc})
+    content = frappe.render_template(
+        "dhananjaya/templates/80g_receipt.html", is_path=True, context={"doc": doc}
+    )
     # options={"password":"krishna"} if password required
     pdf_file = get_pdf(content)
     return pdf_file
-
-
 @frappe.whitelist()
 def download_pdf(
     name,
@@ -219,7 +241,9 @@ def download_pdf(
     language=None,
     letterhead=None,
 ):
-    frappe.local.response.filename = "{name}.pdf".format(name=name.replace(" ", "-").replace("/", "-"))
+    frappe.local.response.filename = "{name}.pdf".format(
+        name=name.replace(" ", "-").replace("/", "-")
+    )
     frappe.local.response.filecontent = get_pdf_dr(doctype, name, doc=None)
     frappe.local.response.type = "pdf"
 
@@ -347,7 +371,9 @@ def get_formatted_address(address):
             address.state,
             address.pin_code,
         ]
-        non_null_values = [i.strip(",") for i in values if (i is not None and len(i) > 0)]
+        non_null_values = [
+            i.strip(",") for i in values if (i is not None and len(i) > 0)
+        ]
         return ", ".join(non_null_values)
 
 
@@ -375,7 +401,9 @@ def get_credit_values(companies: list):
             values.setdefault(s.company, s.credit_value)
     if len(values) == len(companies):
         return values
-    frappe.throw("One of the Companies' configuration is missing in Dhananjaya Settings.")
+    frappe.throw(
+        "One of the Companies' configuration is missing in Dhananjaya Settings."
+    )
 
 
 def is_null_or_blank(value):
