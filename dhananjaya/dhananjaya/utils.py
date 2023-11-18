@@ -191,7 +191,7 @@ def extract_longest_digits(string):
 
 
 def is_valid_pan_number(pan):
-    pan_pattern = re.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}")
+    pan_pattern = re.compile("[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}")
     if pan_pattern.fullmatch(pan):
         return True
     return False
@@ -231,6 +231,8 @@ def get_pdf_dr(doctype, name, doc=None):
     # options={"password":"krishna"} if password required
     pdf_file = get_pdf(content)
     return pdf_file
+
+
 @frappe.whitelist()
 def download_pdf(
     name,

@@ -62,7 +62,9 @@ doctype_js = {"Bank Transaction": "public/js/bank_transaction.js"}
 
 # add methods and filters to jinja environment
 jinja = {
-    "methods": ["dhananjaya.dhananjaya.doctype.dhananjaya_settings.dhananjaya_settings.get_print_donation"]
+    "methods": [
+        "dhananjaya.dhananjaya.doctype.dhananjaya_settings.dhananjaya_settings.get_print_donation"
+    ]
     # "filters": "dhananjaya.utils.jinja_filters"
 }
 
@@ -122,7 +124,7 @@ doc_events = {
     # "Journal Entry": {
     #     "on_submit": "dhananjaya.dhananjaya.statement_utils.reconcile_bank_transaction_for_entries_from_statement",
     #     "before_cancel": "dhananjaya.dhananjaya.statement_utils.unallocate_bank_transaction"
-        # "on_cancel" : "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.cancel_connected_donation_docs",
+    # "on_cancel" : "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.cancel_connected_donation_docs",
     # }
     # "*": {
     # 	"on_update": "method",
@@ -224,27 +226,3 @@ scheduler_events = {
 # auth_hooks = [
 # 	"dhananjaya.auth.validate"
 # ]
-
-
-fixtures = [
-    "Workflow Action Master",
-    "Workflow State",
-    "Role",
-    {
-        "dt": "Workflow",
-        "filters": [
-            ["is_active", "=", 1],
-            [
-                "document_type",
-                "in",
-                [
-                    "Donation Receipt",
-                    "Item Creation Request",
-                    "Supplier Creation Request",
-                    "Purchase Order",
-                    "Donor ECS Creation Request",
-                ],
-            ],
-        ],
-    },
-]
