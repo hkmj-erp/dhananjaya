@@ -1,12 +1,17 @@
 from datetime import datetime, timedelta
 import re
 import frappe, json
-from dhananjaya.dhananjaya.report.donation_cumulative_report.donation_cumulative_report import get_conditions
-from dhananjaya.dhananjaya.report.upcoming_patron_pujas.patron_puja_calculator import get_patron_puja_dates
+from dhananjaya.dhananjaya.report.donation_cumulative_report.donation_cumulative_report import (
+    get_conditions,
+)
+from dhananjaya.dhananjaya.report.upcoming_patron_pujas.patron_puja_calculator import (
+    get_patron_puja_dates,
+)
 from dhananjaya.dhananjaya.utils import get_credits_equivalent, get_preachers
 from dhananjaya.dhananjaya.report.upcoming_special_pujas.puja_calculator import (
     get_puja_dates,
 )
+from frappe.utils.data import getdate, now
 
 
 @frappe.whitelist()
@@ -54,7 +59,9 @@ def user_stats(based_on="receipt_date"):
         credits_amount = get_credits_equivalent(i["company_full"], i["credits"])
         key = i["company"] + "|" + i["month"]
         if key not in total_donations:
-            total_donations.setdefault(key, {"company": i["company"], "month": i["month"], "amount": 0})
+            total_donations.setdefault(
+                key, {"company": i["company"], "month": i["month"], "amount": 0}
+            )
         total_donations[key]["amount"] += credits_amount
 
     return total_donations.values()
@@ -65,7 +72,9 @@ def send_message():
     from redis import Redis
 
     redis_server = Redis.from_url("redis://test.hkmjerp.in:12311")
-    redis_server.publish("events", frappe.as_json({"event": "sas", "message": "demo", "room": "perso"}))
+    redis_server.publish(
+        "events", frappe.as_json({"event": "sas", "message": "demo", "room": "perso"})
+    )
 
 
 @frappe.whitelist()
@@ -78,10 +87,22 @@ def is_the_user_cashier():
 @frappe.whitelist()
 def get_upcoming_pujas():
     current_date = datetime.now().date()
-    after_seven_days = current_date + timedelta(days=8)
+    after_thirty_days = current_date + timedelta(days=30)
     preachers = get_preachers()
-    special_pujas = get_puja_dates(current_date, after_seven_days, preachers)
-    priviledge_pujas = get_patron_puja_dates(current_date, after_seven_days, preachers)
+    special_pujas = get_puja_dates(current_date, after_thirty_days, preachers)
+    priviledge_pujas = get_patron_puja_dates(current_date, after_thirty_days, preachers)
+    all_pujas = special_pujas + priviledge_pujas
+    all_pujas = sorted(all_pujas, key=lambda x: x["date"])
+    return all_pujas
+
+
+@frappe.whitelist()
+def get_upcoming_pujas_from_to(from_date, to_date):
+    from_date = getdate(from_date)
+    to_date = getdate(to_date)
+    preachers = get_preachers()
+    special_pujas = get_puja_dates(from_date, to_date, preachers)
+    priviledge_pujas = get_patron_puja_dates(from_date, to_date, preachers)
     all_pujas = special_pujas + priviledge_pujas
     all_pujas = sorted(all_pujas, key=lambda x: x["date"])
     return all_pujas
@@ -124,7 +145,11 @@ def fetch_donor_by_contact(contact):
 
 @frappe.whitelist(allow_guest=True)
 def get_oauth_client_id(app_name):
-    clients = frappe.get_all("OAuth Client", filters=[["app_name", "=", app_name]], fields=["name", "client_id"])
+    clients = frappe.get_all(
+        "OAuth Client",
+        filters=[["app_name", "=", app_name]],
+        fields=["name", "client_id"],
+    )
     if len(clients) == 0:
         frappe.throw("There is no OAuth Setup associated with this App.")
     else:
@@ -134,5 +159,8 @@ def get_oauth_client_id(app_name):
 @frappe.whitelist(allow_guest=True)
 def get_erp_domains():
     return frappe.get_all(
-        "ERP Domain", filters=[["active", "=", 1]], fields=["name", "erp_title", "erp_address"], order_by="name asc"
+        "ERP Domain",
+        filters=[["active", "=", 1]],
+        fields=["name", "erp_title", "erp_address"],
+        order_by="name asc",
     )

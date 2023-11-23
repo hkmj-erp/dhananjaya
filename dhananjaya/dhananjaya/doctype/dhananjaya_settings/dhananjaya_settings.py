@@ -3,10 +3,13 @@
 from dhananjaya.dhananjaya.utils import get_best_contact_address, get_formatted_address
 import frappe
 from frappe.model.document import Document
+from frappe.utils import random_string
 from frappe.utils.data import money_in_words
+
 
 class DhananjayaSettings(Document):
     pass
+
 
 @frappe.whitelist()
 def get_print_donation(dr):
@@ -43,7 +46,9 @@ def get_print_donation(dr):
         if sevak_name:
             dr_data.update({"sevak_name": sevak_name})
     else:
-        donor_creation_request_doc = frappe.get_doc("Donor Creation Request", dr_doc.donor_creation_request)
+        donor_creation_request_doc = frappe.get_doc(
+            "Donor Creation Request", dr_doc.donor_creation_request
+        )
 
         address_values = [
             donor_creation_request_doc.address_line_1,
@@ -52,7 +57,9 @@ def get_print_donation(dr):
             donor_creation_request_doc.state,
             donor_creation_request_doc.pin_code,
         ]
-        non_null_values = [i.strip(",") for i in address_values if (i is not None and len(i) > 0)]
+        non_null_values = [
+            i.strip(",") for i in address_values if (i is not None and len(i) > 0)
+        ]
         address = ",".join(non_null_values)
 
         dr_data = {
@@ -72,3 +79,12 @@ def get_print_donation(dr):
         dr_data.update({"reference_number": tx_doc.description})
 
     return company_detail.as_dict(), dr_data
+
+
+@frappe.whitelist(methods=["POST"])
+def refresh_versions():
+    for dv in frappe.get_all("Dhananjaya Notifier"):
+        frappe.db.set_value(
+            "Dhananjaya Notifier", dv["name"], "version", random_string(6)
+        )
+    return
