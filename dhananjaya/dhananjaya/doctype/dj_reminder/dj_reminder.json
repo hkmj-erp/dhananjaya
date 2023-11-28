@@ -9,6 +9,7 @@
   "remind_at",
   "message",
   "donor",
+  "donor_name",
   "user"
  ],
  "fields": [
@@ -38,11 +39,17 @@
    "label": "User",
    "options": "User",
    "reqd": 1
+  },
+  {
+   "fetch_from": "donor.full_name",
+   "fieldname": "donor_name",
+   "fieldtype": "Data",
+   "label": "Donor Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-06-01 10:08:38.340958",
+ "modified": "2023-11-28 15:48:49.836125",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "DJ Reminder",

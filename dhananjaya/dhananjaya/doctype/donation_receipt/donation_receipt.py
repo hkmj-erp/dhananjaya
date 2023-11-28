@@ -1,8 +1,6 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
-from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
 from dhananjaya.dhananjaya.utils import (
-    check_user_notify,
     get_best_contact_address,
     get_company_defaults,
     get_pdf_dr,
@@ -157,10 +155,6 @@ class DonationReceipt(Document):
                     {
                         "doctype": "App Notification",
                         "app": settings_doc.firebase_admin_app,
-                        "tag": DJNotificationTags.DONATION_RECEIPT_TAG,
-                        "notify": check_user_notify(
-                            erp_user, DJNotificationTags.DONATION_RECEIPT_TAG
-                        ),
                         "user": erp_user,
                         "subject": title,
                         "message": message,

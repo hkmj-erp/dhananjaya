@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 import re
 import frappe, json
 from dhananjaya.dhananjaya.report.donation_cumulative_report.donation_cumulative_report import (
@@ -97,15 +97,54 @@ def get_upcoming_pujas():
 
 
 @frappe.whitelist()
-def get_upcoming_pujas_from_to(from_date, to_date):
+def get_events_calender(from_date, to_date):
     from_date = getdate(from_date)
     to_date = getdate(to_date)
     preachers = get_preachers()
     special_pujas = get_puja_dates(from_date, to_date, preachers)
+    for puja in special_pujas:
+        puja["event_id"] = puja.pop("puja_id")
+        puja["event"] = puja.pop("occasion")
+        puja["event_type"] = "Special Puja"
+        puja["date"] = datetime.combine(puja["date"], time.min)
+        puja["all_day"] = 1
     priviledge_pujas = get_patron_puja_dates(from_date, to_date, preachers)
-    all_pujas = special_pujas + priviledge_pujas
-    all_pujas = sorted(all_pujas, key=lambda x: x["date"])
-    return all_pujas
+    for puja in priviledge_pujas:
+        puja["event_id"] = puja.pop("puja_id")
+        puja["event"] = puja.pop("occasion")
+        puja["event_type"] = "Privilege Puja"
+        puja["date"] = datetime.combine(puja["date"], time.min)
+        puja["all_day"] = 1
+
+    reminders = get_reminders(from_date, to_date)
+
+    for reminder in reminders:
+        reminder["event_type"] = "Donor Reminder"
+        reminder["all_day"] = 0
+
+    events = special_pujas + priviledge_pujas + reminders
+
+    events = sorted(events, key=lambda x: x["date"])
+    return events
+
+
+def get_reminders(from_date, to_date):
+    return frappe.get_all(
+        "DJ Reminder",
+        filters=[
+            ["user", "=", frappe.session.user],
+            ["remind_at", "between", [from_date, to_date]],
+        ],
+        fields=[
+            "name AS event_id",
+            "message AS event",
+            "donor",
+            "donor_name",
+            "preacher as llp_preacher",
+            "user",
+            "remind_at as date",
+        ],
+    )
 
 
 @frappe.whitelist()

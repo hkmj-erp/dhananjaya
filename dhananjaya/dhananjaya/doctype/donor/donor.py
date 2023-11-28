@@ -1,6 +1,6 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
-from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
+
 from dhananjaya.dhananjaya.doctype.donor.ecs_utils import count_of_ecs, get_ecs_months
 import frappe
 import re
@@ -9,7 +9,13 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.utils import strip, sbool
 from frappe.model.document import Document
 
-from dhananjaya.dhananjaya.utils import check_user_notify, get_preacher_users, is_valid_aadhar_number, is_valid_pan_number, is_valid_pincode, sanitise_str
+from dhananjaya.dhananjaya.utils import (
+    get_preacher_users,
+    is_valid_aadhar_number,
+    is_valid_pan_number,
+    is_valid_pincode,
+    sanitise_str,
+)
 
 
 class Donor(Document):
@@ -51,8 +57,6 @@ class Donor(Document):
                 {
                     "doctype": "App Notification",
                     "app": settings_doc.firebase_admin_app,
-                    "tag": DJNotificationTags.DONOR_CREATION_TAG,
-                    "notify": check_user_notify(erp_user, DJNotificationTags.DONOR_CREATION_TAG),
                     "user": erp_user,
                     "subject": title,
                     "message": message,
@@ -70,8 +74,14 @@ class Donor(Document):
 
     def before_save(self):
         # Preacher Change
-        if not self.is_new() and self.has_value_changed("llp_preacher") and "DCC Manager" not in frappe.get_roles():
-            frappe.throw("Only DCC Manager is allowed to change the Preacher of a Donor.")
+        if (
+            not self.is_new()
+            and self.has_value_changed("llp_preacher")
+            and "DCC Manager" not in frappe.get_roles()
+        ):
+            frappe.throw(
+                "Only DCC Manager is allowed to change the Preacher of a Donor."
+            )
 
         ####
         self.first_name = sanitise_str(self.first_name)
@@ -89,7 +99,9 @@ class Donor(Document):
                 frappe.throw(_("Only one address can be set Preferred."))
             if address.preferred:
                 preferred_flag = True
-            if (strip(address.pin_code) != "") and (not is_valid_pincode(address.pin_code)):
+            if (strip(address.pin_code) != "") and (
+                not is_valid_pincode(address.pin_code)
+            ):
                 frappe.throw(_(f"Row #{i+1} contains an invalid PIN Code."))
             # if address.type in types:
             # 	frappe.throw(_(f"Row #{i+1} is a <b>Duplicate</b> of address type {address.type}. Please remove it."))
@@ -101,7 +113,9 @@ class Donor(Document):
         for i, contact in enumerate(self.contacts):
             if contact.contact_no in contact_numbers:
                 frappe.throw(
-                    _(f"Row #{i+1} is a <b>Duplicate</b> of contact_no number {contact.contact_no}. Please remove it.")
+                    _(
+                        f"Row #{i+1} is a <b>Duplicate</b> of contact_no number {contact.contact_no}. Please remove it."
+                    )
                 )
             contact_numbers.append(contact.contact_no)
         return
@@ -110,7 +124,11 @@ class Donor(Document):
         emails = []
         for i, email in enumerate(self.emails):
             if email.email in emails:
-                frappe.throw(_(f"Row #{i+1} is a <b>Duplicate</b> of email {email.email}. Please remove it."))
+                frappe.throw(
+                    _(
+                        f"Row #{i+1} is a <b>Duplicate</b> of email {email.email}. Please remove it."
+                    )
+                )
             emails.append(email.email)
 
     def validate_kyc(self):
@@ -137,6 +155,7 @@ class Donor(Document):
         if self.opening_date and self.periodicity and self.closing_date:
             return count_of_ecs(self.opening_date, self.periodicity, self.closing_date)
         return "NA"
+
 
 @frappe.whitelist()
 def create_patron_from_donor(source_name, target_doc=None, args=None):

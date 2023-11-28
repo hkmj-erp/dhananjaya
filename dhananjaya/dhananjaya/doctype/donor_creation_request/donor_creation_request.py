@@ -1,9 +1,7 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
 
-from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
 from dhananjaya.dhananjaya.utils import (
-    check_user_notify,
     get_donor_details,
     is_valid_pan_number,
     is_valid_aadhar_number,
@@ -201,7 +199,9 @@ def update_donor(donor, request):
 
     request_doc = frappe.get_doc("Donor Creation Request", request)
     frappe.db.set_value("Donor Creation Request", request, "status", "Closed")
-    donations = frappe.get_all("Donation Receipt", filters={"donor_creation_request": request}, pluck="name")
+    donations = frappe.get_all(
+        "Donation Receipt", filters={"donor_creation_request": request}, pluck="name"
+    )
     donor = frappe.get_doc("Donor", donor)
     for d in donations:
         frappe.db.set_value(
@@ -224,8 +224,6 @@ def update_donor(donor, request):
         {
             "doctype": "App Notification",
             "app": settings_doc.firebase_admin_app,
-            "tag": DJNotificationTags.DONOR_CREATION_TAG,
-            "notify": check_user_notify(erp_user, DJNotificationTags.DONOR_CREATION_TAG),
             "user": erp_user,
             "subject": title,
             "message": message,

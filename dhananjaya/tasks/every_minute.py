@@ -1,6 +1,4 @@
 import frappe
-from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
-from dhananjaya.dhananjaya.utils import check_user_notify
 
 @frappe.whitelist()
 def execute():
@@ -21,8 +19,6 @@ def show_reminders():
             {
                 "doctype": "App Notification",
                 "app": settings_doc.firebase_admin_app,
-                "tag": DJNotificationTags.DONOR_REMINDER_TAG,
-                "notify": check_user_notify(i["user"], DJNotificationTags.DONOR_REMINDER_TAG),
                 "user": i["user"],
                 "subject": "Reminder",
                 "message": i["message"],
@@ -32,6 +28,3 @@ def show_reminders():
         )
         doc.insert(ignore_permissions=True)
     frappe.db.commit()
-
-
-

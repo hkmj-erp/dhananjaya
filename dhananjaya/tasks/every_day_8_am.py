@@ -1,11 +1,9 @@
 from datetime import datetime, timedelta
 import frappe
-from dhananjaya.dhananjaya.utils import check_user_notify, get_preachers
+from dhananjaya.dhananjaya.utils import get_preachers
 from dhananjaya.dhananjaya.report.upcoming_special_pujas.puja_calculator import (
     get_puja_dates,
 )
-from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
-
 
 @frappe.whitelist()
 def execute():
@@ -34,8 +32,6 @@ def special_puja_notify():
                 {
                     "doctype": "App Notification",
                     "app": settings_doc.firebase_admin_app,
-                    "tag": DJNotificationTags.SPECIAL_PUJA_TAG,
-                    "notify": check_user_notify(u, DJNotificationTags.SPECIAL_PUJA_TAG),
                     "user": u,
                     "subject": puja["occasion"],
                     "message": f"Special Puja Tomorrow for {puja['donor_name']}",

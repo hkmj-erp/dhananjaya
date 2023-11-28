@@ -32,47 +32,6 @@ fields = {
             options="Company",
             insert_after="print_reference_id",
         ),
-        dict(
-            fieldname="column_break_ddi1v",
-            label="Notifications",
-            fieldtype="Column Break",
-            insert_after="default_company",
-        ),
-        dict(
-            fieldname="special_puja_notification",
-            label="Special Puja",
-            default=1,
-            fieldtype="Check",
-            insert_after="column_break_ddi1v",
-        ),
-        dict(
-            fieldname="donor_creation_notification",
-            label="Donor Creation",
-            default=1,
-            fieldtype="Check",
-            insert_after="special_puja_notification",
-        ),
-        dict(
-            fieldname="donor_claim_notification",
-            label="Donor Claim",
-            fieldtype="Check",
-            default=1,
-            insert_after="donor_creation_notification",
-        ),
-        dict(
-            fieldname="donation_receipt_notification",
-            label="Donation Receipt",
-            fieldtype="Check",
-            default=1,
-            insert_after="donor_claim_notification",
-        ),
-        dict(
-            fieldname="donor_reminder_notification",
-            label="Donation Reminder",
-            fieldtype="Check",
-            default=1,
-            insert_after="donation_receipt_notification",
-        ),
     ],
 }
 
