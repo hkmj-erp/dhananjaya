@@ -397,13 +397,13 @@
    "type": "Link"
   }
  ],
- "modified": "2023-10-20 16:29:55.620320",
- "modified_by": "ajad@hkm-group.org",
+ "modified": "2023-11-06 14:45:46.149592",
+ "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "DCC",
  "number_cards": [],
  "owner": "nrhd@hkm-group.org",
- "parent_page": "",
+ "parent_page": "HKM",
  "public": 1,
  "quick_lists": [],
  "restrict_to_domain": "",
@@ -421,7 +421,7 @@
    "role": "DCC Preacher"
   }
  ],
- "sequence_id": 6.0,
+ "sequence_id": 3.0,
  "shortcuts": [
   {
    "color": "Grey",
