@@ -22,7 +22,9 @@ def create_receipt():
     else:
         if "donor_creation_request" not in donation:
             frappe.throw("Donor Creation Request Reference is missing")
-        donor_request_doc = frappe.get_doc("Donor Creation Request", donation["donor_creation_request"])
+        donor_request_doc = frappe.get_doc(
+            "Donor Creation Request", donation["donor_creation_request"]
+        )
         donor_request_doc.pan_number = donation["pan_no"]
         donor_request_doc.aadhar_number = donation["aadhar_no"]
         donor_request_doc.save(ignore_permissions=True)
@@ -70,7 +72,9 @@ def create_receipt():
         doc.cheque_number = donation["cheque_number"]
         doc.ifsc_code = donation["ifsc_code"]
         doc.bank_name = donation["bank_name"]
-        cheque_image_name = "_" + donation["cheque_date"] + "_" + donation["cheque_number"]
+        cheque_image_name = (
+            "_" + donation["cheque_date"] + "_" + donation["cheque_number"]
+        )
 
     doc.save()
     # doc.insert()
@@ -89,7 +93,14 @@ def create_receipt():
             args["max_width"] = 1200
             content = optimize_image(**args)
 
-        filename = doc.name + "-" + donation["payment_method"] + cheque_image_name + "." + fileref.split(".")[-1]
+        filename = (
+            doc.name
+            + "-"
+            + donation["payment_method"]
+            + cheque_image_name
+            + "."
+            + fileref.split(".")[-1]
+        )
         frappe.local.uploaded_file = content
         frappe.local.uploaded_filename = filename
         # file_url = frappe.form_dict.file_url
@@ -133,7 +144,11 @@ def get_receipts_of_patron(patron):
     preacher = frappe.db.get_value("Patron", patron, "llp_preacher")
     if preacher not in preachers:
         frappe.throw("Not Allowed")
-    return frappe.get_all("Donation Receipt", fields=["*"], filters=[["docstatus", "!=", "2"], ["patron", "=", patron]])
+    return frappe.get_all(
+        "Donation Receipt",
+        fields=["*"],
+        filters=[["docstatus", "!=", "2"], ["patron", "=", patron]],
+    )
 
 
 ### New Function for Receipts Search
@@ -153,19 +168,27 @@ def search_receipts(filters, order_by, limit_start, limit):
         limit_string = f" LIMIT {limit_start}, {limit}"
 
     for ftr in filters:
+        ## Clean end value of Filters
+        if "in" in ftr[1]:
+            ftr_value = "(" + ", ".join([f"'{f}'" for f in ftr[2]]) + ")"
+        else:
+            ftr_value = f"'{ftr[2]}'"
         if "full_name" in ftr:
             where_string += f""" AND tdr.full_name LIKE '%{ftr[2]}%' """
         if "specific_month" in ftr and ftr[2] != "":
             where_string += f""" AND MONTH(tdr.receipt_date) = {ftr[2]} """
         if "company" in ftr:
-            companies_str = ", ".join([f"'{f}'" for f in ftr[2]])
-            where_string += f""" AND company {ftr[1]} ({companies_str}) """
+            where_string += f""" AND {ftr[0]} {ftr[1]} {ftr_value} """
         if "receipt_date" in ftr:
-            where_string += f""" AND receipt_date {ftr[1]} '{ftr[2]}' """
+            where_string += f""" AND {ftr[0]} {ftr[1]} '{ftr[2]}' """
         if "seva_type" in ftr:
-            where_string += f""" AND seva_type {ftr[1]} '{ftr[2]}' """
+            where_string += f""" AND {ftr[0]} {ftr[1]} '{ftr[2]}' """
         if "seva_subtype" in ftr:
-            where_string += f""" AND seva_subtype {ftr[1]} '{ftr[2]}' """
+            where_string += f""" AND {ftr[0]} {ftr[1]} '{ftr[2]}' """
+        if "workflow_state" in ftr:
+            where_string += f""" AND {ftr[0]} {ftr[1]} {ftr_value} """
+        if "payment_method" in ftr:
+            where_string += f""" AND {ftr[0]} {ftr[1]} {ftr_value} """
         if "docstatus" in ftr:
             where_string += f""" AND docstatus {ftr[1]} {ftr[2]} """
         else:
@@ -204,13 +227,19 @@ def search_receipts(filters, order_by, limit_start, limit):
         as_dict=1,
     )
 
-    return frappe._dict(receipts=receipts, count=analysis[0]["count_receipts"], sum=analysis[0]["total_amount"])
+    return frappe._dict(
+        receipts=receipts,
+        count=analysis[0]["count_receipts"],
+        sum=analysis[0]["total_amount"],
+    )
 
 
 @frappe.whitelist()
 def validate_patronship(seva_type, seva_subtype):
     seva_type_status = frappe.get_value("Seva Type", seva_type, "patronship_allowed")
-    sevasub_type_status = frappe.get_value("Seva Subtype", seva_subtype, "patronship_allowed")
+    sevasub_type_status = frappe.get_value(
+        "Seva Subtype", seva_subtype, "patronship_allowed"
+    )
     if seva_type_status and sevasub_type_status:
         return True
     else:

@@ -8,37 +8,6 @@ from frappe.www.printview import validate_print_permission
 from frappe import local
 from cryptography.fernet import Fernet
 
-from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
-
-
-def check_user_notify(user, tag):
-    user_doc = frappe.get_doc("User", user)
-    if (
-        tag == DJNotificationTags.DONOR_CREATION_TAG
-        and user_doc.donor_creation_notification
-    ):
-        return True
-    if (
-        tag == DJNotificationTags.SPECIAL_PUJA_TAG
-        and user_doc.special_puja_notification
-    ):
-        return True
-    if tag == DJNotificationTags.DONOR_CLAIM_TAG and user_doc.donor_claim_notification:
-        return True
-    if (
-        tag == DJNotificationTags.DONATION_RECEIPT_TAG
-        and user_doc.donation_receipt_notification
-    ):
-        return True
-    if (
-        tag == DJNotificationTags.DONOR_REMINDER_TAG
-        and user_doc.donor_reminder_notification
-    ):
-        return True
-    if tag in [DJNotificationTags.ECS_CREATION_TAG]:
-        return True
-    return False
-
 
 @frappe.whitelist()
 def get_short_url(long_url):
@@ -101,7 +70,9 @@ def download_pdf_public(
 
 ## This returns the preachers assigned to a User
 @frappe.whitelist()
-def get_preachers():
+def get_preachers(user=None):
+    if not user:
+        user = frappe.session.user
     preachers = []
     for i in frappe.db.sql(
         f"""
@@ -109,7 +80,7 @@ def get_preachers():
                     from `tabLLP Preacher` p
                     join `tabLLP Preacher User` pu
                     on p.name = pu.parent
-                    where pu.user = '{frappe.session.user}'
+                    where pu.user = '{user}'
                     group by p.name
                     """,
         as_dict=1,
@@ -191,7 +162,7 @@ def extract_longest_digits(string):
 
 
 def is_valid_pan_number(pan):
-    pan_pattern = re.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}")
+    pan_pattern = re.compile("[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}")
     if pan_pattern.fullmatch(pan):
         return True
     return False
@@ -231,6 +202,8 @@ def get_pdf_dr(doctype, name, doc=None):
     # options={"password":"krishna"} if password required
     pdf_file = get_pdf(content)
     return pdf_file
+
+
 @frappe.whitelist()
 def download_pdf(
     name,

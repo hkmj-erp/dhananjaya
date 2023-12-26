@@ -3,10 +3,6 @@
 
 import frappe
 from frappe.model.document import Document
-from dhananjaya.dhananjaya.utils import check_user_notify
-
-from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
-
 
 class DonorClaimRequest(Document):
     def on_update(self):
@@ -16,8 +12,6 @@ class DonorClaimRequest(Document):
                 {
                     "doctype": "App Notification",
                     "app": settings_doc.firebase_admin_app,
-                    "tag": DJNotificationTags.DONOR_CLAIM_TAG,
-                    "notify": check_user_notify(self.user, DJNotificationTags.DONOR_CLAIM_TAG),
                     "user": self.user,
                     "subject": "Donor Claim Approved!",
                     "message": f"Your request to claim donor {self.full_name} is Approved. Please check the change.",
@@ -31,8 +25,6 @@ class DonorClaimRequest(Document):
                 {
                     "doctype": "App Notification",
                     "app": settings_doc.firebase_admin_app,
-                    "tag": DJNotificationTags.DONOR_CLAIM_TAG,
-                    "notify": check_user_notify(self.user, DJNotificationTags.DONOR_CLAIM_TAG),
                     "user": self.user,
                     "subject": "Donor Claim Rejected!",
                     "message": f"Your request to claim donor {self.full_name} is Rejected. Please contact Admin for further discussion.",

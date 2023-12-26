@@ -9,5 +9,6 @@ def get_data():
         "transactions": [
             {"label": _("Links"), "items": ["Donation Receipt"]},
             {"label": _("Festival Benefits"), "items": ["Donor Festival Benefit"]},
+            {"label": _("Reminders"), "items": ["DJ Reminder"]},
         ],
     }

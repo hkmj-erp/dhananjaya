@@ -26,9 +26,12 @@
    "label": "Enabled"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "seva_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Seva Name",
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -83,7 +86,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2023-11-07 14:06:39.735965",
+ "modified": "2023-11-21 10:01:27.924608",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Subtype",

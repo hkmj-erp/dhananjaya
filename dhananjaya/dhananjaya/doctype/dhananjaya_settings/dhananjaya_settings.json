@@ -20,7 +20,9 @@
   "patron_settings_section",
   "display_names_allowed",
   "ecs_settings_section",
-  "default_ecs_bank"
+  "default_ecs_bank",
+  "notifier_section",
+  "refresh_versions"
  ],
  "fields": [
   {
@@ -114,13 +116,24 @@
   {
    "fieldname": "section_break_uanlt",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "notifier_section",
+   "fieldtype": "Section Break",
+   "label": "Notifier"
+  },
+  {
+   "description": "This button is to update the versions of Offline Doctypes which are used in Mobile Applications so that apps can refresh the fresh data from Server.",
+   "fieldname": "refresh_versions",
+   "fieldtype": "Button",
+   "label": "Refresh Versions"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-29 16:44:56.985248",
+ "modified": "2023-11-23 13:44:30.662344",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",

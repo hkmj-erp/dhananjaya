@@ -17,7 +17,7 @@ def get_patron_puja_dates(from_date, to_date, preachers=[]):
         preachers = list(set(preachers))
         preachers_string = ",".join([f"'{d}'" for d in preachers])
         priviledge_pujas = frappe.db.sql(
-            f""" select * 
+            f""" select tppp.*
                 from `tabPatron Privilege Puja` tppp
                 join `tabPatron` tp
                 on tppp.patron = tp.name
@@ -30,18 +30,25 @@ def get_patron_puja_dates(from_date, to_date, preachers=[]):
         year = from_date.year
         for p in priviledge_pujas:
             try:
-                occasion_date = datetime.strptime(f"{year}-{p['month']}-{p['day']}", "%Y-%B-%d").date()
+                occasion_date = datetime.strptime(
+                    f"{year}-{p['month']}-{p['day']}", "%Y-%B-%d"
+                ).date()
                 if from_date <= occasion_date <= to_date:
                     upcoming_patron_pujas.append(get_puja_data(p, occasion_date))
             except ValueError as e:
-                frappe.errprint(e)
+                continue
     else:
         years = list(range(from_date.year, to_date.year + 1, 1))
         for p in priviledge_pujas:
             for year in years:
-                occasion_date = datetime.strptime(f"{year}-{p['month']}-{p['day']}", "%Y-%B-%d").date()
-                if from_date <= occasion_date <= to_date:
-                    upcoming_patron_pujas.append(get_puja_data(p, occasion_date))
+                try:
+                    occasion_date = datetime.strptime(
+                        f"{year}-{p['month']}-{p['day']}", "%Y-%B-%d"
+                    ).date()
+                    if from_date <= occasion_date <= to_date:
+                        upcoming_patron_pujas.append(get_puja_data(p, occasion_date))
+                except ValueError as e:
+                    continue
 
     patrons = [p["patron"] for p in upcoming_patron_pujas]
     patrons_data = get_patron_data(patrons)

@@ -4,10 +4,6 @@
 import frappe
 from frappe.model.document import Document
 from datetime import datetime
-from dhananjaya.dhananjaya.notification_tags import DJNotificationTags
-
-from dhananjaya.dhananjaya.utils import check_user_notify, get_preacher_users
-
 
 class DonorECSCreationRequest(Document):
     def on_change(self):
@@ -38,8 +34,6 @@ class DonorECSCreationRequest(Document):
                     {
                         "doctype": "App Notification",
                         "app": settings_doc.firebase_admin_app,
-                        "tag": DJNotificationTags.ECS_CREATION_TAG,
-                        "notify": check_user_notify(erp_user, DJNotificationTags.ECS_CREATION_TAG),
                         "user": erp_user,
                         "subject": title,
                         "message": message,

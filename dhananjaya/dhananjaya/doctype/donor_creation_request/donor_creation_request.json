@@ -43,9 +43,11 @@
    "reqd": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "address_line_1",
    "fieldtype": "Data",
-   "label": "Address Line 1"
+   "label": "Address Line 1",
+   "reqd": 1
   },
   {
    "fieldname": "address_line_2",
@@ -142,7 +144,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-29 15:42:23.513956",
+ "modified": "2023-12-05 18:18:47.417543",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor Creation Request",

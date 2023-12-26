@@ -14,3 +14,5 @@ dhananjaya.patches.v_0_0.create_custom_perm #8
 dhananjaya.patches.v_0_0.update_donor_creation_requests #1
 dhananjaya.patches.v_0_0.revamp_patron_card #1
 
+dhananjaya.patches.v_0_1.create_initial_dj_notifier #1
+

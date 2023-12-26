@@ -17,7 +17,7 @@ def get_puja_dates(from_date, to_date, preachers=[]):
         preachers = list(set(preachers))
         preachers_string = ",".join([f"'{d}'" for d in preachers])
         pujas = frappe.db.sql(
-            f""" select * 
+            f""" select `tabSpecial Puja Detail`.*
                 from `tabSpecial Puja Detail`
                 join `tabDonor` on `tabSpecial Puja Detail`.parent = `tabDonor`.name
                 where parentfield = 'puja_details' and parenttype = 'Donor'
@@ -36,16 +36,19 @@ def get_puja_dates(from_date, to_date, preachers=[]):
                 if from_date <= occasion_date <= to_date:
                     upcoming_pujas.append(get_puja_data(p, occasion_date))
             except ValueError as e:
-                frappe.errprint(e)
+                continue
     else:
         years = list(range(from_date.year, to_date.year + 1, 1))
         for p in pujas:
             for year in years:
-                occasion_date = datetime.strptime(
-                    f"{year}-{p['month']}-{p['day']}", "%Y-%B-%d"
-                ).date()
-                if from_date <= occasion_date <= to_date:
-                    upcoming_pujas.append(get_puja_data(p, occasion_date))
+                try:
+                    occasion_date = datetime.strptime(
+                        f"{year}-{p['month']}-{p['day']}", "%Y-%B-%d"
+                    ).date()
+                    if from_date <= occasion_date <= to_date:
+                        upcoming_pujas.append(get_puja_data(p, occasion_date))
+                except ValueError as e:
+                    continue
 
     donors = [p["donor"] for p in upcoming_pujas]
     donors_data = get_donor_details(donors)
@@ -62,6 +65,7 @@ def get_puja_data(p, occasion_date):
     data = {
         "date": occasion_date,
         "occasion": p["occasion"],
+        "puja_id": p["name"],
         "donor": p["parent"],
         "s_name": p["name"],
     }
