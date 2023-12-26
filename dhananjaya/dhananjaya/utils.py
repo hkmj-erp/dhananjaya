@@ -70,7 +70,9 @@ def download_pdf_public(
 
 ## This returns the preachers assigned to a User
 @frappe.whitelist()
-def get_preachers():
+def get_preachers(user=None):
+    if not user:
+        user = frappe.session.user
     preachers = []
     for i in frappe.db.sql(
         f"""
@@ -78,7 +80,7 @@ def get_preachers():
                     from `tabLLP Preacher` p
                     join `tabLLP Preacher User` pu
                     on p.name = pu.parent
-                    where pu.user = '{frappe.session.user}'
+                    where pu.user = '{user}'
                     group by p.name
                     """,
         as_dict=1,

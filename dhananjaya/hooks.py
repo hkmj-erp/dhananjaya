@@ -159,7 +159,7 @@ scheduler_events = {
     "hourly_long": ["dhananjaya.tasks.hourly_long.execute"],
     "cron": {
         "* * * * *": ["dhananjaya.tasks.every_minute.execute"],
-        "0 8 * * *": ["dhananjaya.tasks.every_day_8_am.execute"],
+        "7 9 * * *": ["dhananjaya.tasks.every_day_8_am.execute"],
         # Hourly but offset by 30 minutes
         "30 * * * *": [
             "dhananjaya.tasks.hourly.execute",

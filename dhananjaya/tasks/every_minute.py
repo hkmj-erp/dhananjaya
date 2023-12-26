@@ -1,4 +1,6 @@
+from dhananjaya.tasks.every_day_8_am import privilege_puja_notify
 import frappe
+
 
 @frappe.whitelist()
 def execute():

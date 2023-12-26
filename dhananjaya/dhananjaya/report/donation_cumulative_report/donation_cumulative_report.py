@@ -11,27 +11,38 @@ def execute(filters=None):
     columns = get_columns(companies)
     conditions = get_conditions()
 
+    if filters.get("only_realized"):
+        conditions += "AND tdr.docstatus = 1"
+
     donations = []
 
-    for p in frappe.get_all("LLP Preacher", filters={"include_in_analysis": 1}, pluck="name"):
+    for p in frappe.get_all(
+        "LLP Preacher", filters={"include_in_analysis": 1}, pluck="name"
+    ):
         donation_row = {"preacher": p}
         for c in companies:
             donation_row.setdefault(c, 0)
+        donation_row.setdefault("ecs", 0)
+        donation_row.setdefault("credits", 0)
         # donation_row.extend([0]*len(com))
 
         ### Regular Donations
         preacher_total_donation = 0
         for i in frappe.db.sql(
             f"""
-                            select company, SUM(amount) as total
+                            select company,is_ecs, SUM(amount) as total
                             from `tabDonation Receipt` tdr
                             where tdr.preacher = '{p}'
+                            AND receipt_date BETWEEN '{filters.get("from_date")}' AND '{filters.get("to_date")}'
                             {conditions}
-                            group by tdr.company
+                            group by tdr.company,is_ecs
                             """,
             as_dict=1,
         ):
-            donation_row[i["company"]] = i["total"]
+            if i["is_ecs"]:
+                donation_row["ecs"] += i["total"]
+            else:
+                donation_row[i["company"]] = i["total"]
             preacher_total_donation += i["total"]
 
         ### Credit Donations
@@ -46,7 +57,7 @@ def execute(filters=None):
             as_dict=1,
         ):
             credits_amount = get_credits_equivalent(i["company"], i["credits"])
-            donation_row[i["company"]] += credits_amount  ## Add this to regular
+            donation_row["credits"] += credits_amount  ## Add this to regular
             preacher_total_donation += credits_amount
 
         donation_row.setdefault("total_preacher", preacher_total_donation)
@@ -85,10 +96,11 @@ def get_conditions(selective_preachers=False):
     conditions += f" AND ( seva_subtype IS NULL OR seva_subtype = '' OR seva_subtype IN ({seva_subtypes_str}) )"
 
     if selective_preachers:
-        preachers = frappe.get_all("LLP Preacher", filters=[["include_in_analysis", "=", 1]], pluck="name")
+        preachers = frappe.get_all(
+            "LLP Preacher", filters=[["include_in_analysis", "=", 1]], pluck="name"
+        )
         preachers_str = ",".join([f"'{p}'" for p in preachers])
         conditions += f" AND preacher IN ({preachers_str}) "
-
     return conditions
 
 
@@ -111,6 +123,22 @@ def get_columns(companies):
                 "width": 120,
             }
         )
+    columns.append(
+        {
+            "fieldname": "ecs",
+            "label": "ECS",
+            "fieldtype": "Currency",
+            "width": 120,
+        }
+    )
+    columns.append(
+        {
+            "fieldname": "credits",
+            "label": "Credits",
+            "fieldtype": "Currency",
+            "width": 120,
+        }
+    )
     columns.append(
         {
             "fieldname": "total_preacher",
