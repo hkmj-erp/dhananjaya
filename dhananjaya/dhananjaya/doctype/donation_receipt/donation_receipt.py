@@ -730,6 +730,60 @@ def process_batch_gateway_payments(batch):
 ##### PAYMENT GATEWAY PROCESS ####
 
 
+##### PAYMENT GATEWAY AUTO REALIZATION ####
+############ BEGIN ###############
+
+
+# Process all gateway payments received in a Batch.
+@frappe.whitelist()
+def auto_realize_batch_gateway_payments(batch):
+    batch_doc = frappe.get_doc("PG Upload Batch", batch)
+
+    if not (batch_doc.final_amount == batch_doc.bank_amount):
+        frappe.throw("Auto Realization is not eligible due to amount mismatch.")
+
+    if not batch_doc.gateway_expense_account:
+        frappe.throw("Please set Gateway Expense Account first.")
+
+    payment_txs = frappe.db.get_all(
+        "Payment Gateway Transaction",
+        filters={"batch": batch, "receipt_created": 0},
+        fields=("*"),
+    )
+
+    for tx in payment_txs:
+        receipts = frappe.get_all(
+            "Donation Receipt",
+            filters=[
+                ["remarks", "=", tx['name']],
+                ["workflow_state", "=", "Acknowledged"],
+                ["amount", "=", tx["amount"]],
+            ],
+            pluck="name",
+        )
+        if len(receipts) > 0:
+            receipt_doc = frappe.get_doc("Donation Receipt", receipts[0])
+            receipt_doc.additional_charges = tx["fee"]
+            receipt_doc.payment_gateway_document = tx["name"]
+            receipt_doc.gateway_expense_account = batch_doc.gateway_expense_account
+            receipt_doc.bank_account = batch_doc.bank_account
+            receipt_doc.bank_transaction = batch_doc.bank_transaction
+            receipt_doc.submit()
+            receipt_doc.db_set("workflow_state", "Realized")
+            frappe.db.set_value(
+                "Payment Gateway Transaction",
+                tx["name"],
+                {
+                    "receipt_created": 1,
+                    "donor": receipt_doc.donor,
+                    "seva_type": receipt_doc.seva_type,
+                },
+            )
+
+
+############ CLOSE ###############
+##### PAYMENT GATEWAY AUTO REALIZATION ####
+
 ########## Send Receipt ##########
 
 

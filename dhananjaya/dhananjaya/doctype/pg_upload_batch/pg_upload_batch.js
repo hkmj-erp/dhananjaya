@@ -58,7 +58,7 @@ frappe.ui.form.on("PG Upload Batch", {
           });
         }
       );
-    });
+    }, "Operations");
     frm.add_custom_button(__("Process Batch Payments"), function () {
       frappe.warn(
         "Are you sure you want to proceed?",
@@ -82,8 +82,32 @@ frappe.ui.form.on("PG Upload Batch", {
         "Continue",
         true // Sets dialog as minimizable
       );
-    });
-    frm.add_custom_button(__("Generated Donation Receipts"), function () {
+    }, "Operations");
+    frm.add_custom_button(__("Auto Realize Receipts"), function () {
+      frappe.warn(
+        "Are you sure you want to proceed?",
+        "This will check for Donation Receipts which have Transaction ID in 'Remarks' field and realize them.",
+        () => {
+          frappe.call({
+            freeze: true,
+            freeze_message: "Processing...",
+            method:
+              "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.auto_realize_batch_gateway_payments",
+            args: {
+              batch: frm.doc.name,
+            },
+            callback: function (r) {
+              if (!r.exc) {
+                frappe.msgprint("Successfully Created.");
+              }
+            },
+          });
+        },
+        "Continue",
+        true // Sets dialog as minimizable
+      );
+    }, "Operations");
+    frm.add_custom_button(__("Check Receipts"), function () {
       frappe.call({
         method:
           "dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch.get_payment_entries",
@@ -107,7 +131,7 @@ frappe.ui.form.on("PG Upload Batch", {
           freeze: true,
           freeze_message: "Setting Up",
           method:
-            "dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch.try_razorpay_pattern",
+            "dhananjaya.dhananjaya.doctype.pg_upload_batch.setting_donors.try_razorpay_pattern",
           args: {
             batch: frm.doc.name,
           },
@@ -127,7 +151,27 @@ frappe.ui.form.on("PG Upload Batch", {
           freeze: true,
           freeze_message: "Setting Up",
           method:
-            "dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch.try_au_qr_pattern",
+            "dhananjaya.dhananjaya.doctype.pg_upload_batch.setting_donors.try_au_qr_pattern",
+          args: {
+            batch: frm.doc.name,
+          },
+          callback: function (r) {
+            if (!r.exc) {
+              console.log(r.message);
+            }
+          },
+        });
+      },
+      "Setting Donors"
+    );
+    frm.add_custom_button(
+      __("Try Standard Pattern"),
+      function () {
+        frappe.call({
+          freeze: true,
+          freeze_message: "Setting Up",
+          method:
+            "dhananjaya.dhananjaya.doctype.pg_upload_batch.setting_donors.try_standard_pattern",
           args: {
             batch: frm.doc.name,
           },
@@ -160,8 +204,8 @@ frappe.ui.form.on("PG Upload Batch", {
       total_amount += element["amount"];
       total_fee += element["fee"];
     });
-		// console.log(total_amount);
-		// console.log(total_amount.toFixed(2));
+    // console.log(total_amount);
+    // console.log(total_amount.toFixed(2));
 
     frm.set_value("total_amount", total_amount.toFixed(2));
     frm.set_value("total_fee", total_fee.toFixed(2));

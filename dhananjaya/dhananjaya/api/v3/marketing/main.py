@@ -177,7 +177,7 @@ def upload_donation():
         + f"/api/method/dhananjaya.dhananjaya.utils.download_pdf_public?receiptToken={receipt_token}"
     )
 
-    return frappe._dict(url=get_short_url(long_url))
+    return frappe._dict(url=long_url)
 
 
 COMPULSORY_FIELDS = [
