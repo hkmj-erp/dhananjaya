@@ -32,7 +32,7 @@ frappe.ui.form.on('Donation Receipt', {
 			return {
 				filters: {
 					status: 'Unreconciled',
-					deposit: frm.doc.amount,
+					deposit: frm.doc.amount - frm.doc.additional_charges,
 					bank_account: frm.doc.bank_account
 					// date: ['>=',frm.doc.receipt_date]
 				}

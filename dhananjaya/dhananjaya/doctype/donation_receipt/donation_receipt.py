@@ -135,6 +135,7 @@ class DonationReceipt(Document):
         elif self.workflow_state == "Realized" and not self.is_ecs:
             title = f"{self.full_name} Receipt Realised!"
             message = f"This is to inform you that donation by {self.full_name} has been realized of Rs. {self.amount} from Bank Statement."
+            
         elif self.workflow_state == "Realized" and self.is_ecs:
             title = f"{self.full_name} ECS Ready!"
             message = f"This is to inform you that ECS donation by {self.full_name} has been realized of Rs. {self.amount} from Bank Statement."

@@ -4,134 +4,136 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 from dhananjaya.constants import INDIAN_STATES
 
-
-def make_custom_records():
-    records = [
-        {"doctype": "Role", "role_name": "DCC Preacher"},
-        {"doctype": "Role", "role_name": "DCC Executive"},
-        {"doctype": "Role", "role_name": "DCC Manager"},
-        {"doctype": "Role", "role_name": "DCC Cashier"},
-    ]
-    records.extend(get_states_and_actions())
-    if not frappe.db.exists("Workflow", "Donation Receipt Workflow"):
-        records.append(get_workflow())
-    make_records(records)
+## This file is no longer needed since we can now receive all such customisations using Fixtures. I have made a common fixtures file in hkm app. Use that and all existing things of main hkmjerp.in site will be ported to other sites as well.
 
 
-def setup_dhananjaya():
-    make_custom_records()
-    make_custom_fields()
-    frappe.db.commit()
-    frappe.clear_cache()
+# def make_custom_records():
+#     records = [
+#         {"doctype": "Role", "role_name": "DCC Preacher"},
+#         {"doctype": "Role", "role_name": "DCC Executive"},
+#         {"doctype": "Role", "role_name": "DCC Manager"},
+#         {"doctype": "Role", "role_name": "DCC Cashier"},
+#     ]
+#     records.extend(get_states_and_actions())
+#     if not frappe.db.exists("Workflow", "Donation Receipt Workflow"):
+#         records.append(get_workflow())
+#     make_records(records)
 
 
-def make_custom_fields(update=True):
-    custom_fields = get_custom_fields()
-    create_custom_fields(custom_fields, update=update)
+# def setup_dhananjaya():
+#     make_custom_records()
+#     make_custom_fields()
+#     frappe.db.commit()
+#     frappe.clear_cache()
 
 
-def get_custom_fields():
-    custom_fields = {
-        "Journal Entry": [
-            dict(
-                fieldname="donation_receipt",
-                label="Donation Receipt",
-                fieldtype="Link",
-                options="Donation Receipt",
-                insert_after="tax_withholding_category",
-            ),
-            dict(
-                fieldname="bank_statement_name",
-                label="Bank Statement Name",
-                fieldtype="Data",
-                insert_after="donation_receipt",
-                hidden=1,
-                read_only=1,
-            ),
-            dict(
-                fieldname="workflow_state",
-                label="Workflow State",
-                fieldtype="Link",
-                options="Workflow State",
-                hidden=1,
-                read_only=1,
-                allow_on_submit=1,
-                in_standard_filter=1,
-            ),
-        ],
-        "User": [
-            dict(
-                fieldname="dhananjaya_section",
-                label="Dhananjaya Settings",
-                fieldtype="Section Break",
-                insert_after="roles",
-                collapsible=1,
-            ),
-            dict(
-                fieldname="default_indian_state",
-                label="Default State",
-                fieldtype="Select",
-                options="\n" + "\n".join(INDIAN_STATES),
-                default="Rajasthan",
-                insert_after="dhananjaya_section",
-            ),
-            dict(
-                fieldname="print_reference_id",
-                label="Print Reference ID",
-                fieldtype="Check",
-                insert_after="default_indian_state",
-            ),
-        ],
-    }
-    return custom_fields
+# def make_custom_fields(update=True):
+#     custom_fields = get_custom_fields()
+#     create_custom_fields(custom_fields, update=update)
 
 
-def get_states_and_actions():
-    return [
-        ## States ##
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Draft",
-            "style": "Primary",
-        },
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Acknowledged",
-            "style": "Primary",
-        },
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Cheque Collected",
-            "style": "Info",
-        },
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Suspense",
-            "style": "Warning",
-        },
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Received by Cashier",
-            "style": "Success",
-        },
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Realized",
-            "style": "Success",
-        },
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Cancelled",
-            "style": "Danger",
-        },
-        ## Actions ##
-        {"doctype": "Workflow Action Master", "workflow_action_name": "Acknowledge"},
-        {"doctype": "Workflow Action Master", "workflow_action_name": "Receive Cash"},
-        {"doctype": "Workflow Action Master", "workflow_action_name": "Collect Cheque"},
-        {"doctype": "Workflow Action Master", "workflow_action_name": "Confirm"},
-        {"doctype": "Workflow Action Master", "workflow_action_name": "Cancel"},
-        {"doctype": "Workflow Action Master", "workflow_action_name": "Trash"},
-    ]
+# def get_custom_fields():
+#     custom_fields = {
+#         "Journal Entry": [
+#             dict(
+#                 fieldname="donation_receipt",
+#                 label="Donation Receipt",
+#                 fieldtype="Link",
+#                 options="Donation Receipt",
+#                 insert_after="tax_withholding_category",
+#             ),
+#             dict(
+#                 fieldname="bank_statement_name",
+#                 label="Bank Statement Name",
+#                 fieldtype="Data",
+#                 insert_after="donation_receipt",
+#                 hidden=1,
+#                 read_only=1,
+#             ),
+#             dict(
+#                 fieldname="workflow_state",
+#                 label="Workflow State",
+#                 fieldtype="Link",
+#                 options="Workflow State",
+#                 hidden=1,
+#                 read_only=1,
+#                 allow_on_submit=1,
+#                 in_standard_filter=1,
+#             ),
+#         ],
+#         "User": [
+#             dict(
+#                 fieldname="dhananjaya_section",
+#                 label="Dhananjaya Settings",
+#                 fieldtype="Section Break",
+#                 insert_after="roles",
+#                 collapsible=1,
+#             ),
+#             dict(
+#                 fieldname="default_indian_state",
+#                 label="Default State",
+#                 fieldtype="Select",
+#                 options="\n" + "\n".join(INDIAN_STATES),
+#                 default="Rajasthan",
+#                 insert_after="dhananjaya_section",
+#             ),
+#             dict(
+#                 fieldname="print_reference_id",
+#                 label="Print Reference ID",
+#                 fieldtype="Check",
+#                 insert_after="default_indian_state",
+#             ),
+#         ],
+#     }
+#     return custom_fields
+
+
+# def get_states_and_actions():
+#     return [
+#         ## States ##
+#         {
+#             "doctype": "Workflow State",
+#             "workflow_state_name": "Draft",
+#             "style": "Primary",
+#         },
+#         {
+#             "doctype": "Workflow State",
+#             "workflow_state_name": "Acknowledged",
+#             "style": "Primary",
+#         },
+#         {
+#             "doctype": "Workflow State",
+#             "workflow_state_name": "Cheque Collected",
+#             "style": "Info",
+#         },
+#         {
+#             "doctype": "Workflow State",
+#             "workflow_state_name": "Suspense",
+#             "style": "Warning",
+#         },
+#         {
+#             "doctype": "Workflow State",
+#             "workflow_state_name": "Received by Cashier",
+#             "style": "Success",
+#         },
+#         {
+#             "doctype": "Workflow State",
+#             "workflow_state_name": "Realized",
+#             "style": "Success",
+#         },
+#         {
+#             "doctype": "Workflow State",
+#             "workflow_state_name": "Cancelled",
+#             "style": "Danger",
+#         },
+#         ## Actions ##
+#         {"doctype": "Workflow Action Master", "workflow_action_name": "Acknowledge"},
+#         {"doctype": "Workflow Action Master", "workflow_action_name": "Receive Cash"},
+#         {"doctype": "Workflow Action Master", "workflow_action_name": "Collect Cheque"},
+#         {"doctype": "Workflow Action Master", "workflow_action_name": "Confirm"},
+#         {"doctype": "Workflow Action Master", "workflow_action_name": "Cancel"},
+#         {"doctype": "Workflow Action Master", "workflow_action_name": "Trash"},
+#     ]
 
 
 def get_workflow():
