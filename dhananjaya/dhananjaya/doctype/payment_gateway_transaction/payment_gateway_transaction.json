@@ -16,6 +16,7 @@
   "amount",
   "fee",
   "donor",
+  "donor_name",
   "seva_type",
   "other_details_section",
   "extra_data",
@@ -111,11 +112,18 @@
    "label": "Seva Type",
    "options": "Seva Type",
    "read_only_depends_on": "eval:doc.receipt_created"
+  },
+  {
+   "fetch_from": "donor.full_name",
+   "fieldname": "donor_name",
+   "fieldtype": "Data",
+   "label": "Donor Name",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-06-18 11:38:01.660953",
+ "modified": "2024-01-10 17:38:46.416640",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Payment Gateway Transaction",
