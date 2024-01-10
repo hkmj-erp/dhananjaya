@@ -14,6 +14,13 @@ class PGUploadBatch(Document):
         company_detail = get_company_defaults(self.company)
         self.gateway_expense_account = company_detail.gateway_expense_account
 
+    def on_change(self):
+        self.set_status()
+
+    def set_status(self):
+        if self.final_amount == 0 and self.status == "Open":
+            self.db_set("status", "Closed")
+
 
 @frappe.whitelist()
 def count_donor_linked(batch):

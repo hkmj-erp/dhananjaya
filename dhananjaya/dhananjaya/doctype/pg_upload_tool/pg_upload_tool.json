@@ -18,7 +18,8 @@
    "description": "This will be checked when the Batch of Payment Gateway Entries will be processed for Donation Receipt Creation and Bank Statement Settlement.\n\nIf you keep it non-mandatory, then Donation will be booked in state <b>Suspense</b>",
    "fieldname": "pg_donor_reqd",
    "fieldtype": "Check",
-   "label": "Is Donor Required (DR Creation)"
+   "label": "Is Donor Required (DR Creation)",
+   "read_only": 1
   },
   {
    "fieldname": "company",
@@ -50,7 +51,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-21 12:37:56.406868",
+ "modified": "2024-01-10 12:52:07.195173",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "PG Upload Tool",
@@ -87,6 +88,5 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+ "states": []
 }

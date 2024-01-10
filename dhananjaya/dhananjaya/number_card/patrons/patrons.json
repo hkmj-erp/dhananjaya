@@ -1,6 +1,6 @@
 {
  "aggregate_function_based_on": "",
- "color": "#39E4A5",
+ "color": "#0ac27e",
  "creation": "2023-04-04 22:03:27.056561",
  "docstatus": 0,
  "doctype": "Number Card",
@@ -12,7 +12,7 @@
  "is_public": 1,
  "is_standard": 1,
  "label": "Patrons",
- "modified": "2023-06-10 10:23:14.722207",
+ "modified": "2024-01-10 12:49:06.690213",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patrons",

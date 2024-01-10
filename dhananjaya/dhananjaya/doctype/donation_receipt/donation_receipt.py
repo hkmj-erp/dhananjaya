@@ -135,7 +135,7 @@ class DonationReceipt(Document):
         elif self.workflow_state == "Realized" and not self.is_ecs:
             title = f"{self.full_name} Receipt Realised!"
             message = f"This is to inform you that donation by {self.full_name} has been realized of Rs. {self.amount} from Bank Statement."
-            
+
         elif self.workflow_state == "Realized" and self.is_ecs:
             title = f"{self.full_name} ECS Ready!"
             message = f"This is to inform you that ECS donation by {self.full_name} has been realized of Rs. {self.amount} from Bank Statement."
@@ -726,6 +726,8 @@ def process_batch_gateway_payments(batch):
             "Payment Gateway Transaction", tx["name"], "receipt_created", 1
         )
 
+    batch_doc.set_status()
+
 
 ############ CLOSE ###############
 ##### PAYMENT GATEWAY PROCESS ####
@@ -756,7 +758,7 @@ def auto_realize_batch_gateway_payments(batch):
         receipts = frappe.get_all(
             "Donation Receipt",
             filters=[
-                ["remarks", "=", tx['name']],
+                ["remarks", "=", tx["name"]],
                 ["workflow_state", "=", "Acknowledged"],
                 ["amount", "=", tx["amount"]],
             ],
@@ -780,6 +782,8 @@ def auto_realize_batch_gateway_payments(batch):
                     "seva_type": receipt_doc.seva_type,
                 },
             )
+
+    batch_doc.set_status()
 
 
 ############ CLOSE ###############

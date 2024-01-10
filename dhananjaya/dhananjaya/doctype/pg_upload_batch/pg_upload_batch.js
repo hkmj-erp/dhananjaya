@@ -98,7 +98,7 @@ frappe.ui.form.on("PG Upload Batch", {
             },
             callback: function (r) {
               if (!r.exc) {
-                frappe.msgprint("Successfully Created.");
+                frappe.msgprint("Successfully Connected.");
               }
             },
           });

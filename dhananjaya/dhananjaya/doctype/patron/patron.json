@@ -29,8 +29,8 @@
   "unresolved_fax_column",
   "patron_details_tab",
   "enrolled_date",
-  "committed_amount",
   "seva_type",
+  "committed_amount",
   "column_break_pf6qx",
   "issued_card_no",
   "patron_card_sr",
@@ -158,7 +158,7 @@
   {
    "fieldname": "patron_details_tab",
    "fieldtype": "Tab Break",
-   "label": "Patron Details"
+   "label": "Patronship Details"
   },
   {
    "fieldname": "kyc_tab",
@@ -198,7 +198,7 @@
   {
    "fieldname": "seva_type",
    "fieldtype": "Link",
-   "label": "Seva Type",
+   "label": "Patron Seva Type",
    "options": "Patron Seva Type",
    "permlevel": 1,
    "reqd": 1
@@ -283,7 +283,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-13 19:05:03.980879",
+ "modified": "2024-01-10 11:30:12.828171",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron",
