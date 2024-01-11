@@ -33,12 +33,13 @@
    "options": "Donor"
   },
   {
+   "default": "Pending",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "\nApproved\nRejected",
+   "options": "Pending\nApproved\nRejected",
    "read_only": 1
   },
   {
@@ -69,7 +70,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-24 15:32:43.765286",
+ "modified": "2024-01-11 11:28:25.657064",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor Claim Request",

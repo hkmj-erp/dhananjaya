@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 
+
 class DonorClaimRequest(Document):
     def on_update(self):
         settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
@@ -36,7 +37,13 @@ class DonorClaimRequest(Document):
 
 
 @frappe.whitelist()
-def update_preacher(donor, preacher):
-    donor = frappe.get_doc("Donor", donor)
-    donor.llp_preacher = preacher
-    donor.save()
+def update_preacher(request, preacher):
+    request = frappe.get_doc("Donor Claim Request", request)
+    if request.donor:
+        donor = frappe.get_doc("Donor", request.donor)
+        donor.llp_preacher = preacher
+        donor.save()
+    if request.patron:
+        patron = frappe.get_doc("Patron", request.patron)
+        patron.llp_preacher = preacher
+        patron.save()
