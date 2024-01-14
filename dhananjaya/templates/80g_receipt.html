@@ -210,7 +210,8 @@
                         To Support Towards
                     </div>
                     <div style="text-align: left;font-weight: 600;">
-                        {{doc.seva_type}}
+                        {{ doc.seva_type.split(' - ')[:-1]|join(' - ') }}
+                        <!-- {{doc.seva_type}} -->
                     </div>
                 </div>
             </td>

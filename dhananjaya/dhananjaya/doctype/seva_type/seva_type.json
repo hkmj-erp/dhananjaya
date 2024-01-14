@@ -16,6 +16,7 @@
   "80g_applicable",
   "patronship_allowed",
   "include_in_analysis",
+  "csr_allowed",
   "csr_related_section",
   "csr_separate_accounting",
   "csr_account"
@@ -97,11 +98,17 @@
    "fieldname": "csr_related_section",
    "fieldtype": "Section Break",
    "label": "CSR Related"
+  },
+  {
+   "default": "0",
+   "fieldname": "csr_allowed",
+   "fieldtype": "Check",
+   "label": "CSR Allowed"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-14 12:07:21.729163",
+ "modified": "2024-01-14 15:25:12.045024",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Type",

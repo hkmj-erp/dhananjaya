@@ -9,7 +9,6 @@
   "admin_role",
   "cash_mode",
   "firebase_admin_app",
-  "separate_accounting_for_csr",
   "column_break_tvbte",
   "default_preacher",
   "default_marketing_preacher",
@@ -23,7 +22,10 @@
   "ecs_settings_section",
   "default_ecs_bank",
   "notifier_section",
-  "refresh_versions"
+  "refresh_versions",
+  "special_settings_section",
+  "separate_accounting_for_csr",
+  "show_patron_seva_level_on_receipt"
  ],
  "fields": [
   {
@@ -134,13 +136,24 @@
    "fieldname": "separate_accounting_for_csr",
    "fieldtype": "Check",
    "label": "Separate accounting for CSR"
+  },
+  {
+   "fieldname": "special_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Special Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_patron_seva_level_on_receipt",
+   "fieldtype": "Check",
+   "label": "Show Patron Seva Level on Receipt"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-14 11:51:27.298756",
+ "modified": "2024-01-14 16:13:04.430233",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",

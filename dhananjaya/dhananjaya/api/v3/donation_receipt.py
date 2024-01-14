@@ -51,6 +51,8 @@ def create_receipt():
     doc.seva_type = donation["seva_type"]
     if "atg_required" in donation:
         doc.atg_required = donation["atg_required"]
+    if "is_csr" in donation:
+        doc.is_csr = donation["is_csr"]
     doc.seva_subtype = donation["seva_subtype"]
 
     ## Selected Address & Contact

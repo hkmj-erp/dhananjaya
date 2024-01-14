@@ -25,6 +25,12 @@ def get_print_donation(dr):
 
     if dr_doc.patron:
         sevak_name = frappe.db.get_value("Patron", dr_doc.patron, "full_name") + "(P)"
+        show_patron_level = frappe.db.get_single_value(
+            "Dhananjaya Settings", "show_patron_seva_level_on_receipt"
+        )
+        if show_patron_level:
+            patron_level = frappe.db.get_value("Patron", dr_doc.patron, "seva_type")
+            sevak_name += f"<br><span style = 'color: #979706;'>{patron_level}</span>"
     elif dr_doc.sevak_name:
         sevak_name = dr_doc.sevak_name
 
