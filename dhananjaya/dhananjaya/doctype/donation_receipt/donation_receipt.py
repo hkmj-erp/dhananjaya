@@ -191,11 +191,25 @@ class DonationReceipt(Document):
             frappe.throw(
                 "There are no settings available for this Company. Please check Dhananjaya Settings"
             )
-        account = frappe.db.get_value("Seva Type", self.seva_type, "account")
-        if account is None:
-            self.donation_account = company_detail.donation_account
-        else:
-            self.donation_account = account
+        if not self.donation_account:
+            separate_accounting_for_csr = frappe.db.get_single_value(
+                "Dhananjaya Settings", "separate_accounting_for_csr"
+            )
+            if separate_accounting_for_csr and self.is_csr:
+                account = frappe.db.get_value(
+                    "Seva Type", self.seva_type, "csr_account"
+                )
+                if not account:
+                    frappe.throw(
+                        f"There is no CSR Account setup for Seva Type {self.seva_type}."
+                    )
+            else:
+                account = frappe.db.get_value("Seva Type", self.seva_type, "account")
+
+            if account is None:
+                self.donation_account = company_detail.donation_account
+            else:
+                self.donation_account = account
 
         if not self.bank_account:
             self.bank_account = company_detail.bank_account

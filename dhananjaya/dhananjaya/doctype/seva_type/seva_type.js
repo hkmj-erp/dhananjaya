@@ -7,7 +7,17 @@ frappe.ui.form.on('Seva Type', {
 			return {
 				filters: {
 					company:frm.doc.company,
-					is_group : 0
+					is_group : 0,
+					root_type:"Income"
+				}
+			}
+		});
+		frm.set_query('csr_account',()=> {
+			return {
+				filters: {
+					company:frm.doc.company,
+					is_group : 0,
+					root_type:"Income"
 				}
 			}
 		});

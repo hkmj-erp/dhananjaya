@@ -7,13 +7,18 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "main_section",
   "enabled",
   "company",
   "seva_name",
   "account",
+  "column_break_vwiy",
   "80g_applicable",
   "patronship_allowed",
-  "include_in_analysis"
+  "include_in_analysis",
+  "csr_related_section",
+  "csr_separate_accounting",
+  "csr_account"
  ],
  "fields": [
   {
@@ -62,11 +67,41 @@
    "fieldname": "include_in_analysis",
    "fieldtype": "Check",
    "label": "Include in Analysis"
+  },
+  {
+   "description": "This is only required if there is separate accounting enabled in Dhananjaya Settings.",
+   "fieldname": "csr_account",
+   "fieldtype": "Link",
+   "label": "CSR Account",
+   "mandatory_depends_on": "eval:doc.csr_separate_accounting",
+   "options": "Account"
+  },
+  {
+   "default": "0",
+   "fieldname": "csr_separate_accounting",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "is_virtual": 1,
+   "label": "CSR Separate Accounting"
+  },
+  {
+   "fieldname": "main_section",
+   "fieldtype": "Section Break",
+   "label": "Main"
+  },
+  {
+   "fieldname": "column_break_vwiy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "csr_related_section",
+   "fieldtype": "Section Break",
+   "label": "CSR Related"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-07 08:11:22.793356",
+ "modified": "2024-01-14 12:07:21.729163",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Type",

@@ -9,6 +9,12 @@ from frappe.model.document import Document
 
 
 class SevaType(Document):
+    @property
+    def csr_separate_accounting(self):
+        return frappe.db.get_single_value(
+            "Dhananjaya Settings", "separate_accounting_for_csr"
+        )
+
     def autoname(self):
         self.name = get_abbreviated_name(self.seva_name, self.company)
 

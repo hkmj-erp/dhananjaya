@@ -42,6 +42,8 @@
   "is_ecs",
   "ecs_transaction_id",
   "ecs_rejection_reason",
+  "auto_generated",
+  "is_csr",
   "cheque_details_section",
   "cheque_number",
   "cheque_date",
@@ -487,13 +489,27 @@
    "fieldtype": "Data",
    "label": "Donor Creation Request Name",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "If the receipt is generated from an API Call.\ne.g. From Marketing Team.",
+   "fieldname": "auto_generated",
+   "fieldtype": "Check",
+   "label": "Auto Generated",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_csr",
+   "fieldtype": "Check",
+   "label": "Is CSR"
   }
  ],
  "image_field": "payment_screenshot",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-07 17:40:13.873908",
+ "modified": "2024-01-14 12:11:31.387185",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Receipt",

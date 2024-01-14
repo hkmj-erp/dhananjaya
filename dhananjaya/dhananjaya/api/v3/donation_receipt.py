@@ -247,6 +247,11 @@ def validate_patronship(seva_type, seva_subtype):
 
 
 @frappe.whitelist()
+def validate_atg_applicability(seva_type):
+    return frappe.get_value("Seva Type", seva_type, "80g_applicable")
+
+
+@frappe.whitelist()
 def get_fields():
     metadata = frappe.get_meta("Donation Receipt")
     input_fields = []

@@ -205,5 +205,26 @@ frappe.ui.form.on('Donation Receipt', {
 			frm.set_value('bank_transaction', null);
 			frm.save();
 		}
+	},
+	seva_type: function (frm) {
+		frm.events.update_donation_income_account(frm);
+	},
+	is_csr: function (frm) {
+		frm.events.update_donation_income_account(frm);
+	},
+	async update_donation_income_account(frm) {
+		var separate_accounting_for_csr = await frappe.db.get_single_value("Dhananjaya Settings", "separate_accounting_for_csr");
+		var account_key;
+		if (frm.doc.is_csr && separate_accounting_for_csr) {
+			account_key = "csr_account";
+		} else {
+			account_key = "account";
+		}
+		frappe.db.get_value("Seva Type", { "name": frm.doc.seva_type }, account_key, (r) => {
+			frm.set_value('donation_account', r[account_key]);
+			if (!frm.doc.donation_account) {
+				frappe.throw("There is no account set in Seva Type.");
+			}
+		})
 	}
 });

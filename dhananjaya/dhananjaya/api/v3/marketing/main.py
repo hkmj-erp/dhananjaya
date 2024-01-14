@@ -150,6 +150,7 @@ def upload_donation():
         "additional_charges": donation_raw.get(F_ADDITIONAL_CHARGES),
         "print_remarks_on_receipt": donation_raw.get(F_PRINT_REMARKS_ON_RECEIPT),
         "atg_required": donation_raw.get(F_ATG_REQUIRED),
+        "auto_generated": 1,
     }
 
     receipt_doc = frappe.get_doc(receipt_dict)
