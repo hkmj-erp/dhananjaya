@@ -366,6 +366,7 @@
    "default": "0",
    "fieldname": "is_ecs",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Is ECS"
   },
   {
@@ -495,6 +496,7 @@
    "description": "If the receipt is generated from an API Call.\ne.g. From Marketing Team.",
    "fieldname": "auto_generated",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Auto Generated",
    "read_only": 1
   },
@@ -502,6 +504,7 @@
    "default": "0",
    "fieldname": "is_csr",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Is CSR"
   }
  ],
@@ -509,7 +512,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-14 12:11:31.387185",
+ "modified": "2024-01-14 17:46:17.159776",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Receipt",

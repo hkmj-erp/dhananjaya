@@ -19,6 +19,7 @@
   "date_of_birth",
   "column_break_x7ksb",
   "llp_preacher",
+  "spouse_name",
   "section_break_iejjm",
   "addresses",
   "contacts",
@@ -279,11 +280,16 @@
    "fieldtype": "Table",
    "label": "Issued Card Details",
    "options": "Patron Card Detail"
+  },
+  {
+   "fieldname": "spouse_name",
+   "fieldtype": "Data",
+   "label": "Spouse Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-10 11:30:12.828171",
+ "modified": "2024-01-15 13:59:30.697724",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron",
