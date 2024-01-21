@@ -1,6 +1,11 @@
 import json
+import re
 import frappe
-from dhananjaya.dhananjaya.utils import get_preachers, get_donor_details, is_null_or_blank
+from dhananjaya.dhananjaya.utils import (
+    get_preachers,
+    get_donor_details,
+    is_null_or_blank,
+)
 
 
 @frappe.whitelist()
@@ -24,7 +29,8 @@ def members_search(filters, limit_start=None, limit=None):
 
     if not is_null_or_blank(filters.get("mobile")):
         # where_string += f" and tdc.contact_no LIKE '%{filters.get("contact_no")}%'"
-        having_string += f""" AND contact LIKE '%{filters.get("mobile").strip()}%' """
+        clean_contact = re.sub(r"\D", "", filters.get("mobile"))[-10:]
+        having_string += f""" AND contact LIKE '%{clean_contact}%' """
 
     if not is_null_or_blank(filters.get("address")):
         # select_string += "group"
@@ -53,7 +59,9 @@ def members_search(filters, limit_start=None, limit=None):
     if search_doctype == "Donor":
         ashraya_level_select = " td.ashraya_level, "
         if filters.get("ashraya_level") and filters.get("ashraya_level") != "All":
-            where_string += f""" AND td.ashraya_level = '{filters.get("ashraya_level")}' """
+            where_string += (
+                f""" AND td.ashraya_level = '{filters.get("ashraya_level")}' """
+            )
 
     ## As Patron Level is applicable to only Patron Data
 
@@ -61,7 +69,9 @@ def members_search(filters, limit_start=None, limit=None):
     if search_doctype == "Patron":
         patron_level_select = " td.seva_type, "
         if filters.get("patron_seva_type") and filters.get("patron_seva_type") != "All":
-            where_string += f""" AND td.seva_type = '{filters.get("patron_seva_type")}' """
+            where_string += (
+                f""" AND td.seva_type = '{filters.get("patron_seva_type")}' """
+            )
     for i in frappe.db.sql(
         f"""
 					select 
@@ -125,7 +135,9 @@ def members_search(filters, limit_start=None, limit=None):
 
     data = list(members.values())
 
-    data.sort(key=lambda x: (x["llp_preacher"] in preachers, x["times_donated"]), reverse=True)  #
+    data.sort(
+        key=lambda x: (x["llp_preacher"] in preachers, x["times_donated"]), reverse=True
+    )  #
 
     return data
 
@@ -141,7 +153,9 @@ def member_stats(member, type="donor"):
 					group by company_abbreviation
 					order by company,YEAR(receipt_date) desc,MONTH(receipt_date) desc
 					"""
-    last_year_query_string = query_string.format(" receipt_date > (NOW() - INTERVAL 12 MONTH)", type, member)
+    last_year_query_string = query_string.format(
+        " receipt_date > (NOW() - INTERVAL 12 MONTH)", type, member
+    )
     total_query_string = query_string.format(" 1 ", type, member)
     return {
         "last_year": frappe.db.sql(last_year_query_string, as_dict=1),
@@ -154,7 +168,9 @@ def update_donor_contact_address():
     # return frappe.request.data
     data = json.loads(frappe.request.data)
     if data["to_update"] == "Contact":
-        frappe.db.set_value("Donor Contact", data["name"], "contact_no", data["contact_no"])
+        frappe.db.set_value(
+            "Donor Contact", data["name"], "contact_no", data["contact_no"]
+        )
     elif data["to_update"] == "Address":
         ## So that we can directly put full address data as it is in Donor Address
         del data["to_update"]
@@ -215,7 +231,9 @@ def get_donor_suggestions(filters):
         ):
             suggestions.setdefault(i["name"], i)
 
-        donor_details = get_donor_details([suggestions[s]["donor"] for s in suggestions])
+        donor_details = get_donor_details(
+            [suggestions[s]["donor"] for s in suggestions]
+        )
 
         for s in suggestions:
             suggestions[s].update(donor_details[suggestions[s]["donor"]])
