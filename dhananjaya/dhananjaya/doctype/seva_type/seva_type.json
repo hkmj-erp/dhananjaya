@@ -54,8 +54,7 @@
    "fieldname": "account",
    "fieldtype": "Link",
    "label": "Account",
-   "options": "Account",
-   "reqd": 1
+   "options": "Account"
   },
   {
    "default": "1",
@@ -108,7 +107,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-14 15:25:12.045024",
+ "modified": "2024-01-23 09:55:27.462838",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Type",

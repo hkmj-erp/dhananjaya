@@ -7,6 +7,9 @@ app_description = "Donor Management App"
 app_email = "nrhdasa@gmail.com"
 app_license = "MIT"
 
+
+export_python_type_annotations = True
+
 # Includes in <head>
 # ------------------
 
