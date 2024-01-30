@@ -19,6 +19,64 @@ from dhananjaya.dhananjaya.utils import (
 
 
 class Donor(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from dhananjaya.dhananjaya.doctype.donor_address.donor_address import DonorAddress
+        from dhananjaya.dhananjaya.doctype.donor_contact.donor_contact import DonorContact
+        from dhananjaya.dhananjaya.doctype.donor_email.donor_email import DonorEmail
+        from dhananjaya.dhananjaya.doctype.special_puja_detail.special_puja_detail import SpecialPujaDetail
+        from frappe.types import DF
+
+        aadhar_no: DF.Data | None
+        account_holder: DF.Data | None
+        addresses: DF.Table[DonorAddress]
+        ashraya_level: DF.Literal["", "20", "16", "12", "8", "4", "1"]
+        bank: DF.Data | None
+        closing_date: DF.Date | None
+        contacts: DF.Table[DonorContact]
+        date_of_birth: DF.Date | None
+        donor_creation_request: DF.Link | None
+        driving_license: DF.Data | None
+        ecs_active: DF.Check
+        ecs_amount: DF.Currency
+        ecs_bank: DF.Link | None
+        ecs_bank_ac_no: DF.Data | None
+        ecs_default_patron: DF.Link | None
+        ecs_default_seva_type: DF.Link | None
+        ecs_id: DF.Data | None
+        ecs_type: DF.Literal["Physical Mandate", "E-NACH"]
+        emails: DF.Table[DonorEmail]
+        first_name: DF.Data
+        full_name: DF.Data | None
+        ifsc_code: DF.Data | None
+        introducer_preacher: DF.Data | None
+        last_donation: DF.Date | None
+        last_name: DF.Data | None
+        llp_preacher: DF.Link
+        months_to_apply: DF.Data | None
+        naming_series: DF.Literal["DNR-.YYYY.-"]
+        number_of_ecs: DF.Data | None
+        occupation: DF.Data | None
+        old_donor_id: DF.Data | None
+        old_trust_code: DF.Int
+        opening_date: DF.Date | None
+        pan_no: DF.Data | None
+        passport: DF.Data | None
+        periodicity: DF.Literal["Y", "H", "Q", "M"]
+        profile_image: DF.AttachImage | None
+        puja_details: DF.Table[SpecialPujaDetail]
+        remarks: DF.Data | None
+        salutation: DF.Link | None
+        settlement_day: DF.Literal["7", "14", "21"]
+        spouse_name: DF.Data | None
+        times_donated: DF.Int
+        total_donated: DF.Currency
+        unresolved_fax_column: DF.Data | None
+    # end: auto-generated types
     def after_insert(self):
         if self.donor_creation_request:
             frappe.db.set_value(
@@ -67,10 +125,12 @@ class Donor(Document):
             doc.insert(ignore_permissions=True)
 
     def validate(self):
-        self.validate_address()
-        self.validate_contact()
-        self.validate_email()
-        self.validate_kyc()
+        pass
+        #TODO Only while AHMED import
+        # self.validate_address()
+        # self.validate_contact()
+        # self.validate_email()
+        # self.validate_kyc()
 
     def before_save(self):
         # Preacher Change

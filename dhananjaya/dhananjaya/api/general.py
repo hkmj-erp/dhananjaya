@@ -112,6 +112,7 @@ def fetch_donor_by_contact(contact):
     if contact and contact != "":
         clean_contact = re.sub(r"\D", "", contact)[-10:]
         if len(clean_contact) == 10:
+            
             contacts = frappe.db.sql(
                 f"""
                     select contact_no,parent

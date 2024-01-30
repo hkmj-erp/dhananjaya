@@ -12,6 +12,7 @@
   "patron_status_html",
   "section_break_ngqzq",
   "naming_series",
+  "profile_image",
   "salutation",
   "first_name",
   "last_name",
@@ -20,6 +21,7 @@
   "column_break_x7ksb",
   "llp_preacher",
   "spouse_name",
+  "occupation",
   "section_break_iejjm",
   "addresses",
   "contacts",
@@ -192,9 +194,12 @@
    "label": "Enrolled Date"
   },
   {
+   "fetch_from": "seva_type.seva_amount",
+   "fetch_if_empty": 1,
    "fieldname": "committed_amount",
    "fieldtype": "Currency",
-   "label": "Committed Amount"
+   "label": "Committed Amount",
+   "precision": "2"
   },
   {
    "fieldname": "seva_type",
@@ -285,11 +290,23 @@
    "fieldname": "spouse_name",
    "fieldtype": "Data",
    "label": "Spouse Name"
+  },
+  {
+   "fieldname": "occupation",
+   "fieldtype": "Data",
+   "label": "Occupation"
+  },
+  {
+   "fieldname": "profile_image",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "Profile Image"
   }
  ],
+ "image_field": "profile_image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-15 13:59:30.697724",
+ "modified": "2024-01-30 11:11:09.734927",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron",

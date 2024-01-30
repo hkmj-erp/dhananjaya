@@ -86,7 +86,7 @@ def members_search(filters, limit_start=None, limit=None):
                                 IF(td.aadhar_no is not null and TRIM(td.aadhar_no) != '','✅ Aadhar','')
                                 )
                             ) as kyc,
-					    GROUP_CONCAT(DISTINCT tda.address_line_1,tda.address_line_2,tda.city SEPARATOR' | ') as address,
+					    GROUP_CONCAT(DISTINCT CONCAT(COALESCE(tda.address_line_1,''),', ',COALESCE(tda.address_line_2,''),', ',COALESCE(tda.city,'')) SEPARATOR' |') as address,
 					    GROUP_CONCAT(DISTINCT tdc.contact_no SEPARATOR' , ') as contact,
 					    td.pan_no,
                         td.aadhar_no,

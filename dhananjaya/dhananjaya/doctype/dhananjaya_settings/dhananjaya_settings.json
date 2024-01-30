@@ -25,7 +25,8 @@
   "refresh_versions",
   "special_settings_section",
   "separate_accounting_for_csr",
-  "show_patron_seva_level_on_receipt"
+  "show_patron_seva_level_on_receipt",
+  "mobile_app_notifications"
  ],
  "fields": [
   {
@@ -147,13 +148,19 @@
    "fieldname": "show_patron_seva_level_on_receipt",
    "fieldtype": "Check",
    "label": "Show Patron Seva Level on Receipt"
+  },
+  {
+   "default": "1",
+   "fieldname": "mobile_app_notifications",
+   "fieldtype": "Check",
+   "label": "Mobile App Notifications"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-14 16:13:04.430233",
+ "modified": "2024-01-29 18:12:37.801678",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",

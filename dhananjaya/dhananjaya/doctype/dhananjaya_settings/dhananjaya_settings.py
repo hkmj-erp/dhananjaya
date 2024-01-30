@@ -8,6 +8,31 @@ from frappe.utils.data import money_in_words
 
 
 class DhananjayaSettings(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from dhananjaya.dhananjaya.doctype.dhananjaya_settings_company_details.dhananjaya_settings_company_details import (
+            DhananjayaSettingsCompanyDetails,
+        )
+        from frappe.types import DF
+
+        admin_role: DF.Link
+        cash_mode: DF.Link | None
+        company_details: DF.Table[DhananjayaSettingsCompanyDetails]
+        default_ecs_bank: DF.Link | None
+        default_marketing_preacher: DF.Link
+        default_preacher: DF.Link
+        display_names_allowed: DF.Int
+        firebase_admin_app: DF.Link
+        gateway_mode: DF.Link | None
+        mobile_app_notifications: DF.Check
+        public_fernet_key: DF.Data | None
+        separate_accounting_for_csr: DF.Check
+        show_patron_seva_level_on_receipt: DF.Check
+    # end: auto-generated types
     pass
 
 
@@ -83,6 +108,9 @@ def get_print_donation(dr):
     if dr_doc.bank_transaction:
         tx_doc = frappe.get_doc("Bank Transaction", dr_doc.bank_transaction)
         dr_data.update({"reference_number": tx_doc.description})
+
+    preacher_full_name = frappe.get_value("LLP Preacher", dr_doc.preacher, "full_name")
+    dr_data.update({"preacher_full_name": preacher_full_name})
 
     return company_detail.as_dict(), dr_data
 

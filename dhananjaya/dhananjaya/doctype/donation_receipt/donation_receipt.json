@@ -44,6 +44,7 @@
   "ecs_rejection_reason",
   "auto_generated",
   "is_csr",
+  "user_remarks",
   "cheque_details_section",
   "cheque_number",
   "cheque_date",
@@ -247,7 +248,7 @@
   {
    "fieldname": "remarks",
    "fieldtype": "Text",
-   "label": "Remarks",
+   "label": "Transaction Remarks",
    "max_height": "100px"
   },
   {
@@ -506,13 +507,19 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Is CSR"
+  },
+  {
+   "fieldname": "user_remarks",
+   "fieldtype": "Text",
+   "label": "User Remarks",
+   "max_height": "100px"
   }
  ],
  "image_field": "payment_screenshot",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-22 11:36:06.531386",
+ "modified": "2024-01-29 14:37:27.696724",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Receipt",

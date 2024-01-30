@@ -62,10 +62,15 @@ def upload_donation():
             )
 
     clean_contact = re.sub(r"\D", "", donation_raw.get(F_MOBILE, ""))[-10:]
+    clean_email = None
+    if "email" in donation_raw:
+        clean_email = re.sub(r"\s+", "", donation_raw.get(F_EMAIL, ""))[-10:]
     clean_pan = re.sub(r"\s+", "", donation_raw.get(F_PAN_NO, ""))
     clean_aadhar = re.sub(r"\s+", "", donation_raw.get(F_AADHAR_NO, ""))
 
-    donor = identify_donor(contact=clean_contact, pan=clean_pan, aadhar=clean_aadhar)
+    donor = identify_donor(
+        contact=clean_contact, email=clean_email, pan=clean_pan, aadhar=clean_aadhar
+    )
 
     if donor is None:
         donor_dict = {

@@ -10,6 +10,7 @@
  "field_order": [
   "enabled",
   "seva_name",
+  "amount",
   "lft",
   "rgt",
   "old_parent",
@@ -82,12 +83,19 @@
    "fieldname": "include_in_analysis",
    "fieldtype": "Check",
    "label": "Include in Analysis"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "non_negative": 1,
+   "precision": "2"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2024-01-14 06:37:46.551837",
+ "modified": "2024-01-29 11:24:37.478879",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Subtype",

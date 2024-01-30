@@ -8,11 +8,13 @@ from dhananjaya.dhananjaya.utils import (
 )
 import frappe
 from frappe import _, sendmail
+from frappe.model.naming import getseries
 from frappe.utils import money_in_words, today, unique
 
 # from erpnext.controllers.accounts_controller import AccountsController
 from datetime import datetime
 from frappe.model.document import Document
+from frappe.utils.data import getdate
 
 
 CASH_PAYMENT_MODE = "Cash"
@@ -22,8 +24,82 @@ CUT_OFF_DATE = "2023-01-04"
 
 
 class DonationReceipt(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        additional_charges: DF.Currency
+        address: DF.Data | None
+        amended_from: DF.Link | None
+        amount: DF.Currency
+        atg_required: DF.Check
+        auto_generated: DF.Check
+        bank_account: DF.Link | None
+        bank_name: DF.Data | None
+        bank_transaction: DF.Link | None
+        bounce_transaction: DF.Link | None
+        cash_account: DF.Link | None
+        cash_received_date: DF.Date | None
+        cheque_branch: DF.Data | None
+        cheque_date: DF.Date | None
+        cheque_number: DF.Data | None
+        company: DF.Link
+        company_abbreviation: DF.Data | None
+        contact: DF.Data | None
+        donation_account: DF.Link | None
+        donor: DF.Link | None
+        donor_creation_request: DF.Link | None
+        donor_creation_request_name: DF.Data | None
+        ecs_rejection_reason: DF.Data | None
+        ecs_transaction_id: DF.Data | None
+        full_name: DF.Data | None
+        gateway_expense_account: DF.Link | None
+        ifsc_code: DF.Data | None
+        is_csr: DF.Check
+        is_ecs: DF.Check
+        naming_series: DF.Literal[
+            ".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"
+        ]
+        old_ar_date: DF.Date | None
+        old_ar_no: DF.Data | None
+        old_dr_no: DF.Data | None
+        old_ins_account_number: DF.Data | None
+        old_ins_bank: DF.Data | None
+        old_ins_date: DF.Date | None
+        old_ins_number: DF.Data | None
+        patron: DF.Link | None
+        patron_name: DF.Data | None
+        payment_gateway_document: DF.Link | None
+        payment_method: DF.Link
+        payment_screenshot: DF.AttachImage | None
+        preacher: DF.Link | None
+        print_remarks_on_receipt: DF.Check
+        realization_date: DF.Date | None
+        receipt_date: DF.Date
+        reference_no: DF.Data | None
+        remarks: DF.Text | None
+        seva_subtype: DF.Link | None
+        seva_type: DF.Link
+        sevak_name: DF.Data | None
+        user_remarks: DF.Text | None
+
+    # end: auto-generated types
+    def autoname(self):
+        dateF = getdate(self.receipt_date)
+        company_abbr = frappe.get_cached_value("Company", self.company, "abbr")
+        year = dateF.strftime("%y")
+        month = dateF.strftime("%m")
+        prefix = f"{company_abbr}-DR{year}{month}-"
+        # frappe.errprint(prefix) HKMJ-DR2401-0001
+        self.name = prefix + getseries(prefix, 4)
+
     def validate(self):
-        self.validate_atg_required()
+        # TODO Just for AHMED Import
+        # self.validate_atg_required()
         return
 
     def validate_atg_required(self):

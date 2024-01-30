@@ -19,34 +19,12 @@ frappe.ui.form.on('Patron', {
 		}
 	},
 	update_status_html(frm, data) {
-
-		// var html =	`<div style ="width:40vw; border: solid #26250f26;padding:10px; border-width:1px 10px ;border-radius: 10px 2px" >
-		// 				<h3>Status</h3>
-		// 				<div style="display:flex; justify-content: space-between;font-size:1em">
-		// 					<div style = "width : 150px">Commited Donation</div>
-		// 					<div style = "color:#ff15a4">${data['commited']}</div>
-		// 				</div>
-		// 				<div style="display:flex; justify-content: space-between;font-size:1em">
-		// 					<div style = "width : 150px">Collected Donation</div>
-		// 					<div style= "color:#448b00"> ${data['completed']}</div>
-		// 				</div>
-		// 				<hr>
-		// 				<div style="display:flex; justify-content: space-between;font-size:1em">
-		// 					<div style = "width : 150px">Remaining</div>
-		// 					<div style= "color:#a57f00; font-weight:bold"> ${data['commited']-data['completed']}</div>
-		// 				</div>
-		// 			</div>
-		// 			`
-		// currency=""
-		var formmated_amount = frm.events.formatMoney(data['commited']);
-		console.log(formmated_amount);
-
 		var html = `
 		<div style="display: flex; justify-content: space-around; margin: 20px;">
 
 			<div style="color:rgb(35 15 128);padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 30%;">
 				<p>Committed Amount</p>
-				<p style="font-weight: bold; margin-top: 10px;"> ${frm.events.formatMoney(data['commited'])}</p>
+				<p style="font-weight: bold; margin-top: 10px;"> ${frm.events.formatMoney(frm.doc.committed_amount)}</p>
 			</div>
 
 			<div style="color:green; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 30%;">
@@ -56,7 +34,7 @@ frappe.ui.form.on('Patron', {
 
 			<div style="color:hsl(0deg 80.54% 32.36%); padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 30%;">
 				<p>Remaining Amount</p>
-				<p style="font-weight: bold; margin-top: 10px;"> ${frm.events.formatMoney(data['commited'] - data['completed'])}</p>
+				<p style="font-weight: bold; margin-top: 10px;"> ${frm.events.formatMoney(frm.doc.committed_amount - data['completed'])}</p>
 			</div>
 		</div>
 
@@ -65,5 +43,5 @@ frappe.ui.form.on('Patron', {
 	},
 	formatMoney(amount) {
 		return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
-	}
+	},
 });

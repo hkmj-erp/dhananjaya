@@ -122,6 +122,8 @@
             BOUNCED
         {% elif doc.workflow_state == 'Trashed' %}
             TRASHED
+        {% elif doc.workflow_state == 'Cancelled' %}
+            CANCELLED
         {% endif %}
     </div>
     {% endif %}
@@ -148,7 +150,7 @@
             justify-content: space-between;
             font-size: 15px;">
         <div style="text-align: start;">
-            DR No. : <span style="color: #cd3131;font-weight: 600;">{{ doc.name }}</span>
+            DR No. : <span style="color: #cd3131;font-weight: 600;">{{ doc.old_dr_no if doc.old_dr_no else doc.name }}</span>
         </div>
         <div style="text-align: end;font-weight: 600;">
             {{ frappe.format_date(doc.receipt_date) }}
@@ -315,7 +317,7 @@
                         Received Through
                     </div>
                     <div style="text-align: left;font-weight: 600;">
-                        {{doc.preacher}}
+                        {{donor['preacher_full_name']}}
                     </div>
                 </div>
             </td>

@@ -193,8 +193,8 @@ def is_valid_pincode(pinCode):
 def get_pdf_dr(doctype, name, doc=None):
     doc = doc or frappe.get_doc(doctype, name)
 
-    if doc.docstatus == 2:
-        return "This document is cancelled."
+    # if doc.docstatus == 2:
+    #     return "This document is cancelled."
     validate_print_permission(doc)
     content = frappe.render_template(
         "dhananjaya/templates/80g_receipt.html", is_path=True, context={"doc": doc}

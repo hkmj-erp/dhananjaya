@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestDonorAddressState(FrappeTestCase):
+class TestAPICountry(FrappeTestCase):
 	pass

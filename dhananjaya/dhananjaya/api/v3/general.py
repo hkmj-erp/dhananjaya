@@ -67,14 +67,14 @@ def user_stats(based_on="receipt_date"):
     return total_donations.values()
 
 
-@frappe.whitelist()
-def send_message():
-    from redis import Redis
+# @frappe.whitelist()
+# def send_message():
+#     from redis import Redis
 
-    redis_server = Redis.from_url("redis://test.hkmjerp.in:12311")
-    redis_server.publish(
-        "events", frappe.as_json({"event": "sas", "message": "demo", "room": "perso"})
-    )
+#     redis_server = Redis.from_url("redis://test.hkmjerp.in:12311")
+#     redis_server.publish(
+#         "events", frappe.as_json({"event": "sas", "message": "demo", "room": "perso"})
+#     )
 
 
 @frappe.whitelist()
