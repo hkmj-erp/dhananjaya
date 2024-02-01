@@ -130,7 +130,7 @@ def get_events_calender(from_date, to_date):
 
 def get_reminder_list(from_date, to_date):
     return frappe.db.get_all(
-        "DJ Reminder",
+        "DJ Reminder1",
         filters=[
             ["user", "=", frappe.session.user],
             ["remind_at", "between", [from_date, to_date]],
