@@ -1,10 +1,15 @@
 from dhananjaya.tasks.every_day_8_am import privilege_puja_notify
 import frappe
+from dhananjaya.dhananjaya.doctype.dhananjaya_settings.dhananjaya_settings import (
+    refresh_versions,
+)
 
 
 @frappe.whitelist()
 def execute():
     show_reminders()
+    ## TODO Temporary for New Application
+    refresh_versions()
 
 
 def show_reminders():

@@ -116,7 +116,7 @@ def get_events_calender(from_date, to_date):
         puja["date"] = datetime.combine(puja["date"], time.min)
         puja["all_day"] = 1
 
-    reminders = get_reminders(from_date, to_date)
+    reminders = get_reminder_list(from_date, to_date)
 
     for reminder in reminders:
         reminder["event_type"] = "Donor Reminder"
@@ -128,8 +128,8 @@ def get_events_calender(from_date, to_date):
     return events
 
 
-def get_reminders(from_date, to_date):
-    return frappe.get_all(
+def get_reminder_list(from_date, to_date):
+    return frappe.db.get_all(
         "DJ Reminder",
         filters=[
             ["user", "=", frappe.session.user],
@@ -140,9 +140,8 @@ def get_reminders(from_date, to_date):
             "message AS event",
             "donor",
             "donor_name",
-            "preacher as llp_preacher",
             "user",
-            "remind_at as date",
+            "remind_at AS date",
         ],
     )
 
