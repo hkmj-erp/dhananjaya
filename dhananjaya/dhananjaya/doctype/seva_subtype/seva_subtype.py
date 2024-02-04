@@ -1,7 +1,7 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from dhananjaya.dhananjaya.doctype.dhananjaya_notifier.dhananjaya_notifier import (
     generate_version,
 )
@@ -34,3 +34,25 @@ class SevaSubtype(NestedSet):
 
     def on_change(self):
         generate_version(self.doctype)
+
+    def on_update(self):
+        self.delete_box_key()
+
+    def on_trash(self):
+        self.delete_box_key()
+
+    def delete_box_key(self):
+        frappe.cache().hdel("dhananjaya_box", "seva_subtype")
+
+
+@frappe.whitelist()
+def get_cached_documents():
+    seva_subtypes = (
+        frappe.cache().hget("dhananjaya_box", "seva_subtype") or frappe._dict()
+    )
+    if not seva_subtypes:
+        seva_subtypes = frappe.get_all(
+            "Seva Subtype", fields=["*"], filters={"enabled": 1}
+        )
+        frappe.cache().hset("dhananjaya_box", "seva_subtype", seva_subtypes)
+    return seva_subtypes

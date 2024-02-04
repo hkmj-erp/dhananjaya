@@ -394,3 +394,14 @@ def is_null_or_blank(value):
 
 def sanitise_str(val: str):
     return re.sub(r"\s+", " ", val).strip()
+
+
+def send_receipt_in_mail():
+    receipt_pdf = get_pdf_dr("Donation Receipt", "HKMJ-DR2401-0030", doc=None)
+    print(receipt_pdf)
+    frappe.sendmail(
+        recipients=["nrhdasa@gmail.com"],
+        attachments=[receipt_pdf],
+        subject="Receipt Demo",
+        message="<p>Demo Receipt</p>",
+    )

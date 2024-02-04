@@ -77,7 +77,6 @@ def folder_exists(folder_name):
 
     # file = frappe.new_doc("File")
 
-
 # file.file_name = file_name
 # file.is_folder = 1
 # file.folder = folder

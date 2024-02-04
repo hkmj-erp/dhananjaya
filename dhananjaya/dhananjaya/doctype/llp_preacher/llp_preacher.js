@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('LLP Preacher', {
-	// refresh: function(frm) {
-
-	// }
+	refresh: function (frm) {
+		console.log("Frontend change");
+	}
 });

@@ -1,6 +1,6 @@
 import re, json
 import frappe
-
+from frappe.utils import today
 from dhananjaya.dhananjaya.utils import (
     encode_donation_id,
     get_company_defaults,
@@ -21,7 +21,6 @@ F_DONOR_NAME = "donor_name"
 F_ADDRESS = "address"
 F_EMAIL = "email"
 F_COMPANY = "company"
-F_DATE = "date"
 F_PAYMENT_METHOD = "payment_method"
 F_AMOUNT = "amount"
 F_REMARKS = "remarks"
@@ -62,15 +61,15 @@ def upload_donation():
             )
 
     clean_contact = re.sub(r"\D", "", donation_raw.get(F_MOBILE, ""))[-10:]
-    clean_email = None
-    if "email" in donation_raw:
-        clean_email = re.sub(r"\s+", "", donation_raw.get(F_EMAIL, ""))[-10:]
+    # clean_email = None
+    # if "email" in donation_raw:
+    #     clean_email = re.sub(r"\s+", "", donation_raw.get(F_EMAIL, ""))
     clean_pan = re.sub(r"\s+", "", donation_raw.get(F_PAN_NO, ""))
     clean_aadhar = re.sub(r"\s+", "", donation_raw.get(F_AADHAR_NO, ""))
 
     donor = identify_donor(
-        contact=clean_contact, email=clean_email, pan=clean_pan, aadhar=clean_aadhar
-    )
+        contact=clean_contact, email=None, pan=clean_pan, aadhar=clean_aadhar
+    )  # We don't wish to identify a donor by email.
 
     if donor is None:
         donor_dict = {
@@ -141,7 +140,7 @@ def upload_donation():
     receipt_dict = {
         "doctype": "Donation Receipt",
         "company": donation_raw.get(F_COMPANY),
-        "receipt_date": donation_raw.get(F_DATE),
+        "receipt_date": today(),
         "preacher": llp_preacher,
         "donor": donor,
         "contact": clean_contact,
@@ -191,7 +190,6 @@ COMPULSORY_FIELDS = [
     F_DONOR_NAME,
     F_ADDRESS,
     F_COMPANY,
-    F_DATE,
     F_PAYMENT_METHOD,
     F_AMOUNT,
     F_SEVA_TYPE,

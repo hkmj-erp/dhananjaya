@@ -18,6 +18,9 @@ def members_search(filters, limit_start=None, limit=None):
     where_string = ""
     having_string = ""
 
+    if frappe.db.get_single_value("Dhananjaya Settings", "hide_others_donors"):
+        where_string += f"""  AND td.llp_preacher IN ({preachers_string}) """
+
     # name, mobile, address, email
 
     if not is_null_or_blank(filters.get("name")):
@@ -272,12 +275,6 @@ def get_donor_lnglats():
     if len(preachers) == 0:
         return []
     preachers_str = ",".join([f"'{p}'" for p in preachers])
-    # donors = frappe.get_list("Donor", filters=[["llp_preacher", "in", get_preachers()]], fields=["name", "full_name","llp_preacher"])
-
-    # donor_ids =
-
-    # frappe.get_all("Donor Address", filters={"parent"})
-
     addresses = frappe.db.sql(
         f"""
                 select tda.name as address_id,tda.address_line_1,tda.address_line_2,tda.longitude, tda.latitude, td.name as donor_id, td.full_name

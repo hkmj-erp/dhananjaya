@@ -1,5 +1,6 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
+from dhananjaya.dhananjaya.doctype.donation_receipt.templates import prepare_email_body
 from dhananjaya.dhananjaya.utils import (
     get_best_contact_address,
     get_company_defaults,
@@ -358,9 +359,11 @@ class DonationReceipt(Document):
 
         je = {
             "doctype": "Journal Entry",
-            "voucher_type": "Cash Entry"
-            if self.payment_method == CASH_PAYMENT_MODE
-            else "Bank Entry",
+            "voucher_type": (
+                "Cash Entry"
+                if self.payment_method == CASH_PAYMENT_MODE
+                else "Bank Entry"
+            ),
             "company": self.company,
             "donation_receipt": self.name,
             "docstatus": 1,
@@ -883,17 +886,18 @@ def auto_realize_batch_gateway_payments(batch):
 
 
 @frappe.whitelist()
-def send_receipt(dr):
+def send_receipt(dr, recipients=[], send_to_donor=None):
     from frappe.core.doctype.communication.email import make
 
     dr_doc = frappe.get_doc("Donation Receipt", dr)
-    # recipient = frappe.db.get_value("LLP Preacher", dr_doc.preacher, "erp_user")
-    recipients = get_preacher_users(dr_doc.preacher)
-    if len(recipients) == 0:
-        frappe.throw(
-            _(f"There is no ERP User set in LLP Preacher Profile of {dr_doc.preacher}")
-        )
-
+    if not recipients:
+        recipients = get_preacher_users(dr_doc.preacher)
+        if len(recipients) == 0:
+            frappe.throw(
+                _(
+                    f"There is no ERP User set in LLP Preacher Profile of {dr_doc.preacher}"
+                )
+            )
     ext = ".pdf"
     content = get_pdf_dr(doctype=dr_doc.doctype, name=dr_doc.name, doc=dr_doc)
     out = {"fname": f"{dr_doc.name}" + ext, "fcontent": content}
@@ -901,10 +905,9 @@ def send_receipt(dr):
 
     sendmail(
         recipients=recipients,
-        sender="DCC Jaipur <donorcare@harekrishnajaipur.org>",
         reference_doctype=dr_doc.doctype,
         reference_name=dr_doc.name,
-        subject=f"Receipt : {dr_doc.full_name}",
-        message=f"Hare Krishna,<br>Please find attached the Donation Receipt/Acknowledgement for Donor : {dr_doc.full_name} ({dr_doc.donor}) <br><br> Receipt ID : {dr_doc.name}",
+        subject=f"Heartfelt Thanks for Your Support to {dr_doc.company_abbreviation}!",
+        message=prepare_email_body(dr_doc),
         attachments=attachments,
     )

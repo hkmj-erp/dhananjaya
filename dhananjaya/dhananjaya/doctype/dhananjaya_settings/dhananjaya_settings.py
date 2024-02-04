@@ -14,9 +14,7 @@ class DhananjayaSettings(Document):
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from dhananjaya.dhananjaya.doctype.dhananjaya_settings_company_details.dhananjaya_settings_company_details import (
-            DhananjayaSettingsCompanyDetails,
-        )
+        from dhananjaya.dhananjaya.doctype.dhananjaya_settings_company_details.dhananjaya_settings_company_details import DhananjayaSettingsCompanyDetails
         from frappe.types import DF
 
         admin_role: DF.Link
@@ -26,8 +24,10 @@ class DhananjayaSettings(Document):
         default_marketing_preacher: DF.Link
         default_preacher: DF.Link
         display_names_allowed: DF.Int
+        email_compulsory_donor_request: DF.Check
         firebase_admin_app: DF.Link
         gateway_mode: DF.Link | None
+        hide_others_donors: DF.Check
         mobile_app_notifications: DF.Check
         public_fernet_key: DF.Data | None
         separate_accounting_for_csr: DF.Check
@@ -122,3 +122,12 @@ def refresh_versions():
             "Dhananjaya Notifier", dv["name"], "version", random_string(6)
         )
     return
+
+@frappe.whitelist()
+def get_cached_documents():
+    documents = frappe.cache().hget("dhananjaya_box", "dj_document") or frappe._dict()
+    if not documents:
+        documents = frappe.get_all("DJ Document", fields=["*"])
+        frappe.cache().hset("dhananjaya_box", "dj_document", documents)
+    return documents
+

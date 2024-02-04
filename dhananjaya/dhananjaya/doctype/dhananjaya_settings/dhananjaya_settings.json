@@ -26,7 +26,10 @@
   "special_settings_section",
   "separate_accounting_for_csr",
   "show_patron_seva_level_on_receipt",
-  "mobile_app_notifications"
+  "mobile_app_section",
+  "hide_others_donors",
+  "mobile_app_notifications",
+  "email_compulsory_donor_request"
  ],
  "fields": [
   {
@@ -154,13 +157,30 @@
    "fieldname": "mobile_app_notifications",
    "fieldtype": "Check",
    "label": "Mobile App Notifications"
+  },
+  {
+   "default": "0",
+   "fieldname": "hide_others_donors",
+   "fieldtype": "Check",
+   "label": "Hide Others Donors"
+  },
+  {
+   "fieldname": "mobile_app_section",
+   "fieldtype": "Section Break",
+   "label": "Mobile App"
+  },
+  {
+   "default": "0",
+   "fieldname": "email_compulsory_donor_request",
+   "fieldtype": "Check",
+   "label": "Email Compulsory in New Donor Request"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-29 18:12:37.801678",
+ "modified": "2024-02-04 07:34:29.669778",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",

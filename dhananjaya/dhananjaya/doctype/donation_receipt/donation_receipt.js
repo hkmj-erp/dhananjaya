@@ -124,21 +124,28 @@ frappe.ui.form.on('Donation Receipt', {
 			}, "Operations");
 		}
 
-		// frm.add_custom_button(__('Send Receipt/Acknowledgement'), function () {
-		// 	frappe.call({
-		// 		freeze: true,
-		// 		freeze_message: "Sending...",
-		// 		method: "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.send_receipt",
-		// 		args: {
-		// 			dr: frm.doc.name
-		// 		},
-		// 		callback: function (r) {
-		// 			if (!r.exc) {
-		// 				frappe.msgprint("Successfully Sent.");
-		// 			}
-		// 		}
-		// 	});
-		// }, "Operations");
+		frm.add_custom_button(__('Send Receipt/Acknowledgement'), async function () {
+			donor_doc = await frappe.db.get_doc("Donor", frm.doc.donor)
+			if (donor_doc.emails.length == 0) {
+				frappe.prompt({
+					label: 'Provide Email',
+					fieldname: 'email',
+					fieldtype: 'Data',
+					options: 'Email'
+				}, (values) => {
+					frm.events.send_receipt_email(frm, values.email);
+				})
+			} else {
+				frappe.prompt({
+					label: 'Select Email',
+					fieldname: 'email',
+					fieldtype: 'Select',
+					options: donor_doc.emails.map(item => item.email)
+				}, (values) => {
+					frm.events.send_receipt_email(frm, values.email);
+				})
+			}
+		}, "Operations");
 
 		frm.add_custom_button(__('Bounce'), function () {
 			var warning_message = "";
@@ -182,6 +189,24 @@ frappe.ui.form.on('Donation Receipt', {
 
 
 
+	},
+	send_receipt_email(frm, recipient) {
+		frappe.call({
+			freeze: true,
+			freeze_message: "Sending...",
+			method: "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.send_receipt",
+			args: {
+				dr: frm.doc.name,
+				recipients: recipient
+			},
+			callback: function (r) {
+				if (!r.exc) {
+					frappe.msgprint("Successfully Sent.");
+				} else {
+					console.log(r.message);
+				}
+			}
+		});
 	},
 	bank_transaction: function (frm) {
 		if (!frm.doc.bank_account) {
