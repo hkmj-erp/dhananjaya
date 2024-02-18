@@ -62,9 +62,7 @@ class DonationReceipt(Document):
         ifsc_code: DF.Data | None
         is_csr: DF.Check
         is_ecs: DF.Check
-        naming_series: DF.Literal[
-            ".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"
-        ]
+        naming_series: DF.Literal[".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"]
         old_ar_date: DF.Date | None
         old_ar_no: DF.Data | None
         old_dr_no: DF.Data | None
@@ -87,7 +85,6 @@ class DonationReceipt(Document):
         seva_type: DF.Link
         sevak_name: DF.Data | None
         user_remarks: DF.Text | None
-
     # end: auto-generated types
     def autoname(self):
         dateF = getdate(self.receipt_date)

@@ -28,7 +28,6 @@ class DhananjayaSettings(Document):
         firebase_admin_app: DF.Link
         gateway_mode: DF.Link | None
         hide_others_donors: DF.Check
-        mobile_app_notifications: DF.Check
         public_fernet_key: DF.Data | None
         separate_accounting_for_csr: DF.Check
         show_patron_seva_level_on_receipt: DF.Check
