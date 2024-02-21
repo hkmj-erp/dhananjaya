@@ -1,7 +1,6 @@
 import frappe
 
 
-# TODO Modify: Remove Email parameter
 def identify_donor(contact, email, pan, aadhar):
     donor = None
     if pan:
@@ -40,15 +39,15 @@ def identify_donor(contact, email, pan, aadhar):
         if len(contacts) > 0:
             donor = contacts[0]["parent"]
 
-    if (donor is None) and email:
-        emails = frappe.db.sql(
-            f"""
-                select email,parent
-                from `tabDonor Email`
-                where REGEXP_REPLACE(email, '\s+', '') LIKE '%{email}%' and parenttype = 'Donor'
-                """,
-            as_dict=1,
-        )
-        if len(emails) > 0:
-            donor = emails[0]["parent"]
+    # if (donor is None) and email:
+    #     emails = frappe.db.sql(
+    #         f"""
+    #             select email,parent
+    #             from `tabDonor Email`
+    #             where REGEXP_REPLACE(email, '\s+', '') LIKE '%{email}%' and parenttype = 'Donor'
+    #             """,
+    #         as_dict=1,
+    #     )
+    #     if len(emails) > 0:
+    #         donor = emails[0]["parent"]
     return donor

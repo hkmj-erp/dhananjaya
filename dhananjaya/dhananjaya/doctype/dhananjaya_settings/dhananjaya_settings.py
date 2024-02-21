@@ -113,15 +113,6 @@ def get_print_donation(dr):
 
     return company_detail.as_dict(), dr_data
 
-
-@frappe.whitelist(methods=["POST"])
-def refresh_versions():
-    for dv in frappe.get_all("Dhananjaya Notifier"):
-        frappe.db.set_value(
-            "Dhananjaya Notifier", dv["name"], "version", random_string(6)
-        )
-    return
-
 @frappe.whitelist()
 def get_cached_documents():
     documents = frappe.cache().hget("dhananjaya_box", "dj_document") or frappe._dict()

@@ -62,8 +62,7 @@ class Patron(Document):
     # end: auto-generated types
     def validate(self):
         self.validate_display_names()
-        #TODO Only while AHMED IMPORT
-        # self.validate_commitment_amount()
+        self.validate_commitment_amount()
 
     def validate_display_names(self):
         allowed = frappe.get_value(

@@ -125,12 +125,10 @@ class Donor(Document):
             doc.insert(ignore_permissions=True)
 
     def validate(self):
-        pass
-        #TODO Only while AHMED import
-        # self.validate_address()
-        # self.validate_contact()
-        # self.validate_email()
-        # self.validate_kyc()
+        self.validate_address()
+        self.validate_contact()
+        self.validate_email()
+        self.validate_kyc()
 
     def before_save(self):
         # Preacher Change
