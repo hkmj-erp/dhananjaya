@@ -79,6 +79,7 @@
   {
    "fieldname": "first_name",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "First Name",
    "reqd": 1
   },
@@ -420,7 +421,7 @@
  "image_field": "profile_image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-28 16:13:56.005713",
+ "modified": "2024-02-22 10:23:45.902172",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor",
