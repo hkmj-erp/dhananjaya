@@ -61,8 +61,9 @@ def download_pdf_public(
     # options={"password":"krishna"} if password required
     pdf_file = get_pdf(content)
 
-    frappe.local.response.filename = "{name}.pdf".format(
-        name=receiptId.replace(" ", "-").replace("/", "-")
+    frappe.local.response.filename = "{donor_name} - {receipt_no}.pdf".format(
+        donor_name=doc.full_name if doc.full_name else doc.donor_creation_request_name,
+        receipt_no=receiptId.replace(" ", "-").replace("/", "-"),
     )
     frappe.local.response.filecontent = pdf_file
     frappe.local.response.type = "pdf"
@@ -214,8 +215,12 @@ def download_pdf(
     language=None,
     letterhead=None,
 ):
-    frappe.local.response.filename = "{name}.pdf".format(
-        name=name.replace(" ", "-").replace("/", "-")
+    if not doc:
+        doc = frappe.get_doc("Donation Receipt", name)
+
+    frappe.local.response.filename = "{donor_name} - {receipt_no}.pdf".format(
+        donor_name=doc.full_name if doc.full_name else doc.donor_creation_request_name,
+        receipt_no=name.replace(" ", "-").replace("/", "-"),
     )
     frappe.local.response.filecontent = get_pdf_dr(doctype, name, doc=None)
     frappe.local.response.type = "pdf"

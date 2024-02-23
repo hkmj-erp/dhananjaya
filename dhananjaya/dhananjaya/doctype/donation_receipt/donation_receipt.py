@@ -1,6 +1,9 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
 from dhananjaya.dhananjaya.doctype.donation_receipt.templates import prepare_email_body
+from dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch import (
+    refresh_pg_upload_batch,
+)
 from dhananjaya.dhananjaya.utils import (
     get_best_contact_address,
     get_company_defaults,
@@ -706,21 +709,11 @@ def receipt_cancel_operations(receipt):
         frappe.db.set_value(
             "Payment Gateway Transaction",
             receipt_doc.payment_gateway_document,
-            "receipt_created",
-            0,
+            {"receipt_created": 0, "donor": None, "seva_type": None},
         )
-        frappe.db.set_value(
-            "Payment Gateway Transaction",
-            receipt_doc.payment_gateway_document,
-            "donor",
-            None,
-        )
-        frappe.db.set_value(
-            "Payment Gateway Transaction",
-            receipt_doc.payment_gateway_document,
-            "seva_type",
-            None,
-        )
+        pg_batch = frappe.db.get_value("Payment Gateway Transaction",receipt_doc.payment_gateway_document,"batch")
+        
+        refresh_pg_upload_batch(pg_batch)
 
     # Finally Cancel Donation Receipt
     frappe.db.set_value(
@@ -762,7 +755,7 @@ def detach_bank_transaction(je):
 @frappe.whitelist()
 def process_batch_gateway_payments(batch):
     batch_doc = frappe.get_doc("PG Upload Batch", batch)
-    if not (batch_doc.final_amount == batch_doc.bank_amount):
+    if not (batch_doc.remaining_amount == batch_doc.bank_amount):
         frappe.throw("This Batch processing is not eligible due to amount mismatch.")
     bank_tx_doc = frappe.get_doc("Bank Transaction", batch_doc.bank_transaction)
     settings = frappe.get_cached_doc("PG Upload Tool")
@@ -777,10 +770,9 @@ def process_batch_gateway_payments(batch):
             frappe.throw("Set Seva Types in all the batch gateway payments.")
 
     # Check if Donors & Seva Types are set!
-    if settings.pg_donor_reqd:
-        for tx in payment_txs:
-            if not tx["donor"]:
-                frappe.throw("Set Donor compulsorily in all batch gateway payments.")
+    for tx in payment_txs:
+        if not tx["donor"]:
+            frappe.throw("Set Donor compulsorily in all batch gateway payments.")
 
     seva_account = frappe.db.get_value("Seva Type", tx["seva_type"], "account")
     ## Best Address Contact
@@ -818,7 +810,7 @@ def process_batch_gateway_payments(batch):
             "Payment Gateway Transaction", tx["name"], "receipt_created", 1
         )
 
-    batch_doc.set_status()
+    refresh_pg_upload_batch(batch_doc.name)
 
 
 ############ CLOSE ###############
@@ -834,7 +826,7 @@ def process_batch_gateway_payments(batch):
 def auto_realize_batch_gateway_payments(batch):
     batch_doc = frappe.get_doc("PG Upload Batch", batch)
 
-    if not (batch_doc.final_amount == batch_doc.bank_amount):
+    if not (batch_doc.remaining_amount == batch_doc.bank_amount):
         frappe.throw("Auto Realization is not eligible due to amount mismatch.")
 
     if not batch_doc.gateway_expense_account:
@@ -874,8 +866,7 @@ def auto_realize_batch_gateway_payments(batch):
                     "seva_type": receipt_doc.seva_type,
                 },
             )
-
-    batch_doc.set_status()
+    refresh_pg_upload_batch(batch_doc.name)
 
 
 ############ CLOSE ###############

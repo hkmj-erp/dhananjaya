@@ -2,9 +2,6 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("PG Upload Batch", {
-  before_load: function (frm) {
-    frm.events.recalculate_amounts(frm);
-  },
   onload: function (frm) {
     frm.events.set_finalview(frm);
   },
@@ -22,7 +19,7 @@ frappe.ui.form.on("PG Upload Batch", {
       return {
         filters: {
           status: "Unreconciled",
-          deposit: frm.doc.final_amount,
+          unallocated_amount: frm.doc.remaining_amount,
           bank_account: frm.doc.bank_account,
           // date: ['>=',frm.doc.receipt_date]
         },
@@ -75,6 +72,8 @@ frappe.ui.form.on("PG Upload Batch", {
             callback: function (r) {
               if (!r.exc) {
                 frappe.msgprint("Successfully Created.");
+                frm.refresh();
+                frm.refresh_field("status");
               }
             },
           });
@@ -99,6 +98,7 @@ frappe.ui.form.on("PG Upload Batch", {
             callback: function (r) {
               if (!r.exc) {
                 frappe.msgprint("Successfully Connected.");
+                frm.refresh();
               }
             },
           });
@@ -188,42 +188,42 @@ frappe.ui.form.on("PG Upload Batch", {
   bank_transaction: function (frm) {
     frm.events.set_finalview(frm);
   },
-  async recalculate_amounts(frm) {
-    var total_amount = 0;
-    var total_fee = 0;
-    var txs = await frappe.db.get_list("Payment Gateway Transaction", {
-      fields: ["name", "amount", "fee"],
-      filters: [
-        ["batch", "=", frm.doc.name],
-        ["receipt_created", "=", 0],
-      ],
-      limit: 10000,
-    });
+  // async recalculate_amounts(frm) {
+  //   var total_amount = 0;
+  //   var total_fee = 0;
+  //   var txs = await frappe.db.get_list("Payment Gateway Transaction", {
+  //     fields: ["name", "amount", "fee"],
+  //     filters: [
+  //       ["batch", "=", frm.doc.name],
+  //       ["receipt_created", "=", 0],
+  //     ],
+  //     limit: 10000,
+  //   });
 
-    await txs.forEach((element) => {
-      total_amount += element["amount"];
-      total_fee += element["fee"];
-    });
-    // console.log(total_amount);
-    // console.log(total_amount.toFixed(2));
+  //   await txs.forEach((element) => {
+  //     total_amount += element["amount"];
+  //     total_fee += element["fee"];
+  //   });
+  //   // console.log(total_amount);
+  //   // console.log(total_amount.toFixed(2));
 
-    frm.set_value("total_amount", total_amount.toFixed(2));
-    frm.set_value("total_fee", total_fee.toFixed(2));
-    frm.set_value("final_amount", (total_amount - total_fee).toFixed(2));
-    if (frm.doc.bank_transaction) {
-      var amount = await frappe.db.get_value(
-        "Bank Transaction",
-        frm.doc.bank_transaction,
-        "unallocated_amount"
-      );
-      console.log(amount["message"]["unallocated_amount"]);
-      frm.set_value("bank_amount", amount["message"]["unallocated_amount"]);
-    }
+  //   frm.set_value("total_amount", total_amount.toFixed(2));
+  //   frm.set_value("total_fee", total_fee.toFixed(2));
+  //   frm.set_value("remaining_amount", (total_amount - total_fee).toFixed(2));
+  //   if (frm.doc.bank_transaction) {
+  //     var amount = await frappe.db.get_value(
+  //       "Bank Transaction",
+  //       frm.doc.bank_transaction,
+  //       "unallocated_amount"
+  //     );
+  //     console.log(amount["message"]["unallocated_amount"]);
+  //     frm.set_value("bank_amount", amount["message"]["unallocated_amount"]);
+  //   }
 
-    if (frm.is_dirty()) {
-      frm.save();
-    }
-  },
+  //   if (frm.is_dirty()) {
+  //     frm.save();
+  //   }
+  // },
   async set_finalview(frm) {
     frappe.call({
       method:
@@ -234,7 +234,7 @@ frappe.ui.form.on("PG Upload Batch", {
       callback: function (r) {
         if (!r.exc) {
           console.log(r);
-          var diff_amount = frm.doc.bank_amount - frm.doc.final_amount;
+          var diff_amount = frm.doc.bank_amount - frm.doc.remaining_amount;
           var add_html = "";
           if (diff_amount == 0) {
             frm.se;
@@ -246,19 +246,22 @@ frappe.ui.form.on("PG Upload Batch", {
 
           var dataview = `
 							<div style="margin:5px">
-								<h2>Final Data</h2>
-								<div class ="d-flex flex-row-reverse">
-									<div class= "border rounded p-2 w-25" style="font-size:15px">
-										Donors Linked : ${r.message[0]}/${r.message[1]}
+								<div class ="d-flex justify-content-between">
+                  <div class= "border rounded p-2 w-40" style="font-size:15px">
+										Transactions<p style="font-size:10px">(Resolved/Total)</p><b>${r.message[1]}/${r.message[0]}</b>
+									</div>
+                  <div class= "border rounded p-2 w-40" style="font-size:15px">
+										Donors Linked<p style="font-size:10px">(Linked/Unresolved)</p><b>${r.message[2]}/${r.message[0] - r.message[1]}</b>
 									</div>
 								</div>
-								<div class="d-flex justify-content-between">
-									<div class="p-2">Amount as Per Bank</div>
-									<div class="p-2"> ₹ ${frm.doc.bank_amount}</div>
-								</div>
+                <hr>
 								<div class="d-flex justify-content-between">
 									<div class="p-2">Amount as Per Gateway</div>
-									<div class="p-2"> ₹ ${frm.doc.final_amount}</div>
+									<div class="p-2"> ₹ ${frm.doc.remaining_amount}</div>
+								</div>
+                <div class="d-flex justify-content-between">
+									<div class="p-2">Amount as Per Bank</div>
+									<div class="p-2"> ₹ ${frm.doc.bank_amount}</div>
 								</div>
 								<hr>
 								<div class="d-flex justify-content-between">

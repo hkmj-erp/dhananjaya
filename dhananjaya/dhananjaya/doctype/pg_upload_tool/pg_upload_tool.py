@@ -15,6 +15,19 @@ STANDARD_FIELDS = ["transaction_id", "amount", "fee"]
 
 
 class PGUploadTool(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        company: DF.Link
+        gateway: DF.Link
+        gateway_file: DF.Attach | None
+        google_sheets_url: DF.Data | None
+    # end: auto-generated types
     def get_data_from_template_file(self):
         content = None
         extension = None
@@ -115,6 +128,6 @@ def upload_gateway_transactions(*args, **kwargs):
 
     batch_doc.total_amount = total_amount
     batch_doc.total_fee = total_fee
-    batch_doc.final_amount = total_amount - total_fee
+    batch_doc.remaining_amount = total_amount - total_fee
     batch_doc.save()
     frappe.db.commit()

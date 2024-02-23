@@ -10,11 +10,16 @@
   "summary_section",
   "company",
   "gateway",
-  "total_amount",
-  "total_fee",
-  "final_amount",
   "gateway_expense_account",
   "status",
+  "amount_comprehension_section",
+  "total_amount",
+  "total_fee",
+  "batch_amount",
+  "column_break_lfii",
+  "resolved_amount",
+  "resolved_fee",
+  "remaining_amount",
   "column_break_fiecb",
   "bank_account",
   "bank_transaction",
@@ -36,13 +41,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "final_amount",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Final Amount in Bank (As per Gateway)",
-   "read_only": 1
-  },
-  {
    "fieldname": "column_break_fiecb",
    "fieldtype": "Section Break",
    "label": "Matching Details"
@@ -57,7 +55,7 @@
    "depends_on": "eval:doc.bank_account",
    "fieldname": "bank_transaction",
    "fieldtype": "Link",
-   "label": "Bank Transaction",
+   "label": "Bank Tx",
    "options": "Bank Transaction"
   },
   {
@@ -67,7 +65,8 @@
   },
   {
    "fieldname": "column_break_uee4h",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "label": "Final Perspective"
   },
   {
    "fieldname": "final_view",
@@ -79,8 +78,7 @@
    "fetch_from": "bank_transaction.unallocated_amount",
    "fieldname": "bank_amount",
    "fieldtype": "Currency",
-   "hidden": 1,
-   "label": "Amount",
+   "label": "Bank Tx Amount",
    "read_only": 1
   },
   {
@@ -117,11 +115,46 @@
    "label": "Status",
    "options": "Open\nClosed",
    "read_only": 1
+  },
+  {
+   "fieldname": "amount_comprehension_section",
+   "fieldtype": "Section Break",
+   "label": "Amount Comprehension"
+  },
+  {
+   "fieldname": "batch_amount",
+   "fieldtype": "Currency",
+   "label": "Batch Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lfii",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "resolved_amount",
+   "fieldtype": "Currency",
+   "label": "Resolved Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "resolved_fee",
+   "fieldtype": "Currency",
+   "label": "Resolved Fee",
+   "read_only": 1
+  },
+  {
+   "description": "Sum of amount of pending transactions for which donation receipts are pending.",
+   "fieldname": "remaining_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Remaining Batch Amount",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-10 13:09:28.672941",
+ "modified": "2024-02-23 15:28:37.886152",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "PG Upload Batch",
