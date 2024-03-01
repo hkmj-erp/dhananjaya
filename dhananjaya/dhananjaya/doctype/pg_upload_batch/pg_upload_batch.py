@@ -31,7 +31,6 @@ class PGUploadBatch(Document):
         status: DF.Literal["Open", "Closed"]
         total_amount: DF.Currency
         total_fee: DF.Currency
-
     # end: auto-generated types
     def before_insert(self):
         # set default donation account

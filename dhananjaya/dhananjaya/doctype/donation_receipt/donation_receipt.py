@@ -13,7 +13,7 @@ from dhananjaya.dhananjaya.utils import (
 import frappe
 from frappe import _, sendmail
 from frappe.model.naming import getseries
-from frappe.utils import money_in_words, today, unique
+from frappe.utils import money_in_words, today, unique, get_link_to_form
 
 # from erpnext.controllers.accounts_controller import AccountsController
 from datetime import datetime
@@ -25,6 +25,7 @@ CASH_PAYMENT_MODE = "Cash"
 PAYMENT_GATWEWAY_MODE = "Gateway"
 CHEQUE_MODE = "Cheque"
 CUT_OFF_DATE = "2023-01-04"
+CONSUMABLE = "Consumable"
 
 
 class DonationReceipt(Document):
@@ -40,6 +41,8 @@ class DonationReceipt(Document):
         address: DF.Data | None
         amended_from: DF.Link | None
         amount: DF.Currency
+        asset_item: DF.Link | None
+        asset_location: DF.Link | None
         atg_required: DF.Check
         auto_generated: DF.Check
         bank_account: DF.Link | None
@@ -65,6 +68,7 @@ class DonationReceipt(Document):
         ifsc_code: DF.Data | None
         is_csr: DF.Check
         is_ecs: DF.Check
+        kind_type: DF.Literal["", "Consumable", "Asset"]
         naming_series: DF.Literal[
             ".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"
         ]
@@ -89,6 +93,7 @@ class DonationReceipt(Document):
         seva_subtype: DF.Link | None
         seva_type: DF.Link
         sevak_name: DF.Data | None
+        stock_expense_account: DF.Link | None
         user_remarks: DF.Text | None
 
     # end: auto-generated types
@@ -103,6 +108,23 @@ class DonationReceipt(Document):
 
     def validate(self):
         self.validate_atg_required()
+        return
+
+    def is_kind_donation(self):
+        return frappe.get_cached_value(
+            "DJ Mode of Payment", self.payment_method, "kind"
+        )
+
+    def validate_kind_donation(self):
+        is_kind_mode = self.is_kind_donation()
+        sevatype_kind = frappe.db.get_value("Seva Type", self.seva_type, "kind")
+        if is_kind_mode and (not sevatype_kind):
+            frappe.throw(
+                "Please select a Seva Type of In-Kind Donation, since the Mode is Kind Donation"
+            )
+
+        if is_kind_mode and (not self.kind_type):
+            frappe.throw("Please select a type of Kind Donation")
         return
 
     def validate_atg_required(self):
@@ -316,14 +338,17 @@ class DonationReceipt(Document):
     ###### BEFORE SUBMIT : CHECK WHETHER REQUIRED ACCOUNTS ARE SET ######
 
     def before_submit(self):
+        self.validate_kind_donation()
         company_detail = get_company_defaults(self.company)
         if not company_detail.auto_create_journal_entries:
             return
 
         if not self.donation_account:
             frappe.throw(_("Income account for Donation is <b>NOT</b> set."))
-
-        if self.payment_method == CASH_PAYMENT_MODE:
+        is_kind_mode = self.is_kind_donation()
+        if is_kind_mode:
+            return
+        elif self.payment_method == CASH_PAYMENT_MODE:
             if not self.cash_account:
                 frappe.throw(_("Cash Account is not provided."))
         else:
@@ -333,14 +358,16 @@ class DonationReceipt(Document):
                 frappe.throw(
                     _("Bank Transaction is required to be linked before realisation.")
                 )
+        return
 
     ###### ON INSERT : AUTO CREATE JOURNAL ENTRY CHECK ######
 
     def on_submit(self):
         company_detail = get_company_defaults(self.company)
+        is_kind_mode = self.is_kind_donation()
         if company_detail.auto_create_journal_entries:
             je_doc = self.create_journal_entry()
-            if self.payment_method != CASH_PAYMENT_MODE:
+            if self.payment_method != CASH_PAYMENT_MODE and (not is_kind_mode):
                 self.reconcile_bank_transaction(je_doc)
             if (
                 self.payment_method == PAYMENT_GATWEWAY_MODE
@@ -348,9 +375,52 @@ class DonationReceipt(Document):
             ):
                 self.reconcile_gateway_transaction()
 
+        if is_kind_mode and self.asset_item:
+            self.make_asset()
+
+    def make_asset(self, is_grouped_asset=False):
+        item_doc = frappe.get_doc("Item", self.asset_item)
+        if not self.asset_location:
+            frappe.throw("Enter location for the asset")
+        asset = frappe.get_doc(
+            {
+                "doctype": "Asset",
+                "item_code": self.asset_item,
+                "asset_name": item_doc.item_name,
+                "naming_series": item_doc.asset_naming_series or "AST",
+                "asset_category": item_doc.asset_category,
+                "location": self.asset_location,
+                "company": self.company,
+                "custom_donation_receipt": self.name,
+                "calculate_depreciation": 0,
+                "is_existing_asset": 1,
+                "gross_purchase_amount": self.amount,
+                "purchase_date": self.receipt_date,
+                "available_for_use_date": self.receipt_date,
+            }
+        )
+
+        asset.flags.ignore_validate = True
+        asset.flags.ignore_mandatory = True
+        asset.set_missing_values()
+        asset.insert()
+        return asset.name
+
+    def get_cost_center(self):
+        COST_CENTER = None
+        if self.seva_subtype:
+            subseva_doc = frappe.get_doc("Seva Subtype", self.seva_subtype)
+            for c in subseva_doc.cost_centers:
+                if c.company == self.company:
+                    COST_CENTER = c.cost_center
+        if not COST_CENTER:
+            COST_CENTER = frappe.db.get_value("Company", self.company, "cost_center")
+        return COST_CENTER
+
     ###### JOURNAL ENTRY AUTOMATION ######
 
     def create_journal_entry(self):
+        is_kind_mode = self.is_kind_donation()
         seva_type_doc = frappe.get_cached_doc("Seva Type", self.seva_type)
         if (not seva_type_doc) or (not seva_type_doc.account):
             frappe.throw(
@@ -359,12 +429,14 @@ class DonationReceipt(Document):
                 )
             )
 
+        default_cost_center = self.get_cost_center()
+
         je = {
             "doctype": "Journal Entry",
             "voucher_type": (
                 "Cash Entry"
                 if self.payment_method == CASH_PAYMENT_MODE
-                else "Bank Entry"
+                else "Journal Entry" if is_kind_mode else "Bank Entry"
             ),
             "company": self.company,
             "donation_receipt": self.name,
@@ -388,16 +460,57 @@ class DonationReceipt(Document):
 
         je.setdefault(
             "user_remark",
-            f"BEING AMOUNT RECEIVED FOR {self.seva_type} FROM {donor_name} AS PER R.NO.{self.name} DT:{self.receipt_date} {self.preacher} ",
+            f"BEING {'KIND' if is_kind_mode else 'AMOUNT'} RECEIVED FOR {self.seva_type} FROM {donor_name} AS PER R.NO.{self.name} DT:{self.receipt_date} {self.preacher} ",
         )
 
-        accounts_details = frappe.get_all(
-            "Company",
-            fields=["cost_center"],
-            filters={"name": self.company},
-        )[0]
+        if is_kind_mode:
+            from erpnext.assets.doctype.asset.asset import is_cwip_accounting_enabled
+            from erpnext.assets.doctype.asset_category.asset_category import (
+                get_asset_category_account,
+            )
 
-        if self.payment_method == CASH_PAYMENT_MODE:
+            je.setdefault("posting_date", self.receipt_date)
+            kind_debit_account = None
+            if self.kind_type == CONSUMABLE:
+                kind_debit_account = self.stock_expense_account
+            else:
+                asset_category = frappe.db.get_value(
+                    "Item", self.asset_item, "asset_category"
+                )
+                account_type = (
+                    "capital_work_in_progress_account"
+                    if is_cwip_accounting_enabled(asset_category)
+                    else "fixed_asset_account"
+                )
+                asset_category_account = get_asset_category_account(
+                    account_type, item=self.asset_item, company=self.company
+                )
+                if not asset_category_account:
+                    form_link = get_link_to_form("Asset Category", asset_category)
+                    frappe.throw(
+                        _("Please set Fixed Asset Account in {} against {}.").format(
+                            form_link, self.company
+                        ),
+                        title=_("Missing Account"),
+                    )
+                kind_debit_account = asset_category_account
+            je.setdefault(
+                "accounts",
+                [
+                    {
+                        "account": self.donation_account,
+                        "credit_in_account_currency": self.amount,
+                        "cost_center": default_cost_center,
+                    },
+                    {
+                        "account": kind_debit_account,
+                        "debit_in_account_currency": self.amount,
+                        "cost_center": default_cost_center,
+                    },
+                ],
+            )
+
+        elif self.payment_method == CASH_PAYMENT_MODE:
             # Jounrnal Entry date should be the day Cashier received the amount because it has to tally with Cashbook.
             cash_date = (
                 self.cash_received_date
@@ -412,13 +525,13 @@ class DonationReceipt(Document):
                         "account": self.donation_account,
                         "credit_in_account_currency": self.amount,
                         # This is needed for cost center analysis.
-                        "cost_center": accounts_details.cost_center,
+                        "cost_center": default_cost_center,
                     },
                     {
                         "account": self.cash_account,
                         "debit_in_account_currency": self.amount,
                         # As it not compulsory. It will pick up the default.--> But now it is picking of other company, so explicitly declared.
-                        "cost_center": accounts_details.cost_center,
+                        "cost_center": default_cost_center,
                     },
                 ],
             )
@@ -445,7 +558,7 @@ class DonationReceipt(Document):
                     {
                         "account": self.donation_account,
                         "credit_in_account_currency": self.amount,
-                        "cost_center": accounts_details.cost_center,
+                        "cost_center": default_cost_center,
                     },
                     {
                         "account": bank_account_ledger.account,
@@ -456,7 +569,7 @@ class DonationReceipt(Document):
                             if not self.additional_charges
                             else self.additional_charges
                         ),
-                        "cost_center": accounts_details.cost_center,
+                        "cost_center": default_cost_center,
                     },
                 ],
             )
@@ -468,7 +581,7 @@ class DonationReceipt(Document):
                     {
                         "account": self.gateway_expense_account,
                         "debit_in_account_currency": self.additional_charges,
-                        "cost_center": accounts_details.cost_center,
+                        "cost_center": default_cost_center,
                     }
                 )
 
@@ -567,13 +680,13 @@ def get_donor(doctype, txt, searchfield, start, page_len, filters):
     # fields[1] = "CONCAT(IF(donor.is_patron=1,'🅿','')," + fields[1] + ")"
     return frappe.db.sql(
         """
-        select {fields} 
-        from `tabDonor` donor
-        {join_stmt}
-        where full_name LIKE %(txt)s
-        {cond}
-        order by last_donation desc,full_name limit %(page_len)s offset %(start)s
-        """.format(
+		select {fields} 
+		from `tabDonor` donor
+		{join_stmt}
+		where full_name LIKE %(txt)s
+		{cond}
+		order by last_donation desc,full_name limit %(page_len)s offset %(start)s
+		""".format(
             **{"fields": ", ".join(fields), "cond": cond, "join_stmt": join_stmt}
         ),
         {"txt": "%" + txt + "%", "start": start, "page_len": 40},
@@ -711,9 +824,23 @@ def receipt_cancel_operations(receipt):
             receipt_doc.payment_gateway_document,
             {"receipt_created": 0, "donor": None, "seva_type": None},
         )
-        pg_batch = frappe.db.get_value("Payment Gateway Transaction",receipt_doc.payment_gateway_document,"batch")
-        
+        pg_batch = frappe.db.get_value(
+            "Payment Gateway Transaction", receipt_doc.payment_gateway_document, "batch"
+        )
+
         refresh_pg_upload_batch(pg_batch)
+
+    # Cancel Asset
+    if receipt_doc.asset_item:
+        assets = frappe.db.get_all(
+            "Asset",
+            filters={"custom_donation_receipt": receipt, "docstatus": 1},
+            pluck="name",
+        )
+        if len(assets) > 0:
+            asset = assets[0]
+            asset_doc = frappe.get_doc("Asset", asset)
+            asset_doc.cancel()
 
     # Finally Cancel Donation Receipt
     frappe.db.set_value(
@@ -732,15 +859,16 @@ def detach_bank_transaction(je):
         "Bank Transaction",
         filters={"payment_document": "Journal Entry", "payment_entry": je},
     )
-    if len(tx) != 1:
-        frappe.throw(
-            "There is not a SINGLE Bank Transaction Entry. Either 0 or more than 1. Contact Administrator."
-        )
-    tx = tx[0]
-    tx_doc = frappe.get_doc("Bank Transaction", tx)
-    row = next(r for r in tx_doc.payment_entries if r.payment_entry == je)
-    tx_doc.remove(row)
-    tx_doc.save()
+    # if len(tx) != 1:
+    #     frappe.throw(
+    #         "There is not a SINGLE Bank Transaction Entry. Either 0 or more than 1. Contact Administrator."
+    #     )
+    if len(tx) > 0:
+        tx = tx[0]
+        tx_doc = frappe.get_doc("Bank Transaction", tx)
+        row = next(r for r in tx_doc.payment_entries if r.payment_entry == je)
+        tx_doc.remove(row)
+        tx_doc.save()
 
 
 ############# CLOSE ##############

@@ -27,6 +27,7 @@ class PGUploadTool(Document):
         gateway: DF.Link
         gateway_file: DF.Attach | None
         google_sheets_url: DF.Data | None
+
     # end: auto-generated types
     def get_data_from_template_file(self):
         content = None
@@ -128,6 +129,7 @@ def upload_gateway_transactions(*args, **kwargs):
 
     batch_doc.total_amount = total_amount
     batch_doc.total_fee = total_fee
+    batch_doc.batch_amount = total_amount - total_fee
     batch_doc.remaining_amount = total_amount - total_fee
     batch_doc.save()
     frappe.db.commit()

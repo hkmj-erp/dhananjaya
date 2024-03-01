@@ -48,6 +48,7 @@ class Patron(Document):
         naming_series: DF.Literal["PTR-.YYYY.-"]
         occupation: DF.Data | None
         old_patron_id: DF.Data | None
+        old_patron_number: DF.Data | None
         old_trust_code: DF.Int
         pan_no: DF.Data | None
         passport: DF.Data | None

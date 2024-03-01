@@ -117,15 +117,17 @@ def try_standard_pattern(batch):
             doc.save()
             check_and_update_donor(
                 donor=doc.name,
-                contact=extra_data["Mobile No"],
+                contact=extra_data["Mobile Number"],
                 address=extra_data["Address"],
                 email=None if "Email" not in extra_data else extra_data["Email"],
-                pan_no=None
-                if "PAN Number" not in extra_data
-                else extra_data["PAN Number"],
-                aadhar_no=None
-                if "Aadhar Number" not in extra_data
-                else extra_data["Aadhar Number"],
+                pan_no=(
+                    None if "PAN Number" not in extra_data else extra_data["PAN Number"]
+                ),
+                aadhar_no=(
+                    None
+                    if "Aadhar Number" not in extra_data
+                    else extra_data["Aadhar Number"]
+                ),
             )
             donor_found = doc.name
         frappe.db.set_value(

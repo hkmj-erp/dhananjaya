@@ -17,9 +17,11 @@ class SevaSubtype(NestedSet):
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
+        from dhananjaya.dhananjaya.doctype.seva_subtype_cost_center.seva_subtype_cost_center import SevaSubtypeCostCenter
         from frappe.types import DF
 
         amount: DF.Currency
+        cost_centers: DF.Table[SevaSubtypeCostCenter]
         enabled: DF.Check
         include_in_analysis: DF.Check
         is_group: DF.Check
@@ -36,6 +38,7 @@ class SevaSubtype(NestedSet):
         generate_version(self.doctype)
 
     def on_update(self):
+        super(SevaSubtype, self).on_update()
         self.delete_box_key()
 
     def on_trash(self):

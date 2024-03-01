@@ -10,7 +10,8 @@
  "field_order": [
   "mode",
   "enabled",
-  "description"
+  "description",
+  "kind"
  ],
  "fields": [
   {
@@ -29,11 +30,17 @@
    "fieldname": "description",
    "fieldtype": "Data",
    "label": "Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "kind",
+   "fieldtype": "Check",
+   "label": "In-Kind"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-19 16:47:31.595400",
+ "modified": "2024-03-01 15:28:03.366191",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "DJ Mode of Payment",

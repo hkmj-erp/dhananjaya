@@ -11,6 +11,7 @@
   "enabled",
   "seva_name",
   "amount",
+  "cost_centers",
   "lft",
   "rgt",
   "old_parent",
@@ -44,7 +45,6 @@
   {
    "fieldname": "lft",
    "fieldtype": "Int",
-   "hidden": 1,
    "label": "Left",
    "no_copy": 1,
    "read_only": 1
@@ -52,7 +52,6 @@
   {
    "fieldname": "rgt",
    "fieldtype": "Int",
-   "hidden": 1,
    "label": "Right",
    "no_copy": 1,
    "read_only": 1
@@ -90,12 +89,18 @@
    "label": "Amount",
    "non_negative": 1,
    "precision": "2"
+  },
+  {
+   "fieldname": "cost_centers",
+   "fieldtype": "Table",
+   "label": "Cost Centers",
+   "options": "Seva Subtype Cost Center"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2024-01-29 11:24:37.478879",
+ "modified": "2024-03-01 14:22:13.847520",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Subtype",

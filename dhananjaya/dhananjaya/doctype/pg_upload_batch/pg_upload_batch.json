@@ -124,6 +124,7 @@
   {
    "fieldname": "batch_amount",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Batch Amount",
    "read_only": 1
   },
@@ -154,7 +155,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-23 15:28:37.886152",
+ "modified": "2024-02-23 17:28:57.553738",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "PG Upload Batch",
@@ -207,5 +208,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "gateway",
  "track_changes": 1
 }

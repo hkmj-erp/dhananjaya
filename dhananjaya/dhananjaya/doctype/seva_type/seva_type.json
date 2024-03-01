@@ -17,6 +17,7 @@
   "patronship_allowed",
   "include_in_analysis",
   "csr_allowed",
+  "kind",
   "csr_related_section",
   "csr_separate_accounting",
   "csr_account"
@@ -54,7 +55,8 @@
    "fieldname": "account",
    "fieldtype": "Link",
    "label": "Account",
-   "options": "Account"
+   "options": "Account",
+   "reqd": 1
   },
   {
    "default": "1",
@@ -103,11 +105,17 @@
    "fieldname": "csr_allowed",
    "fieldtype": "Check",
    "label": "CSR Allowed"
+  },
+  {
+   "default": "0",
+   "fieldname": "kind",
+   "fieldtype": "Check",
+   "label": "In-Kind"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-23 09:55:27.462838",
+ "modified": "2024-03-01 15:41:49.129987",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Type",

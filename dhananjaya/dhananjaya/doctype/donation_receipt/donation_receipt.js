@@ -3,6 +3,22 @@
 
 frappe.ui.form.on('Donation Receipt', {
 	refresh: function (frm) {
+		frm.set_query('asset_item', () => {
+			return {
+				filters: {
+					is_fixed_asset: 1,
+					disabled: 0
+				}
+			}
+		});
+		frm.set_query('stock_expense_account', () => {
+			return {
+				filters: {
+					account_type: "Expense Account",
+					disabled: 0
+				}
+			}
+		});
 		frm.set_query('payment_gateway_document', () => {
 			return {
 				filters: {

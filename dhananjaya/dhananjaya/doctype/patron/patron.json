@@ -30,6 +30,7 @@
   "old_patron_id",
   "old_trust_code",
   "unresolved_fax_column",
+  "old_patron_number",
   "patron_details_tab",
   "enrolled_date",
   "seva_type",
@@ -301,12 +302,17 @@
    "fieldtype": "Attach Image",
    "hidden": 1,
    "label": "Profile Image"
+  },
+  {
+   "fieldname": "old_patron_number",
+   "fieldtype": "Data",
+   "label": "Old Patron Number"
   }
  ],
  "image_field": "profile_image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 11:11:09.734927",
+ "modified": "2024-02-27 18:08:13.089153",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron",
