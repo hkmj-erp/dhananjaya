@@ -3,6 +3,24 @@
 
 frappe.query_reports["Gifts Eligibility"] = {
 	"filters": [
+		{
+			"fieldname": "gift",
+			"label": __("Gift"),
+			"fieldtype": "MultiSelectList",
+			"options": "Patron Gift",
+			get_data: function (txt) {
+				return frappe.db.get_link_options('Patron Gift', txt, {});
+			}
+		},
+		{
+			"fieldname": "card",
+			"label": __("Card"),
+			"fieldtype": "MultiSelectList",
+			"options": "Patron Card Type",
+			get_data: function (txt) {
+				return frappe.db.get_link_options('Patron Card Type', txt, {});
+			}
+		},
 		// {
 		// 	fieldname: "preacher",
 		// 	label: __("Preacher"),

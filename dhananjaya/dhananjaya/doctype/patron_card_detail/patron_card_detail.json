@@ -14,10 +14,10 @@
  "fields": [
   {
    "fieldname": "card_type",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Card Type",
-   "options": "\nMembership\nLife Patron"
+   "options": "Patron Card Type"
   },
   {
    "fieldname": "number",
@@ -42,7 +42,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-10-14 08:04:06.131440",
+ "modified": "2024-03-06 16:12:07.872399",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron Card Detail",
