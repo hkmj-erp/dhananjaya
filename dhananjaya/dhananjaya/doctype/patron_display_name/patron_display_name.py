@@ -17,6 +17,6 @@ class PatronDisplayName(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		type: DF.Literal["Company", "Wife", "Husband", "Son", "Daughter", "Person", "Relative"]
+		type: DF.Literal["Company", "Person"]
 	# end: auto-generated types
 	pass
