@@ -215,6 +215,11 @@
                         {{ doc.seva_type.split(' - ')[:-1]|join(' - ') }}
                         <!-- {{doc.seva_type}} -->
                     </div>
+                    {% if doc.is_csr %}
+                    <div style="text-align: left;font-weight: 600; color: green">
+                        CSR DONATION
+                    </div>
+                    {% endif %}
                 </div>
             </td>
             
