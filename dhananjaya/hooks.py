@@ -94,9 +94,9 @@ jinja = {
 # Permissions evaluated in scripted ways
 
 permission_query_conditions = {
-    "Donation Receipt": "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt_filter.list",
-    "Donor": "dhananjaya.dhananjaya.doctype.donor.donor_filter.list",
-    "Patron": "dhananjaya.dhananjaya.doctype.patron.patron_filter.list",
+    "Donation Receipt": "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt_filter.list_filter",
+    "Donor": "dhananjaya.dhananjaya.doctype.donor.donor_filter.list_filter",
+    "Patron": "dhananjaya.dhananjaya.doctype.patron.patron_filter.list_filter",
 }
 
 has_permission = {
