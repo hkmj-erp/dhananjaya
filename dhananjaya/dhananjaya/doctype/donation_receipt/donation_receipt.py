@@ -105,6 +105,7 @@ class DonationReceipt(Document):
         prefix = f"{company_abbr}-DR{year}{month}-"
         # frappe.errprint(prefix) HKMJ-DR2401-0001
         self.name = prefix + getseries(prefix, 4)
+        self.company_abbreviation = company_abbr
 
     def validate(self):
         self.validate_atg_required()

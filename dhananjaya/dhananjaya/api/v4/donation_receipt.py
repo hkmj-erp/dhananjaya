@@ -33,10 +33,10 @@ def create_receipt():
     ##### Create Receipt #####
     doc = frappe.new_doc("Donation Receipt")
     doc.company = donation["company"]
-    if "receipt_date" in donation:
-        doc.receipt_date = donation["receipt_date"]
-    else:
-        doc.receipt_date = today()
+    # if "receipt_date" in donation:
+    #     doc.receipt_date = donation["receipt_date"]
+    # else:
+    doc.receipt_date = today()
 
     doc.preacher = preacher
 
@@ -190,6 +190,8 @@ def search_receipts(filters, order_by, limit_start, limit):
         if "workflow_state" in ftr:
             where_string += f""" AND {ftr[0]} {ftr[1]} {ftr_value} """
         if "payment_method" in ftr:
+            where_string += f""" AND {ftr[0]} {ftr[1]} {ftr_value} """
+        if "amount" in ftr:
             where_string += f""" AND {ftr[0]} {ftr[1]} {ftr_value} """
         if "docstatus" in ftr:
             where_string += f""" AND docstatus {ftr[1]} {ftr[2]} """
