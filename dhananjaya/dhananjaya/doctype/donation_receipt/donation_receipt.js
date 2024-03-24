@@ -138,6 +138,42 @@ frappe.ui.form.on('Donation Receipt', {
 					});
 
 			}, "Operations");
+			if (frm.doc.payment_method == "Cash") {
+				frm.add_custom_button(__('Return Cash'), function () {
+					frappe.warn('Are you sure you want to proceed?',
+						'This action will generate a new Journal Entry to reverse Cash from Cashbook on the given date.',
+						() => {
+							frappe.prompt([
+								{
+									label: 'Cash Returned Date',
+									fieldname: 'returned_date',
+									fieldtype: 'Date',
+									required: 1
+								},
+							], (values) => {
+								console.log(values.returned_date, values.last_name);
+								frappe.call({
+									freeze: true,
+									freeze_message: "Returning Cash",
+									method: "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.receipt_cash_return_operations",
+									args: {
+										receipt: frm.doc.name,
+										cash_return_date: values.returned_date
+									},
+									callback: function (r) {
+										if (!r.exc) {
+											frappe.msgprint("Successfully Returned.");
+										}
+									}
+								});
+							})
+						}, () => {
+						});
+
+				}, "Operations");
+			}
+
+
 		}
 
 		frm.add_custom_button(__('Send Receipt/Acknowledgement'), async function () {
