@@ -3,7 +3,7 @@ from dhananjaya.constants import DCC_EXCLUDE_ROLES
 from dhananjaya.dhananjaya.utils import get_preachers
 
 
-def list(user):
+def list_filter(user):
     if not user:
         user = frappe.session.user
 
