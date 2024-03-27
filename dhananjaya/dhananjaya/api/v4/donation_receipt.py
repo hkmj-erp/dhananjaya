@@ -272,11 +272,6 @@ def cashier_approve_receipt(docname):
     if doc.payment_method == "Cash":
         apply_workflow(doc, "Receive Cash")
         frappe.db.commit()
-        frappe.response.done = True
     elif doc.payment_method == "Cheque":
         apply_workflow(doc, "Collect Cheque")
         frappe.db.commit()
-        frappe.response.done = True
-    else:
-        frappe.response.done = False
-        return "Wrong Action"
