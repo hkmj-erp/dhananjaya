@@ -10,16 +10,50 @@ from dhananjaya.dhananjaya.utils import (
 
 @frappe.whitelist()
 def members_search(filters, limit_start=None, limit=None):
+    filters = json.loads(filters)
+
     preachers = get_preachers()
     preachers_string = ",".join([f"'{p}'" for p in preachers])
 
-    filters = json.loads(filters)
     # join_string = ""
     where_string = ""
     having_string = ""
 
-    if frappe.db.get_single_value("Dhananjaya Settings", "hide_others_donors"):
-        where_string += f"""  AND td.llp_preacher IN ({preachers_string}) """
+    ## Preacher Selected
+    if not is_null_or_blank(filters.get("preacher_selected")):
+        if filters.get("preacher_selected") == "All":
+            if frappe.db.get_single_value("Dhananjaya Settings", "hide_others_donors"):
+                where_string += f"""  AND td.llp_preacher IN ({preachers_string}) """
+        else:
+            where_string += (
+                f""" AND td.llp_preacher = '{filters.get("preacher_selected")}'"""
+            )
+
+    ## Total Donation Amount Selected
+    if not is_null_or_blank(filters.get("total_donated_min")):
+        if filters.get("total_donated_min"):
+            where_string += (
+                f"""  AND td.total_donated >= {filters.get("total_donated_min")} """
+            )
+
+    if not is_null_or_blank(filters.get("total_donated_max")):
+        if filters.get("total_donated_max"):
+            where_string += (
+                f"""  AND td.total_donated <= {filters.get("total_donated_max")} """
+            )
+
+    ## Total Times Donated Selected
+    if not is_null_or_blank(filters.get("total_times_donated_min")):
+        if filters.get("total_times_donated_min"):
+            where_string += f"""  AND td.times_donated >= {filters.get("total_times_donated_min")} """
+
+    ## Last Donation Date Selected
+    if not is_null_or_blank(filters.get("last_time_donated_after")):
+        where_string += (
+            f"""  AND td.last_donation >= '{filters.get("last_time_donated_after")}' """
+        )
+    if not is_null_or_blank(filters.get("last_time_donated_before")):
+        where_string += f"""  AND td.last_donation <= '{filters.get("last_time_donated_before")}' """
 
     # name, mobile, address, email
 
@@ -50,12 +84,12 @@ def members_search(filters, limit_start=None, limit=None):
 
     members = {}
 
-    if not filters.get("search_type"):
+    if not filters.get("member_type"):
         search_doctype = "Donor"
     else:
-        if filters.get("search_type") == "donor":
+        if filters.get("member_type") == "donor":
             search_doctype = "Donor"
-        elif filters.get("search_type") == "patron":
+        elif filters.get("member_type") == "patron":
             search_doctype = "Patron"
 
     search_doctype_lc = search_doctype.lower()

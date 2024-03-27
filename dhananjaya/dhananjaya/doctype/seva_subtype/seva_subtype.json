@@ -45,6 +45,7 @@
   {
    "fieldname": "lft",
    "fieldtype": "Int",
+   "hidden": 1,
    "label": "Left",
    "no_copy": 1,
    "read_only": 1
@@ -52,6 +53,7 @@
   {
    "fieldname": "rgt",
    "fieldtype": "Int",
+   "hidden": 1,
    "label": "Right",
    "no_copy": 1,
    "read_only": 1
@@ -100,7 +102,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2024-03-01 14:22:13.847520",
+ "modified": "2024-03-21 11:10:40.534059",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Subtype",

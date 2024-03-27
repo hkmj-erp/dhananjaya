@@ -23,6 +23,7 @@ from frappe.utils.data import getdate
 
 CASH_PAYMENT_MODE = "Cash"
 PAYMENT_GATWEWAY_MODE = "Gateway"
+TDS_PAYMENT_MODE = "TDS"
 CHEQUE_MODE = "Cheque"
 CUT_OFF_DATE = "2023-01-04"
 CONSUMABLE = "Consumable"
@@ -69,9 +70,7 @@ class DonationReceipt(Document):
         is_csr: DF.Check
         is_ecs: DF.Check
         kind_type: DF.Literal["", "Consumable", "Asset"]
-        naming_series: DF.Literal[
-            ".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"
-        ]
+        naming_series: DF.Literal[".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"]
         old_ar_date: DF.Date | None
         old_ar_no: DF.Data | None
         old_dr_no: DF.Data | None
@@ -94,8 +93,8 @@ class DonationReceipt(Document):
         seva_type: DF.Link
         sevak_name: DF.Data | None
         stock_expense_account: DF.Link | None
+        tds_account: DF.Link | None
         user_remarks: DF.Text | None
-
     # end: auto-generated types
     def autoname(self):
         dateF = getdate(self.receipt_date)
@@ -105,6 +104,7 @@ class DonationReceipt(Document):
         prefix = f"{company_abbr}-DR{year}{month}-"
         # frappe.errprint(prefix) HKMJ-DR2401-0001
         self.name = prefix + getseries(prefix, 4)
+        self.company_abbreviation = company_abbr
 
     def validate(self):
         self.validate_atg_required()
@@ -153,6 +153,13 @@ class DonationReceipt(Document):
                     self.donor,
                 )
             # self.update_account_based_on_seva_type() # Use Only in Emergency Cases.
+
+            if self.has_value_changed("is_csr"):
+                settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
+                if settings_doc.separate_accounting_for_csr:
+                    frappe.throw(
+                        "Not allowed to change CSR after submission as there is accounting based on it."
+                    )
         return
 
     #######################################################
@@ -351,6 +358,9 @@ class DonationReceipt(Document):
         elif self.payment_method == CASH_PAYMENT_MODE:
             if not self.cash_account:
                 frappe.throw(_("Cash Account is not provided."))
+        elif self.payment_method == TDS_PAYMENT_MODE:
+            if not self.tds_account:
+                frappe.throw(_("TDS Account is not provided."))
         else:
             if not self.bank_account:
                 frappe.throw(_("Bank Account is not provided."))
@@ -367,7 +377,9 @@ class DonationReceipt(Document):
         is_kind_mode = self.is_kind_donation()
         if company_detail.auto_create_journal_entries:
             je_doc = self.create_journal_entry()
-            if self.payment_method != CASH_PAYMENT_MODE and (not is_kind_mode):
+            if self.payment_method not in (CASH_PAYMENT_MODE, TDS_PAYMENT_MODE) and (
+                not is_kind_mode
+            ):
                 self.reconcile_bank_transaction(je_doc)
             if (
                 self.payment_method == PAYMENT_GATWEWAY_MODE
@@ -529,6 +541,26 @@ class DonationReceipt(Document):
                     },
                     {
                         "account": self.cash_account,
+                        "debit_in_account_currency": self.amount,
+                        # As it not compulsory. It will pick up the default.--> But now it is picking of other company, so explicitly declared.
+                        "cost_center": default_cost_center,
+                    },
+                ],
+            )
+        elif self.payment_method == TDS_PAYMENT_MODE:
+            # Jounrnal Entry date should be the receipt date only.
+            je.setdefault("posting_date", self.receipt_date)
+            je.setdefault(
+                "accounts",
+                [
+                    {
+                        "account": self.donation_account,
+                        "credit_in_account_currency": self.amount,
+                        # This is needed for cost center analysis.
+                        "cost_center": default_cost_center,
+                    },
+                    {
+                        "account": self.tds_account,
                         "debit_in_account_currency": self.amount,
                         # As it not compulsory. It will pick up the default.--> But now it is picking of other company, so explicitly declared.
                         "cost_center": default_cost_center,
@@ -771,6 +803,68 @@ def receipt_bounce_operations(receipt):
         "Donation Receipt",
         receipt,
         {"docstatus": 2, "workflow_state": "Bounced"},
+    )
+
+
+########################################
+####### Cash Return Procedure ##########
+########################################
+@frappe.whitelist()
+def receipt_cash_return_operations(receipt, cash_return_date):
+    # Check for Permissions
+
+    if "DCC Cashier" not in frappe.get_roles():
+        frappe.throw("You are not allowed to return cash until you are a DCC Cashier.")
+
+    #########################
+
+    receipt_doc = frappe.get_doc("Donation Receipt", receipt)
+
+    if receipt_doc.payment_method != CASH_PAYMENT_MODE:
+        frappe.throw("Only Cash receipts are allowed.")
+
+    je = frappe.get_all(
+        "Journal Entry",
+        fields="name",
+        filters={"donation_receipt": receipt_doc.name, "docstatus": 1},
+    )
+
+    if len(je) != 1:
+        frappe.throw("There is no JE associated.")
+    je = je[0]
+    je_dict = frappe.get_doc("Journal Entry", je["name"]).as_dict()
+
+    transaction_amount = je_dict["total_debit"]
+
+    for a in je_dict["accounts"]:
+        if a["debit"] == 0:
+            a["debit"] = transaction_amount
+            a["debit_in_account_currency"] = transaction_amount
+            a["credit"] = 0
+            a["credit_in_account_currency"] = 0
+        elif a["credit"] == 0:
+            a["credit"] = transaction_amount
+            a["credit_in_account_currency"] = transaction_amount
+            a["debit"] = 0
+            a["debit_in_account_currency"] = 0
+
+    del je_dict["clearance_date"]
+    del je_dict["bank_statement_name"]
+    del je_dict["name"]
+
+    je_dict["posting_date"] = cash_return_date
+    je_dict["user_remark"] = je_dict["user_remark"].replace(
+        "BEING AMOUNT RECEIVED", "BEING CASH RETURNED"
+    )
+
+    reverse_je = frappe.get_doc(je_dict)
+    reverse_je.submit()
+
+    # Finally Bounce Donation Receipt
+    frappe.db.set_value(
+        "Donation Receipt",
+        receipt,
+        {"docstatus": 2, "workflow_state": "Cash Returned"},
     )
 
 

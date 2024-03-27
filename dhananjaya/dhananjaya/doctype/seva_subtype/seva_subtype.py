@@ -17,7 +17,9 @@ class SevaSubtype(NestedSet):
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from dhananjaya.dhananjaya.doctype.seva_subtype_cost_center.seva_subtype_cost_center import SevaSubtypeCostCenter
+        from dhananjaya.dhananjaya.doctype.seva_subtype_cost_center.seva_subtype_cost_center import (
+            SevaSubtypeCostCenter,
+        )
         from frappe.types import DF
 
         amount: DF.Currency
@@ -59,3 +61,37 @@ def get_cached_documents():
         )
         frappe.cache().hset("dhananjaya_box", "seva_subtype", seva_subtypes)
     return seva_subtypes
+
+
+@frappe.whitelist()
+def get_children(doctype, parent, is_root=False):
+
+    filters = [["enabled", "=", "1"]]
+
+    if parent and not is_root:
+        # via expand child
+        filters.append(["parent_seva_subtype", "=", parent])
+    else:
+        filters.append(['ifnull(`parent_seva_subtype`, "")', "=", ""])
+
+    types = frappe.get_list(
+        doctype,
+        fields=["name as value", "seva_name as title", "is_group as expandable"],
+        filters=filters,
+        order_by="name",
+    )
+
+    return types
+
+
+@frappe.whitelist()
+def add_node():
+    from frappe.desk.treeview import make_tree_args
+
+    args = frappe.form_dict
+    args = make_tree_args(**args)
+
+    if args.parent_seva_subtype == "All Types":
+        args.parent_seva_subtype = None
+
+    frappe.get_doc(args).insert()

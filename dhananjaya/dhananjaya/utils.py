@@ -62,7 +62,9 @@ def download_pdf_public(
     pdf_file = get_pdf(content)
 
     frappe.local.response.filename = "{donor_name} - {receipt_no}.pdf".format(
-        donor_name=doc.full_name if doc.full_name else doc.donor_creation_request_name,
+        donor_name=(
+            doc.full_name if doc.full_name else doc.donor_creation_request_name
+        ).strip(),
         receipt_no=receiptId.replace(" ", "-").replace("/", "-"),
     )
     frappe.local.response.filecontent = pdf_file
