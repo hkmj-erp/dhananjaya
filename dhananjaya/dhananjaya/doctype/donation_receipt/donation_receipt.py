@@ -70,7 +70,9 @@ class DonationReceipt(Document):
         is_csr: DF.Check
         is_ecs: DF.Check
         kind_type: DF.Literal["", "Consumable", "Asset"]
-        naming_series: DF.Literal[".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"]
+        naming_series: DF.Literal[
+            ".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"
+        ]
         old_ar_date: DF.Date | None
         old_ar_no: DF.Data | None
         old_dr_no: DF.Data | None
@@ -95,6 +97,7 @@ class DonationReceipt(Document):
         stock_expense_account: DF.Link | None
         tds_account: DF.Link | None
         user_remarks: DF.Text | None
+
     # end: auto-generated types
     def autoname(self):
         dateF = getdate(self.receipt_date)
@@ -980,26 +983,31 @@ def process_batch_gateway_payments(batch):
     if not (batch_doc.remaining_amount == batch_doc.bank_amount):
         frappe.throw("This Batch processing is not eligible due to amount mismatch.")
     bank_tx_doc = frappe.get_doc("Bank Transaction", batch_doc.bank_transaction)
-    settings = frappe.get_cached_doc("PG Upload Tool")
     payment_txs = frappe.db.get_all(
         "Payment Gateway Transaction",
-        filters={"batch": batch, "receipt_created": 0},
+        filters={
+            "batch": batch,
+            "receipt_created": 0,
+            "seva_type": ["is", "set"],
+            "donor": ["is", "set"],
+        },
         fields=("*"),
     )
-    # Check if Seva Types are set!
-    for tx in payment_txs:
-        if not tx["seva_type"]:
-            frappe.throw("Set Seva Types in all the batch gateway payments.")
+    # # Check if Seva Types are set!
+    # for tx in payment_txs:
+    #     if not tx["seva_type"]:
+    #         frappe.throw("Set Seva Types in all the batch gateway payments.")
 
-    # Check if Donors & Seva Types are set!
-    for tx in payment_txs:
-        if not tx["donor"]:
-            frappe.throw("Set Donor compulsorily in all batch gateway payments.")
+    # # Check if Donors & Seva Types are set!
+    # for tx in payment_txs:
+    #     if not tx["donor"]:
+    #         frappe.throw("Set Donor compulsorily in all batch gateway payments.")
 
-    seva_account = frappe.db.get_value("Seva Type", tx["seva_type"], "account")
-    ## Best Address Contact
-    address, contact, email = get_best_contact_address(tx["donor"])
     for tx in payment_txs:
+        # Best Address Contact
+        address, contact, email = get_best_contact_address(tx["donor"])
+
+        seva_doc = frappe.get_cached_doc("Seva Type", tx["seva_type"])
         dr = {
             "doctype": "Donation Receipt",
             "company": batch_doc.company,
@@ -1012,7 +1020,7 @@ def process_batch_gateway_payments(batch):
             "contact": contact,
             "address": address,
             "seva_type": tx["seva_type"],
-            "donation_account": seva_account,
+            "donation_account": seva_doc.account,
             "receipt_date": bank_tx_doc.date,
             "payment_method": PAYMENT_GATWEWAY_MODE,
             "amount": tx["amount"],
