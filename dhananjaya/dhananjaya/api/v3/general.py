@@ -97,7 +97,7 @@ def get_upcoming_pujas():
 
 
 @frappe.whitelist()
-def get_events_calender(from_date, to_date):
+def get_events_calendar(from_date, to_date):
     from_date = getdate(from_date)
     to_date = getdate(to_date)
     preachers = get_preachers()

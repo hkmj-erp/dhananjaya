@@ -1,10 +1,7 @@
 import frappe
 from frappe import _
 import re
-from frappe.utils.csvutils import get_csv_content_from_google_sheets, read_csv_content
-
 from frappe.utils.pdf import get_pdf
-from frappe.www.printview import validate_print_permission
 from frappe import local
 from cryptography.fernet import Fernet
 
@@ -39,36 +36,6 @@ def encode_donation_id(receiptId):
 
     token = f.encrypt(receiptId.encode())
     return token.decode()
-
-
-@frappe.whitelist(allow_guest=True)
-def download_pdf_public(
-    receiptToken,
-    doctype="Donation Receipt",
-):
-    settings = frappe.get_doc("Dhananjaya Settings")
-    key = settings.public_fernet_key.encode()
-    f = Fernet(key)
-    decryptReceiptId = f.decrypt(receiptToken.encode())
-    receiptId = decryptReceiptId.decode()
-    doc = frappe.get_doc(doctype, receiptId)
-    if doc.docstatus == 2:
-        return "This document is cancelled."
-    # validate_print_permission(doc)
-    content = frappe.render_template(
-        "dhananjaya/templates/80g_receipt.html", is_path=True, context={"doc": doc}
-    )
-    # options={"password":"krishna"} if password required
-    pdf_file = get_pdf(content)
-
-    frappe.local.response.filename = "{donor_name} - {receipt_no}.pdf".format(
-        donor_name=(
-            doc.full_name if doc.full_name else doc.donor_creation_request_name
-        ).strip(),
-        receipt_no=receiptId.replace(" ", "-").replace("/", "-"),
-    )
-    frappe.local.response.filecontent = pdf_file
-    frappe.local.response.type = "pdf"
 
 
 ## This returns the preachers assigned to a User
@@ -111,24 +78,6 @@ def get_preacher_users(preacher):
     ):
         users.append(i["user"])
     return users
-
-
-# @frappe.whitelist()
-# def get_preachers_by_user(user):
-#     preachers = []
-#     for i in frappe.db.sql(
-#         f"""
-#                     select p.name
-#                     from `tabLLP Preacher` p
-#                     join `tabLLP Preacher User` pu
-#                     on p.name = pu.parent
-#                     where pu.user = '{user}'
-#                     group by p.name
-#                     """,
-#         as_dict=1,
-#     ):
-#         preachers.append(i["name"])
-#     return preachers
 
 
 @frappe.whitelist()
@@ -184,6 +133,7 @@ def is_valid_aadhar_number(aadhar_number):
 def is_valid_pincode(pinCode):
     return True
     # Regex to check valid pin code of India.
+    # TODO check pincode Validity
     regex = "^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$"
     p = re.compile(regex)
     m = re.match(p, pinCode)
@@ -193,18 +143,27 @@ def is_valid_pincode(pinCode):
         return True
 
 
+def get_receipt_filename(doc):
+    return "{donor_name} - {receipt_no}.pdf".format(
+        donor_name=(
+            doc.full_name if doc.full_name else doc.donor_creation_request_name
+        ).strip(),
+        receipt_no=doc.name.replace(" ", "-").replace("/", "-"),
+    )
+
+
+def get_receipt_content(doc):
+    settings = frappe.get_cached_doc("Dhananjaya Settings")
+    template = frappe.db.get_value(
+        "DJ Receipt Format", settings.receipt_format, "template"
+    )
+    return frappe.render_template(template, context={"doc": doc})
+
+
 def get_pdf_dr(doctype, name, doc=None):
     doc = doc or frappe.get_doc(doctype, name)
-
-    # if doc.docstatus == 2:
-    #     return "This document is cancelled."
-    validate_print_permission(doc)
-    content = frappe.render_template(
-        "dhananjaya/templates/80g_receipt.html", is_path=True, context={"doc": doc}
-    )
-    # options={"password":"krishna"} if password required
-    pdf_file = get_pdf(content)
-    return pdf_file
+    content = get_receipt_content(doc)
+    return get_pdf(content)
 
 
 @frappe.whitelist()
@@ -220,42 +179,25 @@ def download_pdf(
     if not doc:
         doc = frappe.get_doc("Donation Receipt", name)
 
-    frappe.local.response.filename = "{donor_name} - {receipt_no}.pdf".format(
-        donor_name=doc.full_name if doc.full_name else doc.donor_creation_request_name,
-        receipt_no=name.replace(" ", "-").replace("/", "-"),
-    )
+    frappe.local.response.filename = get_receipt_filename(doc)
     frappe.local.response.filecontent = get_pdf_dr(doctype, name, doc=None)
     frappe.local.response.type = "pdf"
 
 
-def get_data_from_google_sheets(url):
-    content = None
-    extension = None
-
-    if url:
-        content = get_csv_content_from_google_sheets(url)
-        extension = "csv"
-    else:
-        frappe.throw("Please put the link of Google Sheets First.")
-
-    if not content:
-        frappe.throw(_("Invalid or corrupted content for import"))
-
-    if content:
-        return read_content(content, extension)
-
-
-def read_content(content, extension):
-    error_title = _("Template Error")
-    if extension not in ("csv", "xlsx", "xls"):
-        frappe.throw(
-            _("Import template should be of type .csv, .xlsx or .xls"),
-            title=error_title,
-        )
-
-    if extension == "csv":
-        data = read_csv_content(content)
-    return data
+@frappe.whitelist(allow_guest=True)
+def download_pdf_public(
+    receiptToken,
+    doctype="Donation Receipt",
+):
+    settings = frappe.get_cached_doc("Dhananjaya Settings")
+    key = settings.public_fernet_key.encode()
+    f = Fernet(key)
+    decryptReceiptId = f.decrypt(receiptToken.encode())
+    receiptId = decryptReceiptId.decode()
+    doc = frappe.get_doc(doctype, receiptId)
+    if doc.docstatus == 2:
+        return "This document is cancelled."
+    return download_pdf(receiptId, doc)
 
 
 def get_donor_details(donors):

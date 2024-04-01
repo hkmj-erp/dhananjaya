@@ -13,6 +13,7 @@
   "default_preacher",
   "default_marketing_preacher",
   "gateway_mode",
+  "receipt_format",
   "section_break_uanlt",
   "company_details",
   "other_section",
@@ -26,6 +27,7 @@
   "special_settings_section",
   "separate_accounting_for_csr",
   "show_patron_seva_level_on_receipt",
+  "receipt_format_template",
   "mobile_app_section",
   "hide_others_donors",
   "email_compulsory_donor_request"
@@ -167,13 +169,26 @@
    "fieldname": "email_compulsory_donor_request",
    "fieldtype": "Check",
    "label": "Email Compulsory in New Donor Request"
+  },
+  {
+   "fieldname": "receipt_format_template",
+   "fieldtype": "Data",
+   "label": "Receipt Format Template",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "receipt_format",
+   "fieldtype": "Link",
+   "label": "Receipt Format",
+   "options": "DJ Receipt Format",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-17 15:28:47.371393",
+ "modified": "2024-04-01 16:47:02.859817",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",
@@ -217,6 +232,16 @@
    "read": 1,
    "role": "All",
    "share": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
   }
  ],
  "sort_field": "modified",

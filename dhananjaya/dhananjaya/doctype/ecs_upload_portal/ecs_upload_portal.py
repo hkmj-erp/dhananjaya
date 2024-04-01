@@ -3,7 +3,7 @@
 
 import datetime
 import json
-from dhananjaya.dhananjaya.utils import get_data_from_google_sheets
+from dhananjaya.dhananjaya.extra_utils.sheets import get_data_from_google_sheets
 import frappe
 from frappe import _
 from frappe.model.document import Document

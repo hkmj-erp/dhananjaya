@@ -18,7 +18,8 @@
   "parent_seva_subtype",
   "is_group",
   "patronship_allowed",
-  "include_in_analysis"
+  "include_in_analysis",
+  "priority"
  ],
  "fields": [
   {
@@ -97,12 +98,19 @@
    "fieldtype": "Table",
    "label": "Cost Centers",
    "options": "Seva Subtype Cost Center"
+  },
+  {
+   "default": "0",
+   "fieldname": "priority",
+   "fieldtype": "Int",
+   "label": "Priority",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2024-03-21 11:10:40.534059",
+ "modified": "2024-04-01 10:50:25.058293",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Subtype",

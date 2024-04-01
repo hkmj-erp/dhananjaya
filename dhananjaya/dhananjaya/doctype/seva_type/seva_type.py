@@ -47,6 +47,8 @@ def get_abbreviated_name(name, company):
 def get_cached_documents():
     seva_types = frappe.cache().hget("dhananjaya_box", "seva_type") or frappe._dict()
     if not seva_types:
-        seva_types = frappe.get_all("Seva Type", fields=["*"], filters={"enabled": 1})
+        seva_types = frappe.get_all(
+            "Seva Type", fields=["*"], filters={"enabled": 1}, order_by="priority desc"
+        )
         frappe.cache().hset("dhananjaya_box", "seva_type", seva_types)
     return seva_types

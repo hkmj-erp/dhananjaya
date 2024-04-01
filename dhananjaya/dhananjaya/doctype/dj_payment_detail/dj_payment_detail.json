@@ -7,6 +7,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "title",
   "trust",
   "type",
   "bank_account_details_section",
@@ -129,11 +130,16 @@
    "fieldtype": "Attach",
    "label": "Document Attachment",
    "mandatory_depends_on": "eval:doc.type == 'Document'"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-23 15:17:15.697375",
+ "modified": "2024-04-01 10:09:15.197273",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "DJ Payment Detail",

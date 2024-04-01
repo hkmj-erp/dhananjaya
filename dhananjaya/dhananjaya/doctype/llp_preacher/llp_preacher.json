@@ -10,7 +10,7 @@
  "field_order": [
   "full_name",
   "initial",
-  "whatsapp_no",
+  "mobile_no",
   "include_in_analysis",
   "allowed_users"
  ],
@@ -31,11 +31,6 @@
    "unique": 1
   },
   {
-   "fieldname": "whatsapp_no",
-   "fieldtype": "Data",
-   "label": "WhatsApp No."
-  },
-  {
    "fieldname": "allowed_users",
    "fieldtype": "Table",
    "label": "Allowed Users",
@@ -47,11 +42,16 @@
    "fieldname": "include_in_analysis",
    "fieldtype": "Check",
    "label": "Include in Analysis"
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "label": "Mobile Number"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-01 19:28:44.658047",
+ "modified": "2024-03-29 14:33:19.801573",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "LLP Preacher",

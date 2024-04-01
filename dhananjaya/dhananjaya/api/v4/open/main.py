@@ -7,8 +7,8 @@ from dhananjaya.dhananjaya.utils import (
     get_short_url,
 )
 
-from dhananjaya.dhananjaya.api.v4.marketing.address_process import parseFullAddress
-from dhananjaya.dhananjaya.api.v4.marketing.identify import identify_donor
+from dhananjaya.dhananjaya.api.v4.open.address_process import parseFullAddress
+from dhananjaya.dhananjaya.api.v4.open.identify import identify_donor
 
 # Define pre-declared variables for dictionary keys
 F_DONATION = "donation"

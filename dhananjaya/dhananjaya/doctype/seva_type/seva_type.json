@@ -18,6 +18,8 @@
   "include_in_analysis",
   "csr_allowed",
   "kind",
+  "donation_type",
+  "priority",
   "csr_related_section",
   "csr_separate_accounting",
   "csr_account"
@@ -102,20 +104,36 @@
   },
   {
    "default": "0",
-   "fieldname": "csr_allowed",
-   "fieldtype": "Check",
-   "label": "CSR Allowed"
-  },
-  {
-   "default": "0",
    "fieldname": "kind",
    "fieldtype": "Check",
    "label": "In-Kind"
+  },
+  {
+   "default": "Non-CSR",
+   "fieldname": "donation_type",
+   "fieldtype": "Select",
+   "label": " Donation Type",
+   "options": "Non-CSR\nCSR\nBoth"
+  },
+  {
+   "default": "0",
+   "fieldname": "priority",
+   "fieldtype": "Int",
+   "label": "Priority",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "csr_allowed",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is CSR Allowed"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-01 15:41:49.129987",
+ "modified": "2024-04-01 11:38:43.691041",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Type",
@@ -173,6 +191,15 @@
    "read": 1,
    "report": 1,
    "role": "DCC Preacher",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User",
    "share": 1
   }
  ],

@@ -31,6 +31,7 @@ class SevaSubtype(NestedSet):
         old_parent: DF.Link | None
         parent_seva_subtype: DF.Link | None
         patronship_allowed: DF.Check
+        priority: DF.Int
         rgt: DF.Int
         seva_name: DF.Data
     # end: auto-generated types
@@ -57,7 +58,10 @@ def get_cached_documents():
     )
     if not seva_subtypes:
         seva_subtypes = frappe.get_all(
-            "Seva Subtype", fields=["*"], filters={"enabled": 1}
+            "Seva Subtype",
+            fields=["*"],
+            filters={"enabled": 1},
+            order_by="priority desc",
         )
         frappe.cache().hset("dhananjaya_box", "seva_subtype", seva_subtypes)
     return seva_subtypes

@@ -29,6 +29,8 @@ class DhananjayaSettings(Document):
         gateway_mode: DF.Link | None
         hide_others_donors: DF.Check
         public_fernet_key: DF.Data | None
+        receipt_format: DF.Link
+        receipt_format_template: DF.Data | None
         separate_accounting_for_csr: DF.Check
         show_patron_seva_level_on_receipt: DF.Check
     # end: auto-generated types
@@ -108,10 +110,13 @@ def get_print_donation(dr):
         tx_doc = frappe.get_doc("Bank Transaction", dr_doc.bank_transaction)
         dr_data.update({"reference_number": tx_doc.description})
 
-    preacher_full_name = frappe.get_value("LLP Preacher", dr_doc.preacher, "full_name")
-    dr_data.update({"preacher_full_name": preacher_full_name})
+    preacher = frappe.get_cached_doc("LLP Preacher", dr_doc.preacher)
+
+    dr_data.update({"preacher_full_name": preacher.full_name})
+    dr_data.update({"preacher_mobile_no": preacher.mobile_no})
 
     return company_detail.as_dict(), dr_data
+
 
 @frappe.whitelist()
 def get_cached_documents():
@@ -120,4 +125,3 @@ def get_cached_documents():
         documents = frappe.get_all("DJ Document", fields=["*"])
         frappe.cache().hset("dhananjaya_box", "dj_document", documents)
     return documents
-
