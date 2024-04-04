@@ -6,6 +6,47 @@ from dhananjaya.dhananjaya.doctype.dhananjaya_import_settings.utils import run_q
 from datetime import datetime, timedelta
 from frappe.model.workflow import apply_workflow
 
+    # data = run_query(
+    #     f"""
+	# 					SELECT DR_NUMBER, PATRON_ID 
+	# 					FROM `view_receipt_details`
+	# 					WHERE PATRON_ID IS NOT NULL
+	# 					AND (TRUST_ID IN ({companies})) {test_string}"""
+    # )
+
+def rectify_patrons():
+    from frappe.utils import comma_and
+    companies = {}
+    settings = frappe.get_cached_doc("Dhananjaya Import Settings")
+    for c in settings.companies_to_import:
+        companies.setdefault(c.company,c.old_trust_code)
+    x = 1
+    drs = {}
+    old_drs = set()
+    for dr in frappe.get_all(
+        "Donation Receipt",
+        filters = {"patron":["is","set"],"old_dr_no":["is","set"]},
+        fields = ["name","old_dr_no","company"]):
+        drs.setdefault(f'{companies[dr["company"]]}-{dr["old_dr_no"]}', dr["name"])
+        old_drs.add(dr["old_dr_no"])
+    
+    old_ids_str = ",".join(
+        [str(dr) for dr in old_drs]
+    )
+
+    data = run_query(f"""
+                    select PATRON_ID, TRUST_ID, DR_NUMBER
+                    from view_receipt_details
+                    where DR_NUMBER IN ({old_ids_str}) """)
+    for d in data:
+        patronID = d['PATRON_ID']
+        if patronID is None:
+            receipt_no = drs[f'{d["TRUST_ID"]}-{d["DR_NUMBER"]}']
+            frappe.db.set_value("Donation Receipt", receipt_no,'patron',None)
+    
+    frappe.db.commit()
+            
+
 
 @frappe.whitelist()
 def import_grade(*args, **kwargs):

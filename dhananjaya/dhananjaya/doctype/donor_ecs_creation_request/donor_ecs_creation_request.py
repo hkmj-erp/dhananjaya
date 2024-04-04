@@ -6,6 +6,33 @@ from frappe.model.document import Document
 from datetime import datetime
 
 class DonorECSCreationRequest(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        account_bank_name: DF.Data
+        account_holder_name: DF.Data
+        account_number: DF.Data
+        amount: DF.Currency
+        company: DF.Link
+        company_abbreviation: DF.Data | None
+        debit_pay_on: DF.Literal["7", "14", "21"]
+        donor: DF.Link
+        donor_name: DF.Data | None
+        end_date: DF.Date
+        frequency: DF.Literal["Yearly", "Half Yearly", "Quarterly", "Monthly"]
+        naming_series: DF.Literal[".company_abbreviation.EC.YY.1.#####"]
+        patron: DF.Link | None
+        patron_name: DF.Data | None
+        payment_mode: DF.Literal["Debit Card", "Internet Banking"]
+        seva_type: DF.Link | None
+        start_date: DF.Date
+        status: DF.Literal["Pending", "Completed", "Rejected"]
+    # end: auto-generated types
     def on_change(self):
         if self.has_value_changed("status"):
             self.notify_mobile_app_users()

@@ -112,7 +112,7 @@
    "fieldname": "payment_mode",
    "fieldtype": "Select",
    "label": "Payment Mode",
-   "options": "Debit Card\nNet Banking",
+   "options": "Debit Card\nInternet Banking",
    "reqd": 1
   },
   {
@@ -177,7 +177,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-23 19:29:52.079949",
+ "modified": "2024-04-02 16:21:17.112688",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor ECS Creation Request",
