@@ -37,12 +37,25 @@ def rectify_patrons():
     data = run_query(f"""
                     select PATRON_ID, TRUST_ID, DR_NUMBER
                     from view_receipt_details
-                    where DR_NUMBER IN ({old_ids_str}) """)
+                    where DR_NUMBER IN ({old_ids_str})
+                    AND PATRON_ID IS NOT NULL
+                    """)
+    pts = {}
+    for p in frappe.get_all(
+        "Patron",
+        fields = ["name","old_patron_id","old_trust_code"]):
+        pts.setdefault(f'{p["old_trust_code"]}-{p["old_patron_id"]}', p["name"])
+
+
     for d in data:
         patronID = d['PATRON_ID']
         if patronID is None:
             receipt_no = drs[f'{d["TRUST_ID"]}-{d["DR_NUMBER"]}']
             frappe.db.set_value("Donation Receipt", receipt_no,'patron',None)
+        else:
+            receipt_no = drs[f'{d["TRUST_ID"]}-{d["DR_NUMBER"]}']
+            ERPPatronID = pts[str(d["TRUST_ID"])+"-"+str(patronID)]
+            frappe.db.set_value("Donation Receipt", receipt_no,'patron',ERPPatronID)
     
     frappe.db.commit()
             
