@@ -12,6 +12,7 @@
   "company_abbreviation",
   "posting_date",
   "donor",
+  "donor_full_name",
   "patron",
   "preacher",
   "seva_subtype",
@@ -92,10 +93,17 @@
    "fieldtype": "Date",
    "label": "Date",
    "reqd": 1
+  },
+  {
+   "fetch_from": "donor.full_name",
+   "fieldname": "donor_full_name",
+   "fieldtype": "Data",
+   "label": "Donor Full Name",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2023-09-21 16:11:21.957448",
+ "modified": "2024-04-11 14:50:15.419639",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Credit",

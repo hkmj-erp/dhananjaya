@@ -64,6 +64,7 @@ class DonationReceipt(Document):
         donor_creation_request_name: DF.Data | None
         ecs_rejection_reason: DF.Data | None
         ecs_transaction_id: DF.Data | None
+        email: DF.Data | None
         full_name: DF.Data | None
         gateway_expense_account: DF.Link | None
         ifsc_code: DF.Data | None
