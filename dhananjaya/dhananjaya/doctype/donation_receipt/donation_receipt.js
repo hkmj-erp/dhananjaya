@@ -123,7 +123,7 @@ frappe.ui.form.on('Donation Receipt', {
 						frappe.call({
 							freeze: true,
 							freeze_message: "Cancelling Linked Documents",
-							method: "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.receipt_cancel_operations",
+							method: "dhananjaya.dhananjaya.doctype.donation_receipt.operations.receipt_cancel_operations",
 							args: {
 								receipt: frm.doc.name
 							},
@@ -155,7 +155,7 @@ frappe.ui.form.on('Donation Receipt', {
 								frappe.call({
 									freeze: true,
 									freeze_message: "Returning Cash",
-									method: "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.receipt_cash_return_operations",
+									method: "dhananjaya.dhananjaya.doctype.donation_receipt.operations.receipt_cash_return_operations",
 									args: {
 										receipt: frm.doc.name,
 										cash_return_date: values.returned_date
@@ -217,7 +217,7 @@ frappe.ui.form.on('Donation Receipt', {
 					frappe.call({
 						freeze: true,
 						freeze_message: "Bouncing Cheque Donation",
-						method: "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.receipt_bounce_operations",
+						method: "dhananjaya.dhananjaya.doctype.donation_receipt.operations.receipt_bounce_operations",
 						args: {
 							receipt: frm.doc.name
 						},
