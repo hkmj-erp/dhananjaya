@@ -354,3 +354,16 @@ def send_receipt_in_mail():
         subject="Receipt Demo",
         message="<p>Demo Receipt</p>",
     )
+
+
+def is_donor_kyc_available(donor_id):
+    pan, aadhar = frappe.db.get_value("Donor", donor_id, ["pan_no", "aadhar_no"])
+    if pan or aadhar:
+        return True
+    return False
+
+def is_donor_request_kyc_available(donor_request_id):
+    pan, aadhar = frappe.db.get_value("Donor Creation Request", donor_request_id, ["pan_number", "aadhar_number"])
+    if pan or aadhar:
+        return True
+    return False

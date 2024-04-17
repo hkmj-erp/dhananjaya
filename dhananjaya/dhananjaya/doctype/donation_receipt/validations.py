@@ -1,10 +1,65 @@
 import frappe
+from frappe import _
 from dhananjaya.dhananjaya.doctype.donation_receipt.constants import (
     CASH_PAYMENT_MODE,
     TDS_PAYMENT_MODE,
     PAYMENT_GATWEWAY_MODE,
     CHEQUE_MODE,
 )
+from dhananjaya.dhananjaya.utils import (
+    get_best_contact_address,
+    get_company_defaults,
+    get_pdf_dr,
+    get_preacher_users,
+    is_donor_kyc_available,
+    is_donor_request_kyc_available,
+)
+
+
+def validate_govt_laws(doc):
+    kyc_available = False
+    if doc.donor:
+        kyc_available = is_donor_kyc_available(doc.donor)
+    elif doc.donor_creation_request:
+        kyc_available = is_donor_request_kyc_available(doc.donor)
+
+    if doc.payment_method == CASH_PAYMENT_MODE and doc.amount >= 200000:
+        frappe.throw("Cash Donations >= 2 Lacs are not allowed.")
+
+    elif (
+        doc.payment_method == CASH_PAYMENT_MODE
+        and doc.amount >= 50000
+        and not kyc_available
+    ):
+        frappe.throw("Cash Donation >= 50,000 should be from KYC Donor Only.")
+
+    elif (
+        doc.payment_method != CASH_PAYMENT_MODE
+        and doc.amount >= 200000
+        and not kyc_available
+    ):
+        frappe.throw("Donation >= 2,00,000 should be from KYC Donor Only.")
+    return
+
+
+def validate_donor(doc):
+    if not (doc.donor or doc.donor_creation_request):
+        frappe.throw("At Least one of Donor or Request is required.")
+    return
+
+
+def validate_cheque_screenshot(doc):
+    if doc.payment_method == CHEQUE_MODE and not doc.payment_screenshot:
+        frappe.throw("Cheque's Screenshot is required.")
+    return
+
+
+def validate_reference_number(doc):
+    if not (doc.remarks or doc.payment_method in [CASH_PAYMENT_MODE, CHEQUE_MODE]):
+        frappe.throw(
+            "Reference Number is compulsory in case of non-Cash/Cheque Receipts."
+        )
+    return
 
 
 def validate_kind_donation(doc):

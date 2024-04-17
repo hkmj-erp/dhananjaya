@@ -1,6 +1,6 @@
 import frappe
 from datetime import datetime
-
+from dhananjaya.dhananjaya.utils import  get_preacher_users
 
 ## SEND NOTIFICATION TO DHANANJAYA APP USERS ON VARIOUS STATES OF RECEIPTS
 def notify_mobile_app_users(doc):

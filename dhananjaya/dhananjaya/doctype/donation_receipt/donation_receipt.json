@@ -474,7 +474,6 @@
   {
    "fieldname": "payment_screenshot",
    "fieldtype": "Attach Image",
-   "hidden": 1,
    "label": "Payment Screenshot"
   },
   {
@@ -599,7 +598,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-10 11:30:04.254033",
+ "modified": "2024-04-17 17:15:34.320107",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Receipt",

@@ -9,6 +9,11 @@ from .validations import (
     validate_donation_account,
     validate_modes_account,
     validate_atg_required,
+    validate_donor,
+    validate_govt_laws,
+    validate_cheque_screenshot,
+    validate_reference_number
+
 )
 
 from .notifications import (
@@ -81,9 +86,7 @@ class DonationReceipt(Document):
         is_csr: DF.Check
         is_ecs: DF.Check
         kind_type: DF.Literal["", "Consumable", "Asset"]
-        naming_series: DF.Literal[
-            ".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"
-        ]
+        naming_series: DF.Literal[".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"]
         old_ar_date: DF.Date | None
         old_ar_no: DF.Data | None
         old_dr_no: DF.Data | None
@@ -108,7 +111,6 @@ class DonationReceipt(Document):
         stock_expense_account: DF.Link | None
         tds_account: DF.Link | None
         user_remarks: DF.Text | None
-
     # end: auto-generated types
     def autoname(self):
         dateF = getdate(self.receipt_date)
@@ -293,6 +295,10 @@ class DonationReceipt(Document):
             return
         validate_donation_account(self)
         validate_modes_account(self)
+        validate_donor(self)
+        validate_cheque_screenshot(self)
+        validate_reference_number(self)
+        validate_govt_laws(self)
         return
 
     ###### ON INSERT : AUTO CREATE JOURNAL ENTRY CHECK ######
