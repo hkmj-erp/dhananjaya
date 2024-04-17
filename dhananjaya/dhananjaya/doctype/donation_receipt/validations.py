@@ -11,40 +11,63 @@ from dhananjaya.dhananjaya.utils import (
     get_company_defaults,
     get_pdf_dr,
     get_preacher_users,
-    is_donor_kyc_available,
-    is_donor_request_kyc_available,
 )
 
 
 def validate_govt_laws(doc):
-    kyc_available = False
-    if doc.donor:
-        kyc_available = is_donor_kyc_available(doc.donor)
-    elif doc.donor_creation_request:
-        kyc_available = is_donor_request_kyc_available(doc.donor)
-
-    if doc.payment_method == CASH_PAYMENT_MODE and doc.amount >= 200000:
-        frappe.throw("Cash Donations >= 2 Lacs are not allowed.")
-
+    day_donation = get_donation_of_the_day(doc)
+    if (
+        doc.payment_method == CASH_PAYMENT_MODE
+        and (doc.amount + day_donation) >= 200000
+    ):
+        frappe.throw(
+            "On the same day, Cash Donations <b>>= 2 Lacs</b> are not allowed."
+        )
     elif (
         doc.payment_method == CASH_PAYMENT_MODE
-        and doc.amount >= 50000
-        and not kyc_available
+        and not doc.flags.kyc_available
+        and (doc.amount + day_donation) >= 50000
     ):
-        frappe.throw("Cash Donation >= 50,000 should be from KYC Donor Only.")
-
+        frappe.throw(
+            f"""On the same day, a single donor cannot contribute <b>>= 50000</b> in cash mode with <b>NO KYC</b> available."""
+        )
     elif (
         doc.payment_method != CASH_PAYMENT_MODE
-        and doc.amount >= 200000
-        and not kyc_available
+        and (doc.amount + doc.day_donation) >= 200000
+        and not doc.flags.kyc_available
     ):
-        frappe.throw("Donation >= 2,00,000 should be from KYC Donor Only.")
+        frappe.throw(
+            "On the same day, a Donor cannot contribute <b>>= 2,00,000</b> with <b>NO KYC</b> available."
+        )
     return
+
+
+def get_donation_of_the_day(doc):
+    total_donation = 0
+    con_str = (
+        f" donor = '{doc.donor}' "
+        if doc.donor
+        else f" donor_creation_request = '{doc.donor_creation_request}' "
+    )
+    qr = frappe.db.sql(
+        f"""
+            SELECT SUM(amount) 
+            FROM `tabDonation Receipt` 
+            WHERE {con_str}
+            AND payment_method = '{doc.payment_method}' 
+            AND receipt_date = '{doc.receipt_date}'
+            AND docstatus != 2
+            AND name != '{doc.name}'
+            """
+    )
+    if qr[0][0]:
+        total_donation = qr[0][0]
+    return total_donation
 
 
 def validate_donor(doc):
     if not (doc.donor or doc.donor_creation_request):
-        frappe.throw("At Least one of Donor or Request is required.")
+        frappe.throw("At Least one of Donor or Donor Creation Request is required.")
     return
 
 
@@ -102,10 +125,7 @@ def validate_modes_account(doc):
 
 
 def validate_atg_required(doc):
-    if not (doc.atg_required and doc.donor):
-        return
-    pan, aadhar = frappe.db.get_value("Donor", doc.donor, ["pan_no", "aadhar_no"])
-    if not (pan or aadhar):
+    if not doc.flags.kyc_available and doc.atg_required:
         frappe.throw(
             "At least one of the KYC ( PAN Number or Aadhar Number) is required for 80G Donation."
         )

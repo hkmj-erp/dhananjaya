@@ -154,9 +154,19 @@ def get_receipt_filename(doc):
 
 def get_receipt_content(doc):
     settings = frappe.get_cached_doc("Dhananjaya Settings")
-    template = frappe.db.get_value(
-        "DJ Receipt Format", settings.receipt_format, "template"
+    seva_type_specific_format = frappe.db.get_value(
+        "Seva Type", doc.seva_type, "specific_print_format"
     )
+    template = frappe.db.get_value(
+        "DJ Receipt Format",
+        (
+            seva_type_specific_format
+            if seva_type_specific_format
+            else settings.receipt_format
+        ),
+        "template",
+    )
+
     return frappe.render_template(template, context={"doc": doc})
 
 
@@ -362,8 +372,11 @@ def is_donor_kyc_available(donor_id):
         return True
     return False
 
+
 def is_donor_request_kyc_available(donor_request_id):
-    pan, aadhar = frappe.db.get_value("Donor Creation Request", donor_request_id, ["pan_number", "aadhar_number"])
+    pan, aadhar = frappe.db.get_value(
+        "Donor Creation Request", donor_request_id, ["pan_number", "aadhar_number"]
+    )
     if pan or aadhar:
         return True
     return False

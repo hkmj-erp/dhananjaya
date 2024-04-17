@@ -22,7 +22,9 @@
   "priority",
   "csr_related_section",
   "csr_separate_accounting",
-  "csr_account"
+  "csr_account",
+  "extra_tab",
+  "specific_print_format"
  ],
  "fields": [
   {
@@ -129,11 +131,22 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "Is CSR Allowed"
+  },
+  {
+   "fieldname": "extra_tab",
+   "fieldtype": "Tab Break",
+   "label": "Extra"
+  },
+  {
+   "fieldname": "specific_print_format",
+   "fieldtype": "Link",
+   "label": "Specific Print Format",
+   "options": "DJ Receipt Format"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-01 11:38:43.691041",
+ "modified": "2024-04-17 19:16:42.176381",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Type",
