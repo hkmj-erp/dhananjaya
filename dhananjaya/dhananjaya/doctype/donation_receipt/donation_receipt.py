@@ -141,7 +141,7 @@ class DonationReceipt(Document):
         if self.donor:
             kyc_available = is_donor_kyc_available(self.donor)
         elif self.donor_creation_request:
-            kyc_available = is_donor_request_kyc_available(self.donor)
+            kyc_available = is_donor_request_kyc_available(self.donor_creation_request)
         return kyc_available
 
     def is_kind_donation(self):

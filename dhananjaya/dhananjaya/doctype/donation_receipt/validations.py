@@ -33,7 +33,7 @@ def validate_govt_laws(doc):
         )
     elif (
         doc.payment_method != CASH_PAYMENT_MODE
-        and (doc.amount + doc.day_donation) >= 200000
+        and (doc.amount + day_donation) >= 200000
         and not doc.flags.kyc_available
     ):
         frappe.throw(
