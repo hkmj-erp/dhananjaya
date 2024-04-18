@@ -299,8 +299,7 @@ def last_patron(donorId):
                     """,
         as_dict=1,
     )
-
-    if len(latest) > 0:
+    if len(latest) > 0 and latest[0]["patron"]:
         latest_patron = latest[0]["patron"]
         doc = frappe.get_doc("Patron", latest_patron)
         return {"patron_name": doc.full_name, "patron_id": doc.name}

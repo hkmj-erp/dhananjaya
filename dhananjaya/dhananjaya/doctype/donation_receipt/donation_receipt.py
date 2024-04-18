@@ -128,12 +128,13 @@ class DonationReceipt(Document):
 
     def validate(self):
         self.flags.is_new_doc = self.is_new()
-        self.flags.kyc_available = self.is_kyc_available()
-        validate_donor(self)
-        validate_atg_required(self)
-        validate_govt_laws(self)
-        validate_cheque_screenshot(self)
-        validate_reference_number(self)
+        ## TODO Revisit it on new version of Dhananjaya
+        # self.flags.kyc_available = self.is_kyc_available()
+        # validate_donor(self)
+        # validate_atg_required(self)
+        # validate_govt_laws(self)
+        # validate_cheque_screenshot(self)
+        # validate_reference_number(self)
         return
 
     def is_kyc_available(self):
@@ -307,6 +308,7 @@ class DonationReceipt(Document):
     ###### BEFORE SUBMIT : CHECK WHETHER REQUIRED ACCOUNTS ARE SET ######
 
     def before_submit(self):
+        ## TODO Revisit it on new version of Dhananjaya
         validate_kind_donation(self)
         company_detail = get_company_defaults(self.company)
         if not company_detail.auto_create_journal_entries:
