@@ -31,6 +31,7 @@ import frappe
 from frappe import _, sendmail
 from frappe.model.naming import getseries
 from frappe.utils import money_in_words, today, unique, get_link_to_form
+from frappe.model.naming import make_autoname
 
 # from erpnext.controllers.accounts_controller import AccountsController
 from datetime import datetime
@@ -87,9 +88,6 @@ class DonationReceipt(Document):
         is_csr: DF.Check
         is_ecs: DF.Check
         kind_type: DF.Literal["", "Consumable", "Asset"]
-        naming_series: DF.Literal[
-            ".company_abbreviation.-RC-.YY.-1.#######", "RC-.YY.-1.####"
-        ]
         old_ar_date: DF.Date | None
         old_ar_no: DF.Data | None
         old_dr_no: DF.Data | None
@@ -106,6 +104,7 @@ class DonationReceipt(Document):
         print_remarks_on_receipt: DF.Check
         realization_date: DF.Date | None
         receipt_date: DF.Date
+        receipt_series: DF.Data | None
         reference_no: DF.Data | None
         remarks: DF.Text | None
         seva_subtype: DF.Link | None
@@ -117,14 +116,21 @@ class DonationReceipt(Document):
 
     # end: auto-generated types
     def autoname(self):
-        dateF = getdate(self.receipt_date)
-        company_abbr = frappe.get_cached_value("Company", self.company, "abbr")
-        year = dateF.strftime("%y")
-        month = dateF.strftime("%m")
-        prefix = f"{company_abbr}-DR{year}{month}-"
-        # frappe.errprint(prefix) HKMJ-DR2401-0001
-        self.name = prefix + getseries(prefix, 4)
-        self.company_abbreviation = company_abbr
+
+        self.company_abbreviation = frappe.get_cached_value(
+            "Company", self.company, "abbr"
+        )
+
+        if self.name:
+            return
+        elif self.receipt_series:
+            self.name = make_autoname(self.receipt_series, "", self)
+        else:
+            dateF = getdate(self.receipt_date)
+            year = dateF.strftime("%y")
+            month = dateF.strftime("%m")
+            prefix = f"{self.company_abbreviation}-DR{year}{month}-"
+            self.name = prefix + getseries(prefix, 4)
 
     def validate(self):
         self.flags.is_new_doc = self.is_new()

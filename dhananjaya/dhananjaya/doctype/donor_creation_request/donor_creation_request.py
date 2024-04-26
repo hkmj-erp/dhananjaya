@@ -11,6 +11,31 @@ from frappe.model.document import Document
 
 
 class DonorCreationRequest(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        aadhar_number: DF.Data | None
+        address_line_1: DF.Data
+        address_line_2: DF.Data | None
+        address_type: DF.Literal["Residential", "Office", "Other"]
+        amended_from: DF.Link | None
+        city: DF.Data
+        contact_number: DF.Data
+        email: DF.Data | None
+        full_name: DF.Data
+        latitude: DF.Float
+        llp_preacher: DF.Link | None
+        longitude: DF.Float
+        pan_number: DF.Data | None
+        pin_code: DF.Data | None
+        state: DF.Literal["", "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", "Kerala", "Ladakh", "Lakshadweep Islands", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Other Territory", "Pondicherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"]
+        status: DF.Literal["Draft", "Closed", "Open", "Rejected"]
+    # end: auto-generated types
     def on_submit(self):
         self.db_set("status", "Open", commit=True)
         frappe.db.commit()

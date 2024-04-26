@@ -2,7 +2,6 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "naming_series:",
  "creation": "2023-02-20 15:05:11.325520",
  "default_view": "List",
  "doctype": "DocType",
@@ -12,7 +11,7 @@
   "section_break_lc36n",
   "company",
   "company_abbreviation",
-  "naming_series",
+  "receipt_series",
   "receipt_date",
   "realization_date",
   "preacher",
@@ -138,20 +137,13 @@
    "read_only": 1
   },
   {
-   "default": ".company_abbreviation.-RC-.YY.-1.#######",
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "hidden": 1,
-   "label": "Series",
-   "options": ".company_abbreviation.-RC-.YY.-1.#######\nRC-.YY.-1.####"
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Company",
    "options": "Company",
-   "reqd": 1
+   "reqd": 1,
+   "set_only_once": 1
   },
   {
    "allow_on_submit": 1,
@@ -592,17 +584,22 @@
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email"
+  },
+  {
+   "fieldname": "receipt_series",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Series"
   }
  ],
  "image_field": "payment_screenshot",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-17 17:15:34.320107",
+ "modified": "2024-04-26 19:47:26.240049",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Receipt",
- "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {

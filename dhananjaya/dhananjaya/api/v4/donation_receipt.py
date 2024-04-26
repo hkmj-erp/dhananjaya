@@ -74,9 +74,7 @@ def create_receipt():
         doc.cheque_number = donation["cheque_number"]
         doc.ifsc_code = donation["ifsc_code"]
         doc.bank_name = donation["bank_name"]
-        cheque_image_name = (
-            "_" + donation["cheque_date"] + "_" + donation["cheque_number"]
-        )
+        cheque_image_name = f"_{donation['cheque_date']}_{donation['cheque_number']}"
 
     doc.save()
     # doc.insert()

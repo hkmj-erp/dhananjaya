@@ -62,7 +62,7 @@ def get_donation_of_the_day(doc):
     )
     if qr[0][0]:
         total_donation = qr[0][0]
-    return total_donation
+    return int(total_donation)
 
 
 def validate_donor(doc):

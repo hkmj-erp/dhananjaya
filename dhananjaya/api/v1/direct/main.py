@@ -1,5 +1,5 @@
-import re, json
 import frappe
+import re, json
 from frappe.utils import today
 from dhananjaya.dhananjaya.utils import (
     encode_donation_id,
@@ -13,6 +13,7 @@ from dhananjaya.api.v1.direct.identify import identify_donor
 # Define pre-declared variables for dictionary keys
 F_DONATION = "donation"
 F_PREACHER = "preacher"
+F_RECEIPT_SERIES = "receipt_series"
 F_DEFAULT_MARKETING_PREACHER = "default_marketing_preacher"
 F_PAN_NO = "pan_no"
 F_AADHAR_NO = "aadhar_no"
@@ -30,6 +31,8 @@ F_DR_NO = "dr_no"
 F_ADDITIONAL_CHARGES = "additional_charges"
 F_PRINT_REMARKS_ON_RECEIPT = "print_remarks_on_receipt"
 F_ATG_REQUIRED = "atg_required"
+F_SEPARATED_ADDRESS = "separated_address"
+F_RECEIPT_DATE = "receipt_date"
 
 
 @frappe.whitelist(methods=["POST"])
@@ -78,18 +81,7 @@ def upload_donation():
             "llp_preacher": preacher,
         }
 
-        if donation_raw.get(F_ADDRESS):
-            resolved_address = parseFullAddress(donation_raw[F_ADDRESS])
-            address_single = [
-                {
-                    "address_line_1": resolved_address[0],
-                    "city": resolved_address[1],
-                    "state": resolved_address[2],
-                    "pin_code": resolved_address[4],
-                }
-            ]
-
-            donor_dict.update({"addresses": address_single})
+        donor_dict.update({"addresses": [get_address(donation_raw)]})
 
         if donation_raw.get(F_EMAIL):
             donor_dict.update({"emails": [{"email": donation_raw[F_EMAIL]}]})
@@ -120,16 +112,8 @@ def upload_donation():
         if len(donor_doc.contacts) == 0:
             donor_doc.append("contacts", {"contact_no": clean_contact})
 
-        if len(donor_doc.addresses) == 0 and donation_raw.get(F_ADDRESS):
-            resolved_address = parseFullAddress(donation_raw[F_ADDRESS])
-            address_single = {
-                "type": "Residential",
-                "address_line_1": resolved_address[0],
-                "city": resolved_address[1],
-                "state": resolved_address[2],
-                "pin_code": resolved_address[4],
-            }
-            donor_doc.append("addresses", address_single)
+        if len(donor_doc.addresses) == 0:
+            donor_doc.append("addresses", [get_address(donation_raw)])
 
         donor_doc.save(ignore_permissions=True)
         donor = donor_doc.name
@@ -140,7 +124,6 @@ def upload_donation():
     receipt_dict = {
         "doctype": "Donation Receipt",
         "company": donation_raw.get(F_COMPANY),
-        "receipt_date": today(),
         "preacher": llp_preacher,
         "donor": donor,
         "contact": clean_contact,
@@ -156,6 +139,14 @@ def upload_donation():
         "atg_required": donation_raw.get(F_ATG_REQUIRED),
         "auto_generated": 1,
     }
+
+    if donation_raw.get(F_RECEIPT_DATE):
+        receipt_dict["receipt_date"] = donation_raw.get(F_RECEIPT_DATE)
+    else:
+        receipt_dict["receipt_date"] = today()
+
+    if donation_raw.get(F_RECEIPT_SERIES):
+        receipt_dict["receipt_series"] = donation_raw.get(F_RECEIPT_SERIES)
 
     receipt_doc = frappe.get_doc(receipt_dict)
     receipt_doc.insert(ignore_permissions=True)
@@ -182,13 +173,27 @@ def upload_donation():
         + f"/api/method/dhananjaya.dhananjaya.utils.download_pdf_public?receiptToken={receipt_token}"
     )
 
-    return frappe._dict(url=long_url)
+    return frappe._dict(
+        url=long_url,
+        receipt={
+            "receipt_id":receipt_doc.name,
+            "company": receipt_doc.company,
+            "preacher": receipt_doc.preacher,
+            "donor_id": receipt_doc.donor,
+            "full_name": receipt_doc.full_name,
+            "contact": receipt_doc.contact,
+            "address": receipt_doc.address,
+            "amount": receipt_doc.amount,
+            "seva_type": receipt_doc.seva_type,
+            "seva_subtype": receipt_doc.seva_subtype,
+            "receipt_date": receipt_doc.receipt_date,
+        },
+    )
 
 
 COMPULSORY_FIELDS = [
     F_MOBILE,
     F_DONOR_NAME,
-    F_ADDRESS,
     F_COMPANY,
     F_PAYMENT_METHOD,
     F_AMOUNT,
@@ -200,4 +205,22 @@ def validate(donation_raw):
     for cf in COMPULSORY_FIELDS:
         if not donation_raw.get(cf):
             frappe.throw(f"API Request is incomplete. {cf} is a compulsory field.")
+
+    if not (donation_raw.get(F_ADDRESS) or donation_raw.get(F_SEPARATED_ADDRESS)):
+        frappe.throw("At least one of Address or Separated Address is required.")
     return
+
+
+def get_address(donation_raw):
+    if donation_raw.get(F_SEPARATED_ADDRESS):
+        return donation_raw.get(F_SEPARATED_ADDRESS)
+    else:
+        resolved_address = parseFullAddress(donation_raw[F_ADDRESS])
+        return {
+            "type": "Residential",
+            "address_line_1": resolved_address[0],
+            "city": resolved_address[1],
+            "state": resolved_address[2],
+            "pin_code": resolved_address[4],
+        }
+    return address
