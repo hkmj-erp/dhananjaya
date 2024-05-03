@@ -47,6 +47,8 @@
    "fetch_from": "donor.llp_preacher",
    "fieldname": "preacher",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Preacher",
    "options": "LLP Preacher",
    "reqd": 1
@@ -74,6 +76,7 @@
   {
    "fieldname": "credits",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Credits",
    "reqd": 1
   },
@@ -91,6 +94,8 @@
   {
    "fieldname": "posting_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Date",
    "reqd": 1
   },
@@ -98,12 +103,13 @@
    "fetch_from": "donor.full_name",
    "fieldname": "donor_full_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Donor Full Name",
    "read_only": 1
   }
  ],
  "links": [],
- "modified": "2024-04-11 14:50:15.419639",
+ "modified": "2024-05-02 12:31:42.156146",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Credit",

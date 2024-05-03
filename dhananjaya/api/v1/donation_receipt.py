@@ -9,6 +9,7 @@ from dhananjaya.dhananjaya.utils import get_preachers
 
 @frappe.whitelist()
 def create_receipt():
+
     donation = json.loads(frappe.form_dict.data)
 
     #### Update KYC ####

@@ -134,6 +134,8 @@ class DonationReceipt(Document):
 
     def validate(self):
         self.flags.is_new_doc = self.is_new()
+        if self.donor == "DNR-2023-23543":
+            frappe.throw("Error Not specidifed.")
         ## TODO Revisit it on new version of Dhananjaya
         # self.flags.kyc_available = self.is_kyc_available()
         # validate_donor(self)

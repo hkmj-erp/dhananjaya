@@ -23,23 +23,25 @@ def execute(filters=None):
     if len(receipts.keys()) > 0:
         for i in frappe.db.sql(
             f"""
-					select td.name as donor_id,
-					GROUP_CONCAT(DISTINCT tda.address_line_1,tda.address_line_2,tda.city SEPARATOR' | ') as address,
-					GROUP_CONCAT(DISTINCT tdc.contact_no SEPARATOR' , ') as contact
-					from `tabDonor` td
-					left join `tabDonor Contact` tdc on tdc.parent = td.name
-					left join `tabDonor Address` tda on tda.parent = td.name
-					where td.name IN ({",".join([f"'{receipt['donor']}'" for receipt in receipts.values()])})
-					group by td.name
+					select name as donor_id,
+                    pan_no,
+                    aadhar_no
+					from `tabDonor`
+					where name IN ({",".join([f"'{receipt['donor']}'" for receipt in receipts.values()])})
+					group by name
 					""",
             as_dict=1,
         ):
             donors.setdefault(i["donor_id"], i)
-
+        frappe.errprint(donors)
         for r in receipts:
-            if receipts[r]["donor"] is not None and receipts[r]["donor"] != "":
-                receipts[r]["contact"] = donors[receipts[r]["donor"]]["contact"]
-                receipts[r]["address"] = donors[receipts[r]["donor"]]["address"]
+            donor_id = receipts[r]["donor"]
+            if donor_id:
+                receipts[r]["kyc"] = (
+                    donors[donor_id]["pan_no"]
+                    if donors[donor_id]["pan_no"]
+                    else donors[donor_id]["aadhar_no"]
+                )
 
     # data = list(receipts.values())
 
@@ -55,7 +57,7 @@ def execute(filters=None):
 
 def get_conditions(filters):
     conditions = ""
-    conditions += f' AND tdr.receipt_date BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"'
+    conditions += f' AND tdr.{filters.get("based_on")} BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"'
 
     if filters.get("company"):
         conditions += f' AND tdr.company = "{filters.get("company")}"'
@@ -77,26 +79,109 @@ def get_conditions(filters):
 
 def get_columns(filters):
     columns = [
-        {"fieldname": "name", "label": "ID", "fieldtype": "Link", "options": "Donation Receipt", "width": 120},
-        {"fieldname": "receipt_date", "label": "Receipt Date", "fieldtype": "Date", "width": 100},
-        {"fieldname": "company_abbreviation", "label": "Company", "fieldtype": "Data", "width": 100},
-        {"fieldname": "donor", "label": "Donor", "fieldtype": "Link", "options": "Donor", "width": 120},
-        {"fieldname": "full_name", "label": "Full Name", "fieldtype": "Data", "width": 200},
-        {"fieldname": "preacher", "label": "Preacher", "fieldtype": "Data", "width": 80},
-        {"fieldname": "amount", "label": "Amount", "fieldtype": "Currency", "width": 120},
-        {"fieldname": "seva_type", "label": "Seva Type", "fieldtype": "Data", "width": 150},
-        # {
-        # 	"fieldname": "kyc",
-        # 	"label": "KYC",
-        # 	"fieldtype": "Data",
-        # 	"width": 200,
-        # },
+        {
+            "fieldname": "name",
+            "label": "ID",
+            "fieldtype": "Link",
+            "options": "Donation Receipt",
+            "width": 140,
+        },
+        {
+            "fieldname": "workflow_state",
+            "label": "State",
+            "fieldtype": "Data",
+            "width": 140,
+        },
+        {
+            "fieldname": "receipt_date",
+            "label": "Receipt Date",
+            "fieldtype": "Date",
+            "width": 120,
+        },
+        {
+            "fieldname": "realization_date",
+            "label": "Realization Date",
+            "fieldtype": "Date",
+            "width": 120,
+        },
+        {
+            "fieldname": "company_abbreviation",
+            "label": "Company",
+            "fieldtype": "Data",
+            "width": 100,
+        },
+        {
+            "fieldname": "donor",
+            "label": "Donor",
+            "fieldtype": "Link",
+            "options": "Donor",
+            "width": 140,
+        },
+        {
+            "fieldname": "full_name",
+            "label": "Full Name",
+            "fieldtype": "Data",
+            "width": 200,
+        },
+        {
+            "fieldname": "preacher",
+            "label": "Preacher",
+            "fieldtype": "Data",
+            "width": 100,
+        },
+        {
+            "fieldname": "amount",
+            "label": "Amount",
+            "fieldtype": "Currency",
+            "width": 120,
+        },
+        {
+            "fieldname": "payment_method",
+            "label": "Payment Method",
+            "fieldtype": "Data",
+            "width": 120,
+        },
+        {
+            "fieldname": "seva_type",
+            "label": "Seva Type",
+            "fieldtype": "Data",
+            "width": 200,
+        },
         {
             "fieldname": "contact",
             "label": "Donor Contact",
             "fieldtype": "Data",
             "width": 200,
         },
-        {"fieldname": "address", "label": "Donor Address", "fieldtype": "Data", "width": 500},
+        {
+            "fieldname": "address",
+            "label": "Donor Address",
+            "fieldtype": "Data",
+            "width": 500,
+        },
+        {
+            "fieldname": "kyc",
+            "label": "KYC",
+            "fieldtype": "Data",
+            "width": 200,
+        },
+        {
+            "fieldname": "atg_required",
+            "label": "80G",
+            "fieldtype": "Check",
+            "width": 100,
+        },
+        {
+            "fieldname": "is_ecs",
+            "label": "ECS",
+            "fieldtype": "Check",
+            "width": 100,
+        },
+        {
+            "fieldname": "is_csr",
+            "label": "CSR",
+            "fieldtype": "Check",
+            "width": 100,
+        },
     ]
     return columns
