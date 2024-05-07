@@ -113,7 +113,7 @@ def upload_donation():
             donor_doc.append("contacts", {"contact_no": clean_contact})
 
         if len(donor_doc.addresses) == 0:
-            donor_doc.append("addresses", [get_address(donation_raw)])
+            donor_doc.append("addresses", get_address(donation_raw))
 
         donor_doc.save(ignore_permissions=True)
         donor = donor_doc.name
@@ -152,16 +152,16 @@ def upload_donation():
     receipt_doc.insert(ignore_permissions=True)
 
     receipt_doc.db_set("workflow_state", "Acknowledged")
-    receipt_doc.db_set("docstatus", 0)
+    # receipt_doc.db_set("docstatus", 0)
 
-    defaults = get_company_defaults(donation_raw.get(F_COMPANY))
+    # defaults = get_company_defaults(donation_raw.get(F_COMPANY))
 
-    if not defaults.auto_create_journal_entries:
-        if donation_raw[F_PAYMENT_METHOD] == "Cash":
-            receipt_doc.db_set("workflow_state", "Received by Cashier")
-        else:
-            receipt_doc.db_set("workflow_state", "Realized")
-        receipt_doc.db_set("docstatus", 1)
+    # if not defaults.auto_create_journal_entries:
+    #     if donation_raw[F_PAYMENT_METHOD] == "Cash":
+    #         receipt_doc.db_set("workflow_state", "Received by Cashier")
+    #     else:
+    #         receipt_doc.db_set("workflow_state", "Realized")
+    #     receipt_doc.db_set("docstatus", 1)
 
     frappe.db.commit()
 
@@ -176,7 +176,7 @@ def upload_donation():
     return frappe._dict(
         url=long_url,
         receipt={
-            "receipt_id":receipt_doc.name,
+            "receipt_id": receipt_doc.name,
             "company": receipt_doc.company,
             "preacher": receipt_doc.preacher,
             "donor_id": receipt_doc.donor,
