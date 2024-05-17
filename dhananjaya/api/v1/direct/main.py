@@ -8,7 +8,7 @@ from dhananjaya.dhananjaya.utils import (
 )
 
 from dhananjaya.api.v1.direct.address_process import parseFullAddress
-from dhananjaya.api.v1.direct.identify import identify_donor
+from dhananjaya.api.v1.direct.identify import identify_donor, identify_patron
 
 # Define pre-declared variables for dictionary keys
 F_DONATION = "donation"
@@ -33,6 +33,7 @@ F_PRINT_REMARKS_ON_RECEIPT = "print_remarks_on_receipt"
 F_ATG_REQUIRED = "atg_required"
 F_SEPARATED_ADDRESS = "separated_address"
 F_RECEIPT_DATE = "receipt_date"
+F_TRY_PATRONSHIP_TAGGING = "try_patron_tagging"
 
 
 @frappe.whitelist(methods=["POST"])
@@ -70,9 +71,17 @@ def upload_donation():
     clean_pan = re.sub(r"\s+", "", donation_raw.get(F_PAN_NO, ""))
     clean_aadhar = re.sub(r"\s+", "", donation_raw.get(F_AADHAR_NO, ""))
 
+    resolved_address = get_address(donation_raw)
+
     donor = identify_donor(
         contact=clean_contact, email=None, pan=clean_pan, aadhar=clean_aadhar
     )  # We don't wish to identify a donor by email.
+
+    patron = None
+    if donation_raw.get(F_TRY_PATRONSHIP_TAGGING):
+        patron = identify_patron(
+            contact=clean_contact, email=None, pan=clean_pan, aadhar=clean_aadhar
+        )
 
     if donor is None:
         donor_dict = {
@@ -81,7 +90,7 @@ def upload_donation():
             "llp_preacher": preacher,
         }
 
-        donor_dict.update({"addresses": [get_address(donation_raw)]})
+        donor_dict.update({"addresses": [resolved_address]})
 
         if donation_raw.get(F_EMAIL):
             donor_dict.update({"emails": [{"email": donation_raw[F_EMAIL]}]})
@@ -113,7 +122,7 @@ def upload_donation():
             donor_doc.append("contacts", {"contact_no": clean_contact})
 
         if len(donor_doc.addresses) == 0:
-            donor_doc.append("addresses", get_address(donation_raw))
+            donor_doc.append("addresses", resolved_address)
 
         donor_doc.save(ignore_permissions=True)
         donor = donor_doc.name
@@ -126,8 +135,9 @@ def upload_donation():
         "company": donation_raw.get(F_COMPANY),
         "preacher": llp_preacher,
         "donor": donor,
+        "patron": patron,
         "contact": clean_contact,
-        "address": donation_raw.get(F_ADDRESS),
+        "address": resolved_address,
         "payment_method": donation_raw.get(F_PAYMENT_METHOD),
         "amount": donation_raw.get(F_AMOUNT),
         "remarks": donation_raw.get(F_REMARKS),

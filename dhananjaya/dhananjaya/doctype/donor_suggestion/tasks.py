@@ -5,8 +5,7 @@ from dhananjaya.dhananjaya.doctype.donor_suggestion.constants import MONTHS
 today = date.today()
 
 
-@frappe.whitelist()
-def donor_suggestions_task():
+def create_donor_suggestions():
     donor_suggestions = {}
     settings = frappe.get_doc("Donor Suggestion Settings")
     for i in frappe.db.sql(
@@ -77,9 +76,9 @@ def donor_suggestions_task():
 
 
 def set_donor_suggestion(donor, remarks, priority):
-    suggestions = frappe.get_all("Donor Suggestion",filters = {'donor':donor})
+    suggestions = frappe.get_all("Donor Suggestion", filters={"donor": donor})
     if len(suggestions) != 0:
-        suggestion_doc = frappe.get_doc("Donor Suggestion", suggestions[0]['name'])
+        suggestion_doc = frappe.get_doc("Donor Suggestion", suggestions[0]["name"])
     else:
         suggestion_doc = frappe.new_doc("Donor Suggestion")
         suggestion_doc.donor = donor

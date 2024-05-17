@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"Brm7GPSE0G\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">DCC</span>\",\"col\":12}},{\"id\":\"61Oz-SLqO7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Search Donor\",\"col\":3}},{\"id\":\"sXOVxTndbH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Receipt\",\"col\":3}},{\"id\":\"J20OA3LVbs\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Donor\",\"col\":3}},{\"id\":\"BgU6FrCQ9w\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation Report\",\"col\":3}},{\"id\":\"uLGJsEDf95\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cashier Report\",\"col\":3}},{\"id\":\"ROhPKNaJRW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation Cumulative Report\",\"col\":3}},{\"id\":\"MqSbfdlFuS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Special Pujas\",\"col\":3}},{\"id\":\"OSZm6K86_R\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"DCC Dashboard\",\"col\":3}},{\"id\":\"lCX_1BTgj1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Distinct Donors\",\"col\":3}},{\"id\":\"ATw4uVkCs7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Patron Puja Report\",\"col\":3}},{\"id\":\"Oa_WhDoM_u\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NHdqKXHwuP\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"XZ9lDAjiKO\",\"type\":\"card\",\"data\":{\"card_name\":\"Donation\",\"col\":4}},{\"id\":\"fmP4yBBO3D\",\"type\":\"card\",\"data\":{\"card_name\":\"Patron\",\"col\":4}},{\"id\":\"VdXCKhKmQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Payment Gateway\",\"col\":4}},{\"id\":\"2AjZtCMG7C\",\"type\":\"card\",\"data\":{\"card_name\":\"Bank\",\"col\":4}},{\"id\":\"GiiGry_-BR\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"pp6hNBwsEk\",\"type\":\"card\",\"data\":{\"card_name\":\"ECS\",\"col\":4}},{\"id\":\"a9FEMZ9e15\",\"type\":\"card\",\"data\":{\"card_name\":\"Festival\",\"col\":4}}]",
+ "content": "[{\"id\":\"Brm7GPSE0G\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">DCC</span>\",\"col\":12}},{\"id\":\"61Oz-SLqO7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Search Donor\",\"col\":3}},{\"id\":\"sXOVxTndbH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Receipt\",\"col\":3}},{\"id\":\"J20OA3LVbs\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Donor\",\"col\":3}},{\"id\":\"BgU6FrCQ9w\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation Report\",\"col\":3}},{\"id\":\"uLGJsEDf95\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cashier Report\",\"col\":3}},{\"id\":\"ROhPKNaJRW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation Cumulative Report\",\"col\":3}},{\"id\":\"MqSbfdlFuS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Special Pujas\",\"col\":3}},{\"id\":\"OSZm6K86_R\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"DCC Dashboard\",\"col\":3}},{\"id\":\"lCX_1BTgj1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Distinct Donors\",\"col\":3}},{\"id\":\"ATw4uVkCs7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Patron Puja Report\",\"col\":3}},{\"id\":\"TBMN9CGv2O\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Patron Status\",\"col\":3}},{\"id\":\"Oa_WhDoM_u\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NHdqKXHwuP\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"XZ9lDAjiKO\",\"type\":\"card\",\"data\":{\"card_name\":\"Donation\",\"col\":4}},{\"id\":\"fmP4yBBO3D\",\"type\":\"card\",\"data\":{\"card_name\":\"Patron\",\"col\":4}},{\"id\":\"VdXCKhKmQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Payment Gateway\",\"col\":4}},{\"id\":\"2AjZtCMG7C\",\"type\":\"card\",\"data\":{\"card_name\":\"Bank\",\"col\":4}},{\"id\":\"GiiGry_-BR\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"pp6hNBwsEk\",\"type\":\"card\",\"data\":{\"card_name\":\"ECS\",\"col\":4}},{\"id\":\"a9FEMZ9e15\",\"type\":\"card\",\"data\":{\"card_name\":\"Festival\",\"col\":4}}]",
  "creation": "2023-03-22 12:34:40.537714",
  "custom_blocks": [],
  "docstatus": 0,
@@ -407,12 +407,12 @@
    "type": "Link"
   }
  ],
- "modified": "2024-03-20 15:01:48.058712",
+ "modified": "2024-05-07 17:55:53.489853",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "DCC",
  "number_cards": [],
- "owner": "nrhd@hkm-group.org",
+ "owner": "nrhd@hkmjaipur.org",
  "parent_page": "HKM",
  "public": 1,
  "quick_lists": [],
@@ -433,6 +433,13 @@
  ],
  "sequence_id": 3.0,
  "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Patron Status",
+   "link_to": "Patron Commitment Status",
+   "type": "Report"
+  },
   {
    "color": "Grey",
    "doc_view": "List",

@@ -4,14 +4,18 @@ from dhananjaya.dhananjaya.report.donation_cumulative_report.donation_cumulative
     get_conditions,
 )
 
+
 @frappe.whitelist()
 def patron_board():
     preachers = get_preachers()
     preachers_string = ",".join([f"'{p}'" for p in preachers])
-    frappe.get_all("Donation Receipt")
+    get_credit_values()
     sevas_map = {}
     for seva in frappe.get_all(
-        "Patron Seva Type", filters={"enabled": 1}, fields=["name", "seva_amount"], order_by="seva_amount desc"
+        "Patron Seva Type",
+        filters={"enabled": 1},
+        fields=["name", "seva_amount"],
+        order_by="seva_amount desc",
     ):
         patrons_map = {}
         for i in frappe.db.sql(
@@ -71,7 +75,10 @@ def ashraya_board():
     }
     for i in frappe.get_all(
         "Donor",
-        filters=[["llp_preacher", "in", preachers], ["ashraya_level", "not in", ["null", ""]]],
+        filters=[
+            ["llp_preacher", "in", preachers],
+            ["ashraya_level", "not in", ["null", ""]],
+        ],
         fields=["ashraya_level, count(name) as count"],
         group_by="ashraya_level",
     ):

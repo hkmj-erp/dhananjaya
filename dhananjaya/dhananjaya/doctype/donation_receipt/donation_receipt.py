@@ -135,8 +135,8 @@ class DonationReceipt(Document):
     def validate(self):
         self.flags.is_new_doc = self.is_new()
         ## TODO Revisit it on new version of Dhananjaya
-        # self.flags.kyc_available = self.is_kyc_available()
-        # validate_donor(self)
+        self.flags.kyc_available = self.is_kyc_available()
+        validate_donor(self)
         # validate_atg_required(self)
         # validate_govt_laws(self)
         # validate_cheque_screenshot(self)
@@ -256,7 +256,7 @@ class DonationReceipt(Document):
                 "Only DCC Manager is allowed to change the Preacher of a Donor."
             )
 
-        if not self.contact:
+        if (not self.contact) or (not self.address):
             address, contact, email = get_best_contact_address(self.donor)
             self.contact = "" if contact is None else contact
             self.address = "" if address is None else address
@@ -569,7 +569,6 @@ class DonationReceipt(Document):
                         "cost_center": default_cost_center,
                     }
                 )
-
         je_doc = frappe.get_doc(je)
         je_doc.insert()
         return je_doc
@@ -790,6 +789,7 @@ def auto_realize_batch_gateway_payments(batch):
         )
         if len(receipts) > 0:
             receipt_doc = frappe.get_doc("Donation Receipt", receipts[0])
+            receipt_doc.payment_method = PAYMENT_GATWEWAY_MODE
             receipt_doc.additional_charges = tx["fee"]
             receipt_doc.payment_gateway_document = tx["name"]
             receipt_doc.gateway_expense_account = batch_doc.gateway_expense_account

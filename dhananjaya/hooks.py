@@ -157,15 +157,25 @@ doc_events = {
 # 	],
 # }
 scheduler_events = {
-    "daily": ["dhananjaya.tasks.daily.execute"],
-    "daily_long": ["dhananjaya.tasks.daily_long.execute"],
-    "hourly_long": ["dhananjaya.tasks.hourly_long.execute"],
+    "daily_long": [
+        "dhananjaya.dhananjaya.doctype.donor_suggestion.tasks.create_donor_suggestions",
+        "dhananjaya.dhananjaya.doctype.donation_receipt.tasks.update_last_donation",
+        "dhananjaya.dhananjaya.doctype.donation_receipt.tasks.clean_dhananjaya_data",
+    ],
+    "hourly_long": [
+        "dhananjaya.dhananjaya.doctype.donation_receipt.tasks.update_donation_calculation"
+    ],
     "cron": {
-        "* * * * *": ["dhananjaya.tasks.every_minute.execute"],
-        "7 9 * * *": ["dhananjaya.tasks.every_day_8_am.execute"],
+        "* * * * *": [
+            "dhananjaya.dhananjaya.doctype.dj_reminder.dj_reminder.show_reminders"
+        ],
+        "7 9 * * *": [
+            "dhananjaya.dhananjaya.doctype.patron_privilege_puja.tasks.special_puja_notify",
+            "dhananjaya.dhananjaya.doctype.patron_privilege_puja.tasks.privilege_puja_notify",
+        ],
         # Hourly but offset by 30 minutes
         "30 * * * *": [
-            "dhananjaya.tasks.hourly.execute",
+            "dhananjaya.dhananjaya.doctype.donation_receipt.tasks.update_realization_date"
         ],
     },
 }

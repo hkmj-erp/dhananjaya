@@ -9,12 +9,6 @@ from dhananjaya.dhananjaya.report.upcoming_special_pujas.puja_calculator import 
 )
 
 
-@frappe.whitelist()
-def execute():
-    special_puja_notify()
-    privilege_puja_notify()
-
-
 def special_puja_notify():
     current_date = datetime.now().date()
     tomorrow = current_date + timedelta(days=1)
