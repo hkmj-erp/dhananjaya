@@ -113,7 +113,6 @@ class DonationReceipt(Document):
         stock_expense_account: DF.Link | None
         tds_account: DF.Link | None
         user_remarks: DF.Text | None
-
     # end: auto-generated types
     def autoname(self):
 
@@ -136,7 +135,7 @@ class DonationReceipt(Document):
         self.flags.is_new_doc = self.is_new()
         ## TODO Revisit it on new version of Dhananjaya
         self.flags.kyc_available = self.is_kyc_available()
-        validate_donor(self)
+        # validate_donor(self)
         # validate_atg_required(self)
         # validate_govt_laws(self)
         # validate_cheque_screenshot(self)
@@ -171,7 +170,7 @@ class DonationReceipt(Document):
                     "donor",
                     self.donor,
                 )
-            # self.update_account_based_on_seva_type() # Use Only in Emergency Cases.
+            self.update_account_based_on_seva_type()  # Use Only in Emergency Cases.
 
             if self.has_value_changed("is_csr"):
                 settings_doc = frappe.get_cached_doc("Dhananjaya Settings")

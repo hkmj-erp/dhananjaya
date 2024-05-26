@@ -33,7 +33,6 @@ def execute(filters=None):
             as_dict=1,
         ):
             donors.setdefault(i["donor_id"], i)
-        frappe.errprint(donors)
         for r in receipts:
             donor_id = receipts[r]["donor"]
             if donor_id:
@@ -57,7 +56,24 @@ def execute(filters=None):
 
 def get_conditions(filters):
     conditions = ""
-    conditions += f' AND tdr.{filters.get("based_on")} BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"'
+    if filters.get("based_on") == "realization_date":
+        rd_condition = f""" 
+                tdr.realization_date BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"
+                """
+        if filters.get("include_non_realized_based_on_receipt_date"):
+            rd_condition += f"""
+                            OR (
+                                tdr.realization_date IS NULL 
+                                AND 
+                                    tdr.receipt_date
+                                    BETWEEN 
+                                    "{filters.get("from_date")}" 
+                                    AND "{filters.get("to_date")}"
+                                )
+                                """
+        conditions += f" AND ({rd_condition})"
+    else:
+        conditions += f' AND tdr.{filters.get("based_on")} BETWEEN "{filters.get("from_date")}" AND "{filters.get("to_date")}"'
 
     if filters.get("company"):
         conditions += f' AND tdr.company = "{filters.get("company")}"'

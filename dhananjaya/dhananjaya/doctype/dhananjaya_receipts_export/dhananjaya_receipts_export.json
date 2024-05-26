@@ -8,8 +8,10 @@
  "engine": "InnoDB",
  "field_order": [
   "company",
+  "based_on",
   "date_from",
-  "date_to"
+  "date_to",
+  "files_html"
  ],
  "fields": [
   {
@@ -29,12 +31,25 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "default": "Receipt Date",
+   "fieldname": "based_on",
+   "fieldtype": "Select",
+   "label": "Based On",
+   "options": "Receipt Date\nRealization Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "files_html",
+   "fieldtype": "HTML",
+   "label": "Files"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-07-01 19:22:22.436986",
+ "modified": "2024-05-23 13:26:09.160678",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Receipts Export",
@@ -47,6 +62,16 @@
    "print": 1,
    "read": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "DCC Manager",
    "share": 1,
    "write": 1
   }

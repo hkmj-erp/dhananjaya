@@ -137,7 +137,8 @@ def upload_donation():
         "donor": donor,
         "patron": patron,
         "contact": clean_contact,
-        "address": resolved_address,
+        # "address": resolved_address, # Address will be automatically fectched from Donor on Save
+        # get_formatted_address(frappe._dict(resolved_address)),
         "payment_method": donation_raw.get(F_PAYMENT_METHOD),
         "amount": donation_raw.get(F_AMOUNT),
         "remarks": donation_raw.get(F_REMARKS),

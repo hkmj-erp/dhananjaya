@@ -1,35 +1,106 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
 
-import gzip
+import tarfile
 import zipfile, io
+import random, string
 import frappe, os
-from frappe import conf, sendmail
-from frappe.utils.file_manager import save_file
+from frappe.utils.background_jobs import is_job_enqueued
 from frappe.model.document import Document
-from frappe.utils import get_bench_path, cstr
 
 from dhananjaya.dhananjaya.utils import get_pdf_dr
 
 
 class DhananjayaReceiptsExport(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        based_on: DF.Literal["Receipt Date", "Realization Date"]
+        company: DF.Link
+        date_from: DF.Date | None
+        date_to: DF.Date | None
+    # end: auto-generated types
     pass
 
 
 @frappe.whitelist()
-def generate_receipts():
-    frappe.enqueue(process_receipts_pdf_bundle, queue="long")
-
-def delete_old_backups(older_than=24):
-    """
-    Cleans up the backup_link_path directory by deleting older files
-    """
+def get_backup_files():
+    frappe.only_for(["System Manager", "DCC Manager"])
     receipts_file_path = frappe.utils.get_site_path(f"public/receipts_backup")
+    files_path = []
     if os.path.exists(receipts_file_path):
         file_list = os.listdir(receipts_file_path)
         for this_file in file_list:
-            this_file_path = os.path.join(receipts_file_path, this_file)
-            os.remove(this_file_path)
+            file_download_link = (
+                frappe.utils.get_url() + f"/receipts_backup/{this_file}"
+            )
+            files_path.append({"name": this_file, "link": file_download_link})
+    return files_path
+
+
+@frappe.whitelist()
+def generate_receipts():
+    export_doc = frappe.get_doc("Dhananjaya Receipts Export")
+    based_on_date = (
+        "realization_date"
+        if export_doc.based_on == "Realization Date"
+        else "receipt_date"
+    )
+
+    receipts = frappe.get_all(
+        "Donation Receipt",
+        fields=["name", based_on_date],
+        filters=[
+            ["docstatus", "=", 1],
+            ["company", "=", export_doc.company],
+            [
+                based_on_date,
+                "between",
+                [export_doc.date_from, export_doc.date_to],
+            ],
+        ],
+        order_by=based_on_date,
+    )
+
+    receipt_monthly_bundle = {}
+
+    for r in receipts:
+        month_year = f"{r[based_on_date].year}-{r[based_on_date].month}"
+        if month_year not in receipt_monthly_bundle:
+            receipt_monthly_bundle[month_year] = []
+        receipt_monthly_bundle[month_year].append(r)
+
+    for month_year, bundle in receipt_monthly_bundle.items():
+        backup_file_name_prefix = export_doc.company + "-" + month_year
+        job_id = f"receipts_export::{export_doc.company}::{month_year}"
+        if not is_job_enqueued(job_id):
+            frappe.enqueue(
+                process_receipts_pdf_bundle,
+                queue="long",
+                timeout=10800,
+                job_id=job_id,
+                receipts=[receipt["name"] for receipt in bundle],
+                backup_file_name_prefix=backup_file_name_prefix,
+            )
+
+
+def delete_old_backup(prefix):
+    """
+    Cleans up the backup_link_path directory by deleting older file
+    """
+    receipts_file_path = frappe.utils.get_site_path(f"public/receipts_backup")
+    if os.path.exists(receipts_file_path):
+        matching_files = [
+            file for file in os.listdir(receipts_file_path) if file.startswith(prefix)
+        ]
+        for file in matching_files:
+            file_path = os.path.join(receipts_file_path, file)
+            os.remove(file_path)
 
 
 def setup_backup_directory():
@@ -38,54 +109,32 @@ def setup_backup_directory():
         os.makedirs(receipts_folder, exist_ok=True)
 
 
-def process_receipts_pdf_bundle():
-    export_doc = frappe.get_doc("Dhananjaya Receipts Export")
-    receipts = frappe.get_all(
-        "Donation Receipt",
-        fields="name",
-        filters=[
-            ["docstatus", "=", 1],
-            ["company", "=", export_doc.company],
-            ["receipt_date", "between", [export_doc.date_from, export_doc.date_to]],
-        ],
-    )
-
+def process_receipts_pdf_bundle(receipts, backup_file_name_prefix):
     setup_backup_directory()
-    # delete_old_backups()
+    delete_old_backup(backup_file_name_prefix)
 
     pdf_bytes_list = []
     pdf_names = []
 
-    for receipt in receipts:
-        receipt_doc = frappe.get_doc("Donation Receipt", receipt["name"])
-        receipt = get_pdf_dr(
-            doctype="Donation Receipt", name=receipt_doc.name, doc=receipt_doc
-        )
+    for receipt_name in receipts:
+        receipt = get_pdf_dr(doctype="Donation Receipt", name=receipt_name)
         pdf_bytes_list.append(receipt)
-        pdf_names.append(receipt_doc.name)
+        pdf_names.append(receipt_name)
 
-    zip_data = io.BytesIO()
-    with zipfile.ZipFile(zip_data, "w", zipfile.ZIP_DEFLATED) as zipf:
-        for i, pdf_bytes in enumerate(pdf_bytes_list):
-            filename = f"{pdf_names[i]}.pdf"
-            zipf.writestr(filename, pdf_bytes)
+    letters = string.ascii_lowercase
+    random_string = "".join(random.choice(letters) for i in range(6))
 
-    # Save and serve the ZIP file using Frappe
-    file_name = f"{export_doc.company}.zip"
+    file_name = f"{backup_file_name_prefix}-{random_string}.tar"
     receipts_file_path = frappe.utils.get_site_path(
         f"public/receipts_backup/{file_name}"
     )
+    tar_data = io.BytesIO()
+    with tarfile.open(fileobj=tar_data, mode="w|") as tar:
+        for i, pdf_bytes in enumerate(pdf_bytes_list):
+            tarinfo = tarfile.TarInfo(f"{pdf_names[i]}.pdf")
+            tarinfo.size = len(pdf_bytes)
+            tar.addfile(tarinfo=tarinfo, fileobj=io.BytesIO(pdf_bytes))
+    tar_data.seek(0)
 
     with open(receipts_file_path, "wb") as file:
-        file.write(zip_data.getvalue())
-
-    with open(receipts_file_path, "rb") as file:
-        file_content = file.read()
-
-    fileaddress = frappe.utils.get_url() + f"/receipts_backup/{file_name}"
-
-    sendmail(
-        recipients=frappe.session.user,
-        subject=f"Receipts Bundle Prepared",
-        message=f"Hare Krishna,<br>Please click below to download the file bundle of receipts.<br><a href = '{fileaddress}'>Link for downloading the Receipts</a>",
-    )
+        file.write(tar_data.getvalue())
