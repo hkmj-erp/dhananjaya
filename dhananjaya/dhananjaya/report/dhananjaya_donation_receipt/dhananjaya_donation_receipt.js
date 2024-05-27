@@ -32,7 +32,7 @@ frappe.query_reports["Dhananjaya Donation Receipt"] = {
           value: "receipt_date",
         },
       ],
-      default: "receipt_date",
+      default: "realization_date",
       width: 100,
     },
     {
@@ -73,6 +73,12 @@ frappe.query_reports["Dhananjaya Donation Receipt"] = {
     {
       fieldname: "include_non_realized_based_on_receipt_date",
       label: __("Include Non-realized based on Receipt Date"),
+      fieldtype: "Check",
+      width: 80,
+    },
+    {
+      fieldname: "group_by_seva_type",
+      label: __("Group by Seva Type"),
       fieldtype: "Check",
       width: 80,
     },

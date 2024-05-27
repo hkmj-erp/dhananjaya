@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from collections import defaultdict
 
 
 def execute(filters=None):
@@ -47,8 +48,27 @@ def execute(filters=None):
     # data = receipts
     columns = get_columns(filters)
 
-    data = list(receipts.values())
-    data.sort(key=lambda x: (x["company"], x["receipt_date"]), reverse=True)
+    if filters.get("group_by_seva_type"):
+        seva_type_map = {}
+        for r in receipts.values():
+            if (r["seva_type"], r["donation_account"]) not in seva_type_map:
+                seva_type_map.setdefault(
+                    (r["seva_type"], r["donation_account"]),
+                    frappe._dict(
+                        seva_type=r["seva_type"],
+                        donation_account=r["donation_account"],
+                        amount=r["amount"],
+                    ),
+                )
+            else:
+                seva_type_map[(r["seva_type"], r["donation_account"])]["amount"] += r[
+                    "amount"
+                ]
+        data = list(seva_type_map.values())
+        data.sort(key=lambda x: (x["seva_type"]))
+    else:
+        data = list(receipts.values())
+        data.sort(key=lambda x: (x["company"], x["receipt_date"]), reverse=True)
 
     # columns, data = [], []
     return columns, data
@@ -94,110 +114,132 @@ def get_conditions(filters):
 
 
 def get_columns(filters):
-    columns = [
-        {
-            "fieldname": "name",
-            "label": "ID",
-            "fieldtype": "Link",
-            "options": "Donation Receipt",
-            "width": 140,
-        },
-        {
-            "fieldname": "workflow_state",
-            "label": "State",
-            "fieldtype": "Data",
-            "width": 140,
-        },
-        {
-            "fieldname": "receipt_date",
-            "label": "Receipt Date",
-            "fieldtype": "Date",
-            "width": 120,
-        },
-        {
-            "fieldname": "realization_date",
-            "label": "Realization Date",
-            "fieldtype": "Date",
-            "width": 120,
-        },
-        {
-            "fieldname": "company_abbreviation",
-            "label": "Company",
-            "fieldtype": "Data",
-            "width": 100,
-        },
-        {
-            "fieldname": "donor",
-            "label": "Donor",
-            "fieldtype": "Link",
-            "options": "Donor",
-            "width": 140,
-        },
-        {
-            "fieldname": "full_name",
-            "label": "Full Name",
-            "fieldtype": "Data",
-            "width": 200,
-        },
-        {
-            "fieldname": "preacher",
-            "label": "Preacher",
-            "fieldtype": "Data",
-            "width": 100,
-        },
-        {
-            "fieldname": "amount",
-            "label": "Amount",
-            "fieldtype": "Currency",
-            "width": 120,
-        },
-        {
-            "fieldname": "payment_method",
-            "label": "Payment Method",
-            "fieldtype": "Data",
-            "width": 120,
-        },
-        {
-            "fieldname": "seva_type",
-            "label": "Seva Type",
-            "fieldtype": "Data",
-            "width": 200,
-        },
-        {
-            "fieldname": "contact",
-            "label": "Donor Contact",
-            "fieldtype": "Data",
-            "width": 200,
-        },
-        {
-            "fieldname": "address",
-            "label": "Donor Address",
-            "fieldtype": "Data",
-            "width": 500,
-        },
-        {
-            "fieldname": "kyc",
-            "label": "KYC",
-            "fieldtype": "Data",
-            "width": 200,
-        },
-        {
-            "fieldname": "atg_required",
-            "label": "80G",
-            "fieldtype": "Check",
-            "width": 100,
-        },
-        {
-            "fieldname": "is_ecs",
-            "label": "ECS",
-            "fieldtype": "Check",
-            "width": 100,
-        },
-        {
-            "fieldname": "is_csr",
-            "label": "CSR",
-            "fieldtype": "Check",
-            "width": 100,
-        },
-    ]
+    if filters.get("group_by_seva_type"):
+        columns = [
+            {
+                "fieldname": "seva_type",
+                "label": "Seva Type",
+                "fieldtype": "Data",
+                "width": 250,
+            },
+            {
+                "fieldname": "donation_account",
+                "label": "Account",
+                "fieldtype": "Data",
+                "width": 250,
+            },
+            {
+                "fieldname": "amount",
+                "label": "Amount",
+                "fieldtype": "Currency",
+                "width": 200,
+            },
+        ]
+    else:
+        columns = [
+            {
+                "fieldname": "name",
+                "label": "ID",
+                "fieldtype": "Link",
+                "options": "Donation Receipt",
+                "width": 140,
+            },
+            {
+                "fieldname": "workflow_state",
+                "label": "State",
+                "fieldtype": "Data",
+                "width": 140,
+            },
+            {
+                "fieldname": "receipt_date",
+                "label": "Receipt Date",
+                "fieldtype": "Date",
+                "width": 120,
+            },
+            {
+                "fieldname": "realization_date",
+                "label": "Realization Date",
+                "fieldtype": "Date",
+                "width": 120,
+            },
+            {
+                "fieldname": "company_abbreviation",
+                "label": "Company",
+                "fieldtype": "Data",
+                "width": 100,
+            },
+            {
+                "fieldname": "donor",
+                "label": "Donor",
+                "fieldtype": "Link",
+                "options": "Donor",
+                "width": 140,
+            },
+            {
+                "fieldname": "full_name",
+                "label": "Full Name",
+                "fieldtype": "Data",
+                "width": 200,
+            },
+            {
+                "fieldname": "preacher",
+                "label": "Preacher",
+                "fieldtype": "Data",
+                "width": 100,
+            },
+            {
+                "fieldname": "amount",
+                "label": "Amount",
+                "fieldtype": "Currency",
+                "width": 120,
+            },
+            {
+                "fieldname": "payment_method",
+                "label": "Payment Method",
+                "fieldtype": "Data",
+                "width": 120,
+            },
+            {
+                "fieldname": "seva_type",
+                "label": "Seva Type",
+                "fieldtype": "Data",
+                "width": 200,
+            },
+            {
+                "fieldname": "contact",
+                "label": "Donor Contact",
+                "fieldtype": "Data",
+                "width": 200,
+            },
+            {
+                "fieldname": "address",
+                "label": "Donor Address",
+                "fieldtype": "Data",
+                "width": 500,
+            },
+            {
+                "fieldname": "kyc",
+                "label": "KYC",
+                "fieldtype": "Data",
+                "width": 200,
+            },
+            {
+                "fieldname": "atg_required",
+                "label": "80G",
+                "fieldtype": "Check",
+                "width": 100,
+            },
+            {
+                "fieldname": "is_ecs",
+                "label": "ECS",
+                "fieldtype": "Check",
+                "width": 100,
+            },
+            {
+                "fieldname": "is_csr",
+                "label": "CSR",
+                "fieldtype": "Check",
+                "width": 100,
+            },
+        ]
     return columns
