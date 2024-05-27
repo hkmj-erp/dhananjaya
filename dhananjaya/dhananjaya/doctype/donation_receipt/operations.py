@@ -1,3 +1,4 @@
+from turtle import forward
 import frappe
 from dhananjaya.dhananjaya.doctype.donation_receipt.constants import (
     CASH_PAYMENT_MODE,
@@ -38,9 +39,7 @@ def get_festival_benefit(request):
 @frappe.whitelist()
 def receipt_bounce_operations(receipt):
     # Check for Permissions
-
-    if "DCC Executive" not in frappe.get_roles():
-        frappe.throw("You are not allowed to bounce until you are a DCC Executive.")
+    frappe.only_for(["DCC Executive", "DCC Manager"])
 
     #########################
 
@@ -60,7 +59,12 @@ def receipt_bounce_operations(receipt):
             frappe.throw("There is no JE associated or are more than one entry.")
         je = je[0]
         je_dict = frappe.get_doc("Journal Entry", je["name"]).as_dict()
-        bank_tx_doc = frappe.get_doc("Bank Transaction", receipt_doc.bounce_transaction)
+        forward_bank_tx_doc = frappe.get_doc(
+            "Bank Transaction", receipt_doc.bank_transaction
+        )
+        reverse_bank_tx_doc = frappe.get_doc(
+            "Bank Transaction", receipt_doc.bounce_transaction
+        )
 
         transaction_amount = je_dict["total_debit"]
 
@@ -76,13 +80,16 @@ def receipt_bounce_operations(receipt):
                 a["debit"] = 0
                 a["debit_in_account_currency"] = 0
 
+            if a["account"] == forward_bank_tx_doc.bank_account:
+                a["account"] = reverse_bank_tx_doc.bank_account
+
         del je_dict["clearance_date"]
         del je_dict["bank_statement_name"]
         del je_dict["name"]
 
-        je_dict["posting_date"] = bank_tx_doc.date
+        je_dict["posting_date"] = reverse_bank_tx_doc.date
         je_dict["user_remark"] = je_dict["user_remark"].replace(
-            "BEING AMOUNT RECEIVED", "BEING CHEQUE RETURNED"
+            "BEING AMOUNT RECEIVED", "BEING AMOUNT RETURNED"
         )
 
         reverse_je = frappe.get_doc(je_dict)
@@ -92,13 +99,13 @@ def receipt_bounce_operations(receipt):
             "payment_name": reverse_je.name,
             "amount": reverse_je.total_debit,
         }
-        add_payment_entry(bank_tx_doc, voucher)
+        add_payment_entry(reverse_bank_tx_doc, voucher)
         ## Add Clearance Date
         frappe.db.set_value(
             "Journal Entry",
             reverse_je.name,
             "clearance_date",
-            bank_tx_doc.date.strftime("%Y-%m-%d"),
+            reverse_bank_tx_doc.date.strftime("%Y-%m-%d"),
         )
 
     # Finally Bounce Donation Receipt
@@ -116,8 +123,7 @@ def receipt_bounce_operations(receipt):
 def receipt_cash_return_operations(receipt, cash_return_date):
     # Check for Permissions
 
-    if "DCC Cashier" not in frappe.get_roles():
-        frappe.throw("You are not allowed to return cash until you are a DCC Cashier.")
+    frappe.only_for("DCC Cashier")
 
     #########################
 
@@ -179,19 +185,13 @@ def receipt_cash_return_operations(receipt, cash_return_date):
 @frappe.whitelist()
 def receipt_cancel_operations(receipt):
     # Check for Permissions
-
-    if "DCC Manager" not in frappe.get_roles():
-        frappe.throw("You are not allowed to cancel. Contact DCC Manager.")
-
+    frappe.only_for("DCC Manager")
     #########################
 
     receipt_doc = frappe.get_doc("Donation Receipt", receipt)
 
-    if (
-        receipt_doc.payment_method == CASH_PAYMENT_MODE
-        and "System Manager" not in frappe.get_roles()
-    ):
-        frappe.throw("Cash Receipts are strictly not allowed to cancel.")
+    if receipt_doc.payment_method == CASH_PAYMENT_MODE:
+        frappe.only_for("System Manager")
 
     je = frappe.db.get_list(
         "Journal Entry",

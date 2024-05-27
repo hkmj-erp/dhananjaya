@@ -345,7 +345,6 @@
    "permlevel": 3
   },
   {
-   "allow_on_submit": 1,
    "description": "This account will be credited when Journal Entry is created.",
    "fieldname": "donation_account",
    "fieldtype": "Link",
@@ -598,7 +597,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-05-24 19:09:32.464612",
+ "modified": "2024-05-27 11:58:35.878915",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donation Receipt",

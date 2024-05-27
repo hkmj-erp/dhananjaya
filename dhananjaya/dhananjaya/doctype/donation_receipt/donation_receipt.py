@@ -113,6 +113,7 @@ class DonationReceipt(Document):
         stock_expense_account: DF.Link | None
         tds_account: DF.Link | None
         user_remarks: DF.Text | None
+
     # end: auto-generated types
     def autoname(self):
 
@@ -170,8 +171,9 @@ class DonationReceipt(Document):
                     "donor",
                     self.donor,
                 )
+            ####
             self.update_account_based_on_seva_type()  # Use Only in Emergency Cases.
-
+            ###
             if self.has_value_changed("is_csr"):
                 settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
                 if settings_doc.separate_accounting_for_csr:
@@ -199,44 +201,49 @@ class DonationReceipt(Document):
             if not seva_doc.account:
                 frappe.throw(("No Account associated with this Seva Type."))
 
-            frappe.db.set_value(
-                "Donation Receipt",
-                self.name,
-                "donation_account",
-                seva_doc.account,
-                update_modified=False,
+            old_seva_type, old_account = frappe.get_value(
+                "Donation Receipt", self.name, ["seva_type", "donation_account"]
             )
 
-            old_account = frappe.db.get_value(
-                "Donation Receipt", self.name, "donation_account"
+            new_seva_type, new_account = self.seva_type, seva_doc.account
+
+            frappe.db.sql(
+                f"UPDATE `tabDonation Receipt` SET donation_account = '{new_account}' WHERE name = '{self.name}'"
             )
 
-            je = frappe.get_all(
-                "Journal Entry",
-                filters={"donation_receipt": self.name},
-                fields=["name"],
+            jes = frappe.get_all(
+                "Journal Entry", filters={"donation_receipt": self.name}, pluck="name"
             )
 
-            je = frappe.get_doc("Journal Entry", je[0]["name"])
-
-            for idx, acc in enumerate(je.accounts):
-                if acc.credit == self.amount:
-                    frappe.db.set_value(
-                        "Journal Entry Account",
-                        acc.name,
-                        "account",
-                        seva_doc.account,
+            if jes:
+                jes_str = ",".join(jes)
+                frappe.db.sql(
+                    f"""
+                            UPDATE `tabJournal Entry Account`
+                            SET account = '{new_account}'
+                            WHERE 
+                                account = '{old_account}'
+                                AND parent IN ('{jes_str}')
+                            """
+                )
+                frappe.db.sql(
+                    f"""
+                            UPDATE `tabGL Entry`
+                            SET account = '{new_account}'
+                            WHERE voucher_no IN ('{jes_str}') AND account = '{old_account}'
+                            """
+                )
+                for je in jes:
+                    frappe.set_value(
+                        "Journal Entry",
+                        je,
+                        {
+                            "title": new_account,
+                            "user_remark": frappe.get_value(
+                                "Journal Entry", je, "user_remark"
+                            ).replace(old_seva_type, new_seva_type),
+                        },
                     )
-            gl_entry = frappe.get_all(
-                "GL Entry",
-                filters={"voucher_no": je.name, "credit": [">", 0]},
-                fields=["name"],
-            )
-
-            frappe.db.set_value(
-                "GL Entry", gl_entry[0]["name"], "account", seva_doc.account
-            )
-
         frappe.db.commit()
 
     ################################################################
