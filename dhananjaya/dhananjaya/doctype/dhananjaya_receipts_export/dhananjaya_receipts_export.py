@@ -52,19 +52,33 @@ def generate_receipts():
         else "receipt_date"
     )
 
-    receipts = frappe.get_all(
-        "Donation Receipt",
-        fields=["name", based_on_date],
-        filters=[
-            ["docstatus", "=", 1],
-            ["company", "=", export_doc.company],
-            [
-                based_on_date,
-                "between",
-                [export_doc.date_from, export_doc.date_to],
-            ],
-        ],
-        order_by=based_on_date,
+    conditions = ""
+
+    if based_on_date == "realization_date":
+        rd_condition = f""" 
+                tdr.realization_date BETWEEN "{export_doc.date_from}" AND "{export_doc.date_to}"
+                OR (
+                    tdr.realization_date IS NULL 
+                    AND 
+                        tdr.receipt_date
+                        BETWEEN 
+                        "{export_doc.date_from}" 
+                        AND "{export_doc.date_to}"
+                    )
+                """
+        conditions += f" AND ({rd_condition})"
+    else:
+        conditions += f' AND tdr.{based_on_date} BETWEEN "{export_doc.date_from}" AND "{export_doc.date_to}"'
+
+    conditions += f' AND tdr.company = "{export_doc.company}"'
+
+    receipts = frappe.db.sql(
+        f"""
+        select *
+        from `tabDonation Receipt` tdr
+        where docstatus = 1 {conditions}
+        order by {based_on_date}
+        """
     )
 
     receipt_monthly_bundle = {}

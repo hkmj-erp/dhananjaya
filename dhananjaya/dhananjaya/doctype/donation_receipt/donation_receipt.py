@@ -134,12 +134,11 @@ class DonationReceipt(Document):
 
     def validate(self):
         self.flags.is_new_doc = self.is_new()
-        ## TODO Revisit it on new version of Dhananjaya
         self.flags.kyc_available = self.is_kyc_available()
         # validate_donor(self)
         # validate_atg_required(self)
         # validate_govt_laws(self)
-        # validate_cheque_screenshot(self)
+        # validate_cheque_screenshot(self) # Need to change in API before uncommenting this as screenshot is uploaded post creation
         # validate_reference_number(self)
         return
 
