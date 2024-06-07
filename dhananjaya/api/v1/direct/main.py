@@ -1,3 +1,4 @@
+from hkm.erpnext___custom.doctype.hkm_api_call.hkm_api_call import store_incoming_api
 import frappe
 import re, json
 from frappe.utils import today
@@ -38,6 +39,7 @@ F_TRY_PATRONSHIP_TAGGING = "try_patron_tagging"
 
 @frappe.whitelist(methods=["POST"])
 def upload_donation():
+    store_incoming_api()
     try:
         data = json.loads(frappe.request.data)
 

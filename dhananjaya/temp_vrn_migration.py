@@ -38,7 +38,7 @@
 
 
 # def read_excel_file():
-#     file_path = "/home/ubuntu/frappe-bench/apps/dhananjaya/dhananjaya/SFC Data by DCC till 31-03-2024.xlsx"
+#     file_path = "/home/ubuntu/frappe-bench/apps/dhananjaya/dhananjaya/SFC Data by DCC FY 2024-25.xlsx"
 #     json_data = None
 #     try:
 #         # Read the Excel file into a DataFrame
@@ -56,8 +56,8 @@
 #     if json_data:
 #         for ind, data in enumerate(json_data):
 #             # if 316 < ind <= 5000:
-#             if 13700 <= ind:
-#                 print(data)
+#             if ind > 0:
+#                 # print(data)
 #                 # if ind == 142:
 #                 print(f"Proceesing Receipt Number {ind+1}")
 #                 upload_donation(data)
@@ -178,7 +178,7 @@
 #     receipt_doc = frappe.get_doc(receipt_dict)
 #     receipt_doc.insert(ignore_permissions=True)
 
-#     receipt_doc.db_set("workflow_state", "Realized")
-#     receipt_doc.db_set("docstatus", 1)
+#     receipt_doc.db_set("workflow_state", "Acknowledged")
+#     # receipt_doc.db_set("docstatus", 1)
 
 #     frappe.db.commit()

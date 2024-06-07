@@ -78,7 +78,8 @@ def generate_receipts():
         from `tabDonation Receipt` tdr
         where docstatus = 1 {conditions}
         order by {based_on_date}
-        """
+        """,
+        as_dict=1,
     )
 
     receipt_monthly_bundle = {}
