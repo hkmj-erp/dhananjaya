@@ -1,4 +1,3 @@
-from turtle import forward
 import frappe
 from dhananjaya.dhananjaya.doctype.donation_receipt.constants import (
     CASH_PAYMENT_MODE,
@@ -240,15 +239,8 @@ def receipt_cancel_operations(receipt):
             asset_doc.cancel()
 
     # Finally Cancel Donation Receipt
-    frappe.db.set_value(
-        "Donation Receipt",
-        receipt,
-        {
-            "docstatus": 2,
-            "workflow_state": "Cancelled",
-            "payment_gateway_document": None,
-        },
-    )
+    receipt_doc.cancel()
+    receipt_doc.db_set("workflow_state", "Cancelled")
 
 
 def detach_bank_transaction(je):
