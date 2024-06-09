@@ -108,11 +108,8 @@ def receipt_bounce_operations(receipt):
         )
 
     # Finally Bounce Donation Receipt
-    frappe.db.set_value(
-        "Donation Receipt",
-        receipt,
-        {"docstatus": 2, "workflow_state": "Bounced"},
-    )
+    receipt_doc.cancel()
+    receipt_doc.db_set("workflow_state", "Bounced")
 
 
 ########################################
@@ -168,12 +165,9 @@ def receipt_cash_return_operations(receipt, cash_return_date):
     reverse_je = frappe.get_doc(je_dict)
     reverse_je.submit()
 
-    # Finally Bounce Donation Receipt
-    frappe.db.set_value(
-        "Donation Receipt",
-        receipt,
-        {"docstatus": 2, "workflow_state": "Cash Returned"},
-    )
+    # Finally Cash Return Donation Receipt
+    receipt_doc.cancel()
+    receipt_doc.db_set("workflow_state", "Cash Returned")
 
 
 ##### CANCELLATION PROCEDURE #####
