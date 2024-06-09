@@ -137,7 +137,7 @@ class DonationReceipt(Document):
         self.flags.kyc_available = self.is_kyc_available()
         validate_donor(self)
         validate_atg_required(self)
-        validate_govt_laws(self)
+        # validate_govt_laws(self) # Hundi Donations to be incorporated #TODO
         # validate_cheque_screenshot(self) # Need to change in API before uncommenting this as screenshot is uploaded post creation
         # validate_reference_number(self)
         return
