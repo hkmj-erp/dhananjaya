@@ -30,7 +30,14 @@
   "receipt_format_template",
   "mobile_app_section",
   "hide_others_donors",
-  "email_compulsory_donor_request"
+  "email_compulsory_donor_request",
+  "notification_channels_tab",
+  "cash_cheque_collection_channel",
+  "receipt_realisation_channel",
+  "donor_claim_channel",
+  "donor_creation_channel",
+  "ecs_channel",
+  "event_reminder_channel"
  ],
  "fields": [
   {
@@ -182,13 +189,55 @@
    "label": "Receipt Format",
    "options": "DJ Receipt Format",
    "reqd": 1
+  },
+  {
+   "fieldname": "notification_channels_tab",
+   "fieldtype": "Tab Break",
+   "label": "Notification Channels"
+  },
+  {
+   "fieldname": "receipt_realisation_channel",
+   "fieldtype": "Link",
+   "label": "Receipt Realisation Channel",
+   "options": "Notification Channel"
+  },
+  {
+   "fieldname": "donor_claim_channel",
+   "fieldtype": "Link",
+   "label": "Donor Claim Channel",
+   "options": "Notification Channel"
+  },
+  {
+   "fieldname": "donor_creation_channel",
+   "fieldtype": "Link",
+   "label": "Donor Creation Channel",
+   "options": "Notification Channel"
+  },
+  {
+   "fieldname": "ecs_channel",
+   "fieldtype": "Link",
+   "label": "ECS Channel",
+   "options": "Notification Channel"
+  },
+  {
+   "fieldname": "cash_cheque_collection_channel",
+   "fieldtype": "Link",
+   "label": "Cash/Cheque Collection Channel",
+   "options": "Notification Channel",
+   "reqd": 1
+  },
+  {
+   "fieldname": "event_reminder_channel",
+   "fieldtype": "Link",
+   "label": "Event Reminder Channel",
+   "options": "Notification Channel"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-04-01 16:47:02.859817",
+ "modified": "2024-06-15 16:17:39.698250",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Dhananjaya Settings",

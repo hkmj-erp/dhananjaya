@@ -37,6 +37,7 @@ def show_reminders():
             {
                 "doctype": "App Notification",
                 "app": settings_doc.firebase_admin_app,
+                "channel": settings_doc.event_reminder_channel,
                 "user": i["user"],
                 "subject": "Reminder",
                 "message": i["message"],

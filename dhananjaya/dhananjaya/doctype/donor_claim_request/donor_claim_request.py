@@ -13,6 +13,7 @@ class DonorClaimRequest(Document):
                 {
                     "doctype": "App Notification",
                     "app": settings_doc.firebase_admin_app,
+                    "channel": settings_doc.donor_claim_channel,
                     "user": self.user,
                     "subject": "Donor Claim Approved!",
                     "message": f"Your request to claim donor {self.full_name} is Approved. Please check the change.",
@@ -26,6 +27,7 @@ class DonorClaimRequest(Document):
                 {
                     "doctype": "App Notification",
                     "app": settings_doc.firebase_admin_app,
+                    "channel": settings_doc.donor_claim_channel,
                     "user": self.user,
                     "subject": "Donor Claim Rejected!",
                     "message": f"Your request to claim donor {self.full_name} is Rejected. Please contact Admin for further discussion.",
