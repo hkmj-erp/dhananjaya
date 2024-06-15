@@ -31,6 +31,7 @@ def special_puja_notify():
                 {
                     "doctype": "App Notification",
                     "app": settings_doc.firebase_admin_app,
+                    "channel": settings_doc.event_reminder_channel,
                     "user": u,
                     "subject": puja["occasion"],
                     "message": f"Special Puja Tomorrow for {puja['donor_name']}",
@@ -64,6 +65,7 @@ def privilege_puja_notify():
                 {
                     "doctype": "App Notification",
                     "app": settings_doc.firebase_admin_app,
+                    "channel": settings_doc.event_reminder_channel,
                     "user": u,
                     "subject": puja["occasion"],
                     "message": f"Privilege Puja Tomorrow for {puja['patron_name']}",

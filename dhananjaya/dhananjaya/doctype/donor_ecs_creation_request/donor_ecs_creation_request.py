@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 from datetime import datetime
 
+
 class DonorECSCreationRequest(Document):
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
@@ -32,6 +33,7 @@ class DonorECSCreationRequest(Document):
         seva_type: DF.Link | None
         start_date: DF.Date
         status: DF.Literal["Pending", "Completed", "Rejected"]
+
     # end: auto-generated types
     def on_change(self):
         if self.has_value_changed("status"):
@@ -61,6 +63,7 @@ class DonorECSCreationRequest(Document):
                     {
                         "doctype": "App Notification",
                         "app": settings_doc.firebase_admin_app,
+                        "channel": settings_doc.ecs_channel,
                         "user": erp_user,
                         "subject": title,
                         "message": message,
@@ -77,7 +80,7 @@ class DonorECSCreationRequest(Document):
             self.donor,
             {
                 "ecs_active": 1,
-                "ecs_bank":settings_doc.default_ecs_bank,
+                "ecs_bank": settings_doc.default_ecs_bank,
                 "bank": self.account_bank_name,
                 "ecs_bank_ac_no": self.account_number,
                 "account_holder": self.account_holder_name,

@@ -18,19 +18,25 @@ class DhananjayaSettings(Document):
         from frappe.types import DF
 
         admin_role: DF.Link
+        cash_cheque_collection_channel: DF.Link
         cash_mode: DF.Link | None
         company_details: DF.Table[DhananjayaSettingsCompanyDetails]
         default_ecs_bank: DF.Link | None
         default_marketing_preacher: DF.Link
         default_preacher: DF.Link
         display_names_allowed: DF.Int
+        donor_claim_channel: DF.Link | None
+        donor_creation_channel: DF.Link | None
+        ecs_channel: DF.Link | None
         email_compulsory_donor_request: DF.Check
+        event_reminder_channel: DF.Link | None
         firebase_admin_app: DF.Link
         gateway_mode: DF.Link | None
         hide_others_donors: DF.Check
         public_fernet_key: DF.Data | None
         receipt_format: DF.Link
         receipt_format_template: DF.Data | None
+        receipt_realisation_channel: DF.Link | None
         separate_accounting_for_csr: DF.Check
         show_patron_seva_level_on_receipt: DF.Check
     # end: auto-generated types
