@@ -213,6 +213,8 @@ class DonationReceipt(Document):
             frappe.throw(("No Account associated with this Seva Type."))
 
         old_doc = self.get_doc_before_save()
+        if not old_doc:
+            return
         old_seva_type, old_account = old_doc.seva_type, old_doc.donation_account
         new_seva_type, new_account = self.seva_type, seva_doc.account
         frappe.db.sql(
@@ -511,7 +513,6 @@ class DonationReceipt(Document):
                     {
                         "account": self.cash_account,
                         "debit_in_account_currency": self.amount,
-                        # As it not compulsory. It will pick up the default.--> But now it is picking of other company, so explicitly declared.
                         "cost_center": default_cost_center,
                     },
                 ],
@@ -531,7 +532,6 @@ class DonationReceipt(Document):
                     {
                         "account": self.tds_account,
                         "debit_in_account_currency": self.amount,
-                        # As it not compulsory. It will pick up the default.--> But now it is picking of other company, so explicitly declared.
                         "cost_center": default_cost_center,
                     },
                 ],

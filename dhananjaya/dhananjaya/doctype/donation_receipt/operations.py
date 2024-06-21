@@ -12,6 +12,7 @@ from dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt import (
 from dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch import (
     refresh_pg_upload_batch,
 )
+from frappe.model.docstatus import DocStatus
 
 
 @frappe.whitelist()
@@ -108,7 +109,8 @@ def receipt_bounce_operations(receipt):
         )
 
     # Finally Bounce Donation Receipt
-    receipt_doc.cancel()
+    receipt_doc.docstatus = DocStatus.cancelled()
+    receipt_doc.save(ignore_permissions=True)
     receipt_doc.db_set("workflow_state", "Bounced")
 
 
@@ -166,7 +168,8 @@ def receipt_cash_return_operations(receipt, cash_return_date):
     reverse_je.submit()
 
     # Finally Cash Return Donation Receipt
-    receipt_doc.cancel()
+    receipt_doc.docstatus = DocStatus.cancelled()
+    receipt_doc.save(ignore_permissions=True)
     receipt_doc.db_set("workflow_state", "Cash Returned")
 
 
@@ -233,7 +236,8 @@ def receipt_cancel_operations(receipt):
             asset_doc.cancel()
 
     # Finally Cancel Donation Receipt
-    receipt_doc.cancel()
+    receipt_doc.docstatus = DocStatus.cancelled()
+    receipt_doc.save(ignore_permissions=True)
     receipt_doc.db_set("workflow_state", "Cancelled")
 
 

@@ -70,7 +70,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-11 11:28:25.657064",
+ "modified": "2024-06-18 11:19:51.217413",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Donor Claim Request",
@@ -125,5 +125,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "full_name"
 }

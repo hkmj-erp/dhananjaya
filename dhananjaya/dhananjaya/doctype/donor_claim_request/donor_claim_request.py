@@ -6,6 +6,22 @@ from frappe.model.document import Document
 
 
 class DonorClaimRequest(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        donor: DF.Link | None
+        full_name: DF.Data | None
+        patron: DF.Link | None
+        patron_name: DF.Data | None
+        preacher_claimed: DF.Link | None
+        status: DF.Literal["Pending", "Approved", "Rejected"]
+        user: DF.Link
+    # end: auto-generated types
     def on_update(self):
         settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
         if self.status == "Approved":
