@@ -13,13 +13,13 @@ frappe.query_reports["Cashier Report"] = {
     },
     {
       fieldname: "from_date",
-      fieldtype: "Datetime",
+      fieldtype: "Date",
       label: "From Date",
       reqd: 1,
     },
     {
       fieldname: "to_date",
-      fieldtype: "Datetime",
+      fieldtype: "Date",
       label: "To Date",
       reqd: 1,
     },
