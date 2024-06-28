@@ -80,7 +80,7 @@ def create_receipt():
         )
 
     doc.save()
-    # doc.insert()
+    frappe.db.commit()
 
     files = frappe.request.files
     fileref = frappe.form_dict.file_name
@@ -119,6 +119,8 @@ def create_receipt():
                 "content": content,
             }
         ).save(ignore_permissions=1)
+        frappe.db.commit()
+        doc.reload()
         doc.payment_screenshot = image_doc.file_url
     doc.save()
     doc.db_set("workflow_state", "Acknowledged")

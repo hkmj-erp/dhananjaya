@@ -109,9 +109,8 @@ def receipt_bounce_operations(receipt):
         )
 
     # Finally Bounce Donation Receipt
-    receipt_doc.docstatus = DocStatus.cancelled()
-    receipt_doc.save(ignore_permissions=True)
     receipt_doc.db_set("workflow_state", "Bounced")
+    receipt_doc.db_set("docstatus", 2)
 
 
 ########################################
@@ -168,9 +167,8 @@ def receipt_cash_return_operations(receipt, cash_return_date):
     reverse_je.submit()
 
     # Finally Cash Return Donation Receipt
-    receipt_doc.docstatus = DocStatus.cancelled()
-    receipt_doc.save(ignore_permissions=True)
     receipt_doc.db_set("workflow_state", "Cash Returned")
+    receipt_doc.db_set("docstatus", 2)
 
 
 ##### CANCELLATION PROCEDURE #####

@@ -21,6 +21,7 @@ def update_donation_calculation():
                 "times_donated": d["times"],
                 "total_donated": d["donation"],
             },
+            update_modified=False,
         )
     frappe.db.commit()
 
@@ -42,6 +43,7 @@ def update_donation_calculation():
                 "times_donated": d["times"],
                 "total_donated": d["donation"],
             },
+            update_modified=False,
         )
 
 
@@ -106,5 +108,9 @@ def update_realization_date():
     )
     for r in receipts:
         frappe.db.set_value(
-            "Donation Receipt", r["receipt_id"], "realization_date", r["real_date"]
+            "Donation Receipt",
+            r["receipt_id"],
+            "realization_date",
+            r["real_date"],
+            update_modified=False,
         )
