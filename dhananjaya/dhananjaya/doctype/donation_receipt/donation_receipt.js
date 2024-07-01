@@ -362,20 +362,25 @@ frappe.ui.form.on("Donation Receipt", {
   },
   async update_cost_center(frm) {
     if (frm.doc.docstatus == 0) {
-      frappe.db
-        .get_list("Seva Subtype Cost Center", {
-          filters: {
-            parent: frm.doc.seva_subtype,
-            company: frm.doc.company,
-          },
-          fields: ["cost_center"],
-        })
-        .then((data) => {
-          if (data && data.length) {
-            console.log(data);
-            frm.set_value("cost_center", data[0].cost_center);
+      frappe.call({
+        method: "frappe.client.get",
+        args: {
+          doctype: "Seva Subtype",
+          name: frm.doc.seva_subtype,
+          fieldname: "cost_centers",
+        },
+        callback(r) {
+          if (r.message) {
+            cost_centers = r.message.cost_centers;
+            for (var i = 0; i < cost_centers.length; i++) {
+              if (frm.doc.company == cost_centers[i].company) {
+                frm.set_value("cost_center", cost_centers[i].cost_center);
+                break;
+              }
+            }
           }
-        });
+        },
+      });
     }
   },
 });
