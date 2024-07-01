@@ -322,6 +322,16 @@ class DonationReceipt(Document):
         ):
             self.gateway_expense_account = company_detail.gateway_expense_account
 
+        ## Setting Cost Center:
+        if not self.cost_center:
+            if self.seva_subtype:
+                seva_subtype_doc = frappe.get_cached_doc(
+                    "Seva Subtype", self.seva_subtype
+                )
+                for c in seva_subtype_doc.cost_centers:
+                    if c.company == self.company:
+                        self.cost_center = c.cost_center
+                        break
         return
 
     ###### UPDATE WORKFLOW STATE FROM 'SUSPENSE' TO 'REALIZED' ON ENTERING THE RIGHT DONOR ######

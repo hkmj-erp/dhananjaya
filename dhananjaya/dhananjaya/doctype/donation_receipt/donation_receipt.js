@@ -329,6 +329,9 @@ frappe.ui.form.on("Donation Receipt", {
   seva_type: function (frm) {
     frm.events.update_donation_income_account(frm);
   },
+  seva_subtype: function (frm) {
+    frm.events.update_cost_center(frm);
+  },
   is_csr: function (frm) {
     frm.events.update_donation_income_account(frm);
   },
@@ -355,6 +358,24 @@ frappe.ui.form.on("Donation Receipt", {
           }
         }
       );
+    }
+  },
+  async update_cost_center(frm) {
+    if (frm.doc.docstatus == 0) {
+      frappe.db
+        .get_list("Seva Subtype Cost Center", {
+          filters: {
+            parent: frm.doc.seva_subtype,
+            company: frm.doc.company,
+          },
+          fields: ["cost_center"],
+        })
+        .then((data) => {
+          if (data && data.length) {
+            console.log(data);
+            frm.set_value("cost_center", data[0].cost_center);
+          }
+        });
     }
   },
 });
