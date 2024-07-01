@@ -75,7 +75,8 @@ jinja = {
 # ------------
 
 # before_install = "dhananjaya.install.before_install"
-# after_install = "dhananjaya.install.after_install"
+after_install = "dhananjaya.setup.after_install"
+after_migrate = "dhananjaya.setup.after_install"
 
 # Uninstallation
 # ------------
@@ -243,3 +244,6 @@ scheduler_events = {
 # auth_hooks = [
 # 	"dhananjaya.auth.validate"
 # ]
+
+
+accounting_dimension_doctypes = ["Donation Receipt"]

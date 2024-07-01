@@ -1,5 +1,8 @@
 # Copyright (c) 2023, Narahari Dasa and contributors
 # For license information, please see license.txt
+from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
+    get_accounting_dimensions,
+)
 from .templates import prepare_email_body
 from dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch import (
     refresh_pg_upload_batch,
@@ -75,6 +78,7 @@ class DonationReceipt(Document):
         company: DF.Link
         company_abbreviation: DF.Data | None
         contact: DF.Data | None
+        cost_center: DF.Link | None
         donation_account: DF.Link | None
         donor: DF.Link | None
         donor_creation_request: DF.Link | None
@@ -102,6 +106,7 @@ class DonationReceipt(Document):
         payment_screenshot: DF.AttachImage | None
         preacher: DF.Link | None
         print_remarks_on_receipt: DF.Check
+        project: DF.Link | None
         realization_date: DF.Date | None
         receipt_date: DF.Date
         receipt_series: DF.Data | None
@@ -171,8 +176,9 @@ class DonationReceipt(Document):
                     self.donor,
                 )
             ####
-            if self.has_value_changed("seva_type"):
-                self.on_change_seva_type()  # Use Only in Emergency Cases.
+            # if self.has_value_changed("seva_type"):
+            #     self.on_change_seva_type()  # Use Only in Emergency Cases.
+            ## TODO First check the impact of both GL Entry & Payment Ledger Entry
             ###
             if self.has_value_changed("is_csr"):
                 settings_doc = frappe.get_cached_doc("Dhananjaya Settings")
@@ -477,21 +483,18 @@ class DonationReceipt(Document):
                         title=_("Missing Account"),
                     )
                 kind_debit_account = asset_category_account
-            je.setdefault(
-                "accounts",
-                [
-                    {
-                        "account": self.donation_account,
-                        "credit_in_account_currency": self.amount,
-                        "cost_center": default_cost_center,
-                    },
-                    {
-                        "account": kind_debit_account,
-                        "debit_in_account_currency": self.amount,
-                        "cost_center": default_cost_center,
-                    },
-                ],
-            )
+            # update_accounting_dimensions(self, je_row)
+            credit_entry = {
+                "account": self.donation_account,
+                "credit_in_account_currency": self.amount,
+            }
+            self.update_accounting_dimensions(credit_entry)
+
+            debit_entry = {
+                "account": kind_debit_account,
+                "debit_in_account_currency": self.amount,
+            }
+            je.setdefault("accounts", [credit_entry, debit_entry])
 
         elif self.payment_method == CASH_PAYMENT_MODE:
             # Jounrnal Entry date should be the day Cashier received the amount because it has to tally with Cashbook.
@@ -501,40 +504,35 @@ class DonationReceipt(Document):
                 else today()
             )
             je.setdefault("posting_date", cash_date)
-            je.setdefault(
-                "accounts",
-                [
-                    {
-                        "account": self.donation_account,
-                        "credit_in_account_currency": self.amount,
-                        # This is needed for cost center analysis.
-                        "cost_center": default_cost_center,
-                    },
-                    {
-                        "account": self.cash_account,
-                        "debit_in_account_currency": self.amount,
-                        "cost_center": default_cost_center,
-                    },
-                ],
+            credit_entry = {
+                "account": self.donation_account,
+                "credit_in_account_currency": self.amount,
+            }
+            self.update_accounting_dimensions(credit_entry)
+            debit_entry = (
+                {
+                    "account": self.cash_account,
+                    "debit_in_account_currency": self.amount,
+                },
             )
+            je.setdefault("accounts", [credit_entry, debit_entry])
         elif self.payment_method == TDS_PAYMENT_MODE:
             # Jounrnal Entry date should be the receipt date only.
             je.setdefault("posting_date", self.receipt_date)
+            credit_entry = {
+                "account": self.donation_account,
+                "credit_in_account_currency": self.amount,
+            }
+            self.update_accounting_dimensions(credit_entry)
+            debit_entry = {
+                {
+                    "account": self.tds_account,
+                    "debit_in_account_currency": self.amount,
+                }
+            }
             je.setdefault(
                 "accounts",
-                [
-                    {
-                        "account": self.donation_account,
-                        "credit_in_account_currency": self.amount,
-                        # This is needed for cost center analysis.
-                        "cost_center": default_cost_center,
-                    },
-                    {
-                        "account": self.tds_account,
-                        "debit_in_account_currency": self.amount,
-                        "cost_center": default_cost_center,
-                    },
-                ],
+                [credit_entry, debit_entry],
             )
         else:
             bank_account_ledger = frappe.get_cached_doc(
@@ -552,39 +550,33 @@ class DonationReceipt(Document):
                 je.setdefault("cheque_no", transaction.description)
                 je.setdefault("cheque_date", self.receipt_date)
                 # je.setdefault('clearance_date',transaction.date)
-            # frappe.throw(transaction.date.strftime('%m/%d/%Y'))
+            credit_entry = {
+                "account": self.donation_account,
+                "credit_in_account_currency": self.amount,
+            }
+            self.update_accounting_dimensions(credit_entry)
+            debit_entry = (
+                {
+                    "account": bank_account_ledger.account,
+                    "bank_account": self.bank_account,
+                    "debit_in_account_currency": self.amount
+                    - (0 if not self.additional_charges else self.additional_charges),
+                },
+            )
             je.setdefault(
                 "accounts",
-                [
-                    {
-                        "account": self.donation_account,
-                        "credit_in_account_currency": self.amount,
-                        "cost_center": default_cost_center,
-                    },
-                    {
-                        "account": bank_account_ledger.account,
-                        "bank_account": self.bank_account,
-                        "debit_in_account_currency": self.amount
-                        - (
-                            0
-                            if not self.additional_charges
-                            else self.additional_charges
-                        ),
-                        "cost_center": default_cost_center,
-                    },
-                ],
+                [credit_entry, debit_entry],
             )
+
             if (
                 self.payment_method == PAYMENT_GATWEWAY_MODE
                 and self.additional_charges > 0
             ):
-                je["accounts"].append(
-                    {
-                        "account": self.gateway_expense_account,
-                        "debit_in_account_currency": self.additional_charges,
-                        "cost_center": default_cost_center,
-                    }
-                )
+                tx_charges_debit_entry = {
+                    "account": self.gateway_expense_account,
+                    "debit_in_account_currency": self.additional_charges,
+                }
+                je["accounts"].append(tx_charges_debit_entry)
         je_doc = frappe.get_doc(je)
         je_doc.insert()
         return je_doc
@@ -619,6 +611,30 @@ class DonationReceipt(Document):
         gateway_doc.seva_type = self.seva_type
         gateway_doc.receipt_created = 1
         gateway_doc.save()
+
+    def update_accounting_dimensions(self, je_row):
+        for dimension in get_accounting_dimensions():
+            je_row.update({dimension: self.get(dimension)})
+
+        je_row.cost_center = self.cost_center
+        je_row.project = self.project
+
+        if not je_row.cost_center:
+            je_row.cost_center = frappe.get_cached_value(
+                "Company", self.company, "cost_center"
+            )
+
+        # TODO Update Onchnage
+        # COST_CENTER = None
+        # if self.seva_subtype:
+        #     subseva_doc = frappe.get_doc("Seva Subtype", self.seva_subtype)
+        #     for c in subseva_doc.cost_centers:
+        #         if c.company == self.company:
+        #             COST_CENTER = c.cost_center
+        # if not COST_CENTER:
+        #     COST_CENTER = frappe.db.get_value("Company", self.company, "cost_center")
+        # return COST_CENTER
+        ###
 
 
 def add_payment_entry(tx_doc, voucher):
