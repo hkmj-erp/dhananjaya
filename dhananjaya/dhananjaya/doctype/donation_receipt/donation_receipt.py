@@ -519,12 +519,10 @@ class DonationReceipt(Document):
                 "credit_in_account_currency": self.amount,
             }
             self.update_accounting_dimensions(credit_entry)
-            debit_entry = (
-                {
-                    "account": self.cash_account,
-                    "debit_in_account_currency": self.amount,
-                },
-            )
+            debit_entry = {
+                "account": self.cash_account,
+                "debit_in_account_currency": self.amount,
+            }
             je.setdefault("accounts", [credit_entry, debit_entry])
         elif self.payment_method == TDS_PAYMENT_MODE:
             # Jounrnal Entry date should be the receipt date only.
@@ -535,10 +533,8 @@ class DonationReceipt(Document):
             }
             self.update_accounting_dimensions(credit_entry)
             debit_entry = {
-                {
-                    "account": self.tds_account,
-                    "debit_in_account_currency": self.amount,
-                }
+                "account": self.tds_account,
+                "debit_in_account_currency": self.amount,
             }
             je.setdefault(
                 "accounts",
@@ -565,14 +561,12 @@ class DonationReceipt(Document):
                 "credit_in_account_currency": self.amount,
             }
             self.update_accounting_dimensions(credit_entry)
-            debit_entry = (
-                {
-                    "account": bank_account_ledger.account,
-                    "bank_account": self.bank_account,
-                    "debit_in_account_currency": self.amount
-                    - (0 if not self.additional_charges else self.additional_charges),
-                },
-            )
+            debit_entry = {
+                "account": bank_account_ledger.account,
+                "bank_account": self.bank_account,
+                "debit_in_account_currency": self.amount
+                - (0 if not self.additional_charges else self.additional_charges),
+            }
             je.setdefault(
                 "accounts",
                 [credit_entry, debit_entry],
@@ -626,11 +620,11 @@ class DonationReceipt(Document):
         for dimension in get_accounting_dimensions():
             je_row.update({dimension: self.get(dimension)})
 
-        je_row.cost_center = self.cost_center
-        je_row.project = self.project
+        je_row["cost_center"] = self.cost_center
+        je_row["projext"] = self.project
 
-        if not je_row.cost_center:
-            je_row.cost_center = frappe.get_cached_value(
+        if not je_row["cost_center"]:
+            je_row["cost_center"] = frappe.get_cached_value(
                 "Company", self.company, "cost_center"
             )
 
