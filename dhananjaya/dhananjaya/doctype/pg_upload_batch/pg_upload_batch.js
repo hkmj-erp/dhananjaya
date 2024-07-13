@@ -25,105 +25,148 @@ frappe.ui.form.on("PG Upload Batch", {
         },
       };
     });
-    frm.add_custom_button(__("Set Seva Type (BULK)"), function () {
-      frappe.prompt(
-        {
-          label: "Seva Type",
-          fieldname: "seva_type",
-          fieldtype: "Link",
-          options: "Seva Type",
-        },
-        (values) => {
-          // console.log(values.seva_type);
-          frappe.call({
-            freeze: true,
-            freeze_message: "Processing...",
-            method:
-              "dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch.set_seva_type_bulk",
-            args: {
-              batch: frm.doc.name,
-              seva_type: values.seva_type,
-            },
-            callback: function (r) {
-              if (!r.exc) {
-                frappe.show_alert(
-                  "Successfully set Seva Type in all connected payments",
-                  5
-                );
-              }
-            },
-          });
-        }
-      );
-    }, "Operations");
-    frm.add_custom_button(__("Process Batch Payments"), function () {
-      frappe.warn(
-        "Are you sure you want to proceed?",
-        "This will generate following:<br><br>1. Donation Entries<br>2. Journal Entries<br>3. Bank Reconcillation",
-        () => {
-          frappe.call({
-            freeze: true,
-            freeze_message: "Processing...",
-            method:
-              "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.process_batch_gateway_payments",
-            args: {
-              batch: frm.doc.name,
-            },
-            callback: function (r) {
-              if (!r.exc) {
-                frappe.msgprint("Successfully Created.");
-                frm.refresh();
-                frm.refresh_field("status");
-              }
-            },
-          });
-        },
-        "Continue",
-        true // Sets dialog as minimizable
-      );
-    }, "Operations");
-    frm.add_custom_button(__("Auto Realize Receipts"), function () {
-      frappe.warn(
-        "Are you sure you want to proceed?",
-        "This will check for Donation Receipts which have Transaction ID in 'Remarks' field and realize them.",
-        () => {
-          frappe.call({
-            freeze: true,
-            freeze_message: "Processing...",
-            method:
-              "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.auto_realize_batch_gateway_payments",
-            args: {
-              batch: frm.doc.name,
-            },
-            callback: function (r) {
-              if (!r.exc) {
-                frappe.msgprint("Successfully Connected.");
-                frm.refresh();
-              }
-            },
-          });
-        },
-        "Continue",
-        true // Sets dialog as minimizable
-      );
-    }, "Operations");
-    frm.add_custom_button(__("Check Receipts"), function () {
-      frappe.call({
-        method:
-          "dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch.get_payment_entries",
-        args: {
-          batch: frm.doc.name,
-        },
-        callback: function (r) {
-          if (!r.exc) {
-            console.log(r.message);
-            frappe.set_route("List", "Donation Receipt", {
-              payment_gateway_document: ["in", r.message],
+    frm.add_custom_button(
+      __("Set Seva Type (BULK)"),
+      function () {
+        frappe.prompt(
+          {
+            label: "Seva Type",
+            fieldname: "seva_type",
+            fieldtype: "Link",
+            options: "Seva Type",
+          },
+          (values) => {
+            // console.log(values.seva_type);
+            frappe.call({
+              freeze: true,
+              freeze_message: "Processing...",
+              method:
+                "dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch.set_seva_type_bulk",
+              args: {
+                batch: frm.doc.name,
+                seva_type: values.seva_type,
+              },
+              callback: function (r) {
+                if (!r.exc) {
+                  frappe.show_alert(
+                    "Successfully set Seva Type in all connected payments",
+                    5
+                  );
+                }
+              },
             });
           }
-        },
-      });
-    });
+        );
+      },
+      "Operations"
+    );
+    frm.add_custom_button(
+      __("Process Batch Payments"),
+      function () {
+        frappe.warn(
+          "Are you sure you want to proceed?",
+          "This will generate following:<br><br>1. Donation Entries<br>2. Journal Entries<br>3. Bank Reconcillation",
+          () => {
+            frappe.call({
+              freeze: true,
+              freeze_message: "Processing...",
+              method:
+                "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.process_batch_gateway_payments",
+              args: {
+                batch: frm.doc.name,
+              },
+              callback: function (r) {
+                if (!r.exc) {
+                  frappe.msgprint("Successfully Created.");
+                  frm.refresh();
+                  frm.refresh_field("status");
+                }
+              },
+            });
+          },
+          "Continue",
+          true // Sets dialog as minimizable
+        );
+      },
+      "Operations"
+    );
+    frm.add_custom_button(
+      __("Auto Realize Receipts"),
+      function () {
+        frappe.warn(
+          "Are you sure you want to proceed?",
+          "This will check for Donation Receipts which have Transaction ID in 'Remarks' field and realize them.",
+          () => {
+            frappe.call({
+              freeze: true,
+              freeze_message: "Processing...",
+              method:
+                "dhananjaya.dhananjaya.doctype.donation_receipt.donation_receipt.auto_realize_batch_gateway_payments",
+              args: {
+                batch: frm.doc.name,
+              },
+              callback: function (r) {
+                if (!r.exc) {
+                  frappe.msgprint("Successfully Connected.");
+                  frm.refresh();
+                }
+              },
+            });
+          },
+          "Continue",
+          true // Sets dialog as minimizable
+        );
+      },
+      "Operations"
+    );
+    frm.add_custom_button(
+      __("Check Receipts"),
+      function () {
+        frappe.call({
+          method:
+            "dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch.get_payment_entries",
+          args: {
+            batch: frm.doc.name,
+          },
+          callback: function (r) {
+            if (!r.exc) {
+              console.log(r.message);
+              frappe.set_route("List", "Donation Receipt", {
+                payment_gateway_document: ["in", r.message],
+              });
+            }
+          },
+        });
+      },
+      "Receipts"
+    );
+    frm.add_custom_button(
+      __("Disconnect Cancelled Receipts"),
+      function () {
+        frappe.call({
+          method:
+            "dhananjaya.dhananjaya.doctype.pg_upload_batch.pg_upload_batch.disconnect_cancelled_receipts",
+          args: {
+            batch: frm.doc.name,
+          },
+          callback: function (r) {
+            if (!r.exc) {
+              frappe.show_alert({
+                message: __("Successfully disconnected"),
+                indicator: "green",
+              });
+              frm.refresh();
+            } else {
+              frappe.show_alert({
+                message: __("Couldn't disconnect."),
+                indicator: "red",
+              });
+            }
+          },
+        });
+      },
+      "Receipts"
+    );
     frm.add_custom_button(
       __("Try Razorpay Pattern"),
       function () {
@@ -248,10 +291,14 @@ frappe.ui.form.on("PG Upload Batch", {
 							<div style="margin:5px">
 								<div class ="d-flex justify-content-between">
                   <div class= "border rounded p-2 w-40" style="font-size:15px">
-										Transactions<p style="font-size:10px">(Resolved/Total)</p><b>${r.message[1]}/${r.message[0]}</b>
+										Transactions<p style="font-size:10px">(Resolved/Total)</p><b>${r.message[1]}/${
+            r.message[0]
+          }</b>
 									</div>
                   <div class= "border rounded p-2 w-40" style="font-size:15px">
-										Donors Linked<p style="font-size:10px">(Linked/Unresolved)</p><b>${r.message[2]}/${r.message[0] - r.message[1]}</b>
+										Donors Linked<p style="font-size:10px">(Linked/Unresolved)</p><b>${
+                      r.message[2]
+                    }/${r.message[0] - r.message[1]}</b>
 									</div>
 								</div>
                 <hr>

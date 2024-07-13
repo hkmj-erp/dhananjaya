@@ -28,10 +28,11 @@ def update_donation_calculation():
     ## Patron Data Update
     for d in frappe.db.sql(
         """
-                    select patron, count(name) as times, sum(amount) as donation, max(receipt_date) as last_donation
-                    from  `tabDonation Receipt` tdr
-                    where (tdr.docstatus = 1) AND (tdr.patron IS NOT NULL)
-                    group by tdr.patron
+                    SELECT tp.name as patron, count(tdr.name) as times, sum(tdr.amount) as donation, max(tdr.receipt_date) as last_donation
+                    FROM `tabPatron` tp
+                    LEFT JOIN `tabDonation Receipt` tdr
+                        ON tp.name = tdr.patron AND tdr.docstatus = 1
+                    GROUP BY tp.name
                     """,
         as_dict=1,
     ):
@@ -41,10 +42,11 @@ def update_donation_calculation():
             {
                 "last_donation": d["last_donation"],
                 "times_donated": d["times"],
-                "total_donated": d["donation"],
+                "total_donated": 0 if d["donation"] is None else d["donation"],
             },
             update_modified=False,
         )
+    frappe.db.commit()
 
 
 def update_last_donation():

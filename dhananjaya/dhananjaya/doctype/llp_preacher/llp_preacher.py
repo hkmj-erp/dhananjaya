@@ -32,11 +32,11 @@ class LLPPreacher(Document):
                 user = frappe.get_doc("User", user_row.user)
                 user.add_roles([PREACHER_ROLE])
 
-    def after_insert(self):
-        self.create_devotee_dimension()
+    # def after_insert(self):
+    #     self.create_devotee_dimension()
 
-    def create_devotee_dimension(self):
-        if frappe.db.exists("DocType", {"name": "Devotee"}):
-            if not frappe.db.exists("Devotee", self.name):
-                frappe.get_doc({"doctype": "Devotee", "name1": self.name}).insert()
-        return
+    # def create_devotee_dimension(self):
+    #     if frappe.db.exists("DocType", {"name": "Devotee"}):
+    #         if not frappe.db.exists("Devotee", self.name):
+    #             frappe.get_doc({"doctype": "Devotee", "name1": self.name}).insert()
+    #     return

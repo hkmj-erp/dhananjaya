@@ -191,7 +191,6 @@ frappe.ui.form.on("Donation Receipt", {
         );
       }
     }
-
     frm.add_custom_button(
       __("Send Receipt/Acknowledgement"),
       async function () {

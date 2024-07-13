@@ -332,7 +332,6 @@ class DonationReceipt(Document):
                     if c.company == self.company:
                         self.cost_center = c.cost_center
                         break
-        return
 
     ###### UPDATE WORKFLOW STATE FROM 'SUSPENSE' TO 'REALIZED' ON ENTERING THE RIGHT DONOR ######
     _saving_flag = False

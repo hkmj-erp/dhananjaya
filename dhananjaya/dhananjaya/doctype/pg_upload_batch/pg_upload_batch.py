@@ -31,6 +31,7 @@ class PGUploadBatch(Document):
         status: DF.Literal["Open", "Closed"]
         total_amount: DF.Currency
         total_fee: DF.Currency
+
     # end: auto-generated types
     def before_insert(self):
         # set default donation account
@@ -116,5 +117,21 @@ def set_seva_type_bulk(batch, seva_type):
 					set seva_type = '{seva_type}'
 					where batch = '{batch}' AND receipt_created = 0
 					"""
+    )
+    frappe.db.commit()
+
+
+@frappe.whitelist()
+def disconnect_cancelled_receipts(batch):
+    frappe.db.sql(
+        f"""
+            UPDATE `tabDonation Receipt` tdr
+            JOIN `tabPayment Gateway Transaction` tpgt
+            ON tdr.payment_gateway_document = tpgt.name
+            JOIN `tabPG Upload Batch` tpb
+            ON tpb.name = tpgt.batch
+            SET payment_gateway_document = NULL
+            WHERE tpb.name = '{batch}' AND tdr.docstatus = 2
+		"""
     )
     frappe.db.commit()

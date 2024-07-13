@@ -25,11 +25,10 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-01 17:35:26.987728",
+ "modified": "2024-07-04 12:52:08.159939",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Festival",
- "name_case": "UPPER CASE",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
@@ -65,6 +64,27 @@
    "read": 1,
    "report": 1,
    "role": "DCC Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
    "share": 1,
    "write": 1
   }
