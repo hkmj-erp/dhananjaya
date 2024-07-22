@@ -142,7 +142,8 @@ class DonationReceipt(Document):
         self.flags.kyc_available = self.is_kyc_available()
         validate_donor(self)
         validate_atg_required(self)
-        # validate_govt_laws(self) # Hundi Donations to be incorporated #TODO
+        validate_govt_laws(self)
+        # Hundi Donations are to be separately managed by accounts
         # validate_cheque_screenshot(self) # Need to change in API before uncommenting this as screenshot is uploaded post creation
         # validate_reference_number(self)
         return
@@ -438,7 +439,7 @@ class DonationReceipt(Document):
             ),
             "company": self.company,
             "donation_receipt": self.name,
-            "docstatus": 1,
+            # "docstatus": 1,
         }
 
         ##### In Case of New Donor Request #####
@@ -582,6 +583,7 @@ class DonationReceipt(Document):
                 je["accounts"].append(tx_charges_debit_entry)
         je_doc = frappe.get_doc(je)
         je_doc.insert()
+        je_doc.submit()
         return je_doc
 
     ###### BANK RECONCILLATION AUTOMATION ######
