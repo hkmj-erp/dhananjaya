@@ -1,4 +1,4 @@
-from hkm.erpnext___custom.doctype.hkm_api_call.hkm_api_call import store_incoming_api
+# from hkm.erpnext___custom.doctype.hkm_api_call.hkm_api_call import store_incoming_api
 import frappe
 import re, json
 from frappe.utils import today
@@ -39,7 +39,7 @@ F_TRY_PATRONSHIP_TAGGING = "try_patron_tagging"
 
 @frappe.whitelist(methods=["POST"])
 def upload_donation():
-    store_incoming_api()
+    # store_incoming_api()
     try:
         data = json.loads(frappe.request.data)
 
@@ -152,6 +152,13 @@ def upload_donation():
         "atg_required": donation_raw.get(F_ATG_REQUIRED),
         "auto_generated": 1,
     }
+
+    ## Set Accounting Dimensions
+
+    if donation_raw.get("project"):
+        receipt_dict["project"] = donation_raw.get("project")
+
+    ##
 
     if donation_raw.get(F_RECEIPT_DATE):
         receipt_dict["receipt_date"] = donation_raw.get(F_RECEIPT_DATE)

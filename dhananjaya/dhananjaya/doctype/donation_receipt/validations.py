@@ -15,6 +15,8 @@ from dhananjaya.dhananjaya.utils import (
 
 
 def validate_govt_laws(doc):
+    if isinstance(doc.amount, str):
+        doc.amount = float(doc.amount)
     day_donation = get_donation_of_the_day(doc)
     if (
         doc.payment_method == CASH_PAYMENT_MODE

@@ -68,6 +68,14 @@ def receipt_bounce_operations(receipt):
 
         transaction_amount = je_dict["total_debit"]
 
+        forward_company_account = frappe.db.get_value(
+            "Bank Account", forward_bank_tx_doc.bank_account, "account"
+        )
+
+        reverse_company_account = frappe.db.get_value(
+            "Bank Account", reverse_bank_tx_doc.bank_account, "account"
+        )
+
         for a in je_dict["accounts"]:
             if a["debit"] == 0:
                 a["debit"] = transaction_amount
@@ -80,8 +88,8 @@ def receipt_bounce_operations(receipt):
                 a["debit"] = 0
                 a["debit_in_account_currency"] = 0
 
-            if a["account"] == forward_bank_tx_doc.bank_account:
-                a["account"] = reverse_bank_tx_doc.bank_account
+            if a["account"] == forward_company_account:
+                a["account"] = reverse_company_account
 
         del je_dict["clearance_date"]
         del je_dict["bank_statement_name"]
