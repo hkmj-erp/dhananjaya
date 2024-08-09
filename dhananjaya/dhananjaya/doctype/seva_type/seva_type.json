@@ -12,6 +12,7 @@
   "company",
   "seva_name",
   "account",
+  "cash_account",
   "column_break_vwiy",
   "80g_applicable",
   "patronship_allowed",
@@ -142,11 +143,17 @@
    "fieldtype": "Link",
    "label": "Specific Print Format",
    "options": "DJ Receipt Format"
+  },
+  {
+   "fieldname": "cash_account",
+   "fieldtype": "Link",
+   "label": "Cash Account",
+   "options": "Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-17 19:16:42.176381",
+ "modified": "2024-08-08 12:17:52.714707",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Seva Type",

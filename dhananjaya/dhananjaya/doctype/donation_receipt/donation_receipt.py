@@ -316,7 +316,13 @@ class DonationReceipt(Document):
         if not self.bank_account:
             self.bank_account = company_detail.bank_account
         if self.payment_method == CASH_PAYMENT_MODE and not self.cash_account:
-            self.cash_account = company_detail.cash_account
+            cash_account = frappe.db.get_value(
+                "Seva Type", self.seva_type, "cash_account"
+            )
+            if cash_account:
+                self.cash_account = cash_account
+            else:
+                self.cash_account = company_detail.cash_account
         if (
             self.payment_method == PAYMENT_GATWEWAY_MODE
             and not self.gateway_expense_account

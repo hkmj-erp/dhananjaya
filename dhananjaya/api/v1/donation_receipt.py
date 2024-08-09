@@ -5,6 +5,7 @@ from frappe.model.workflow import apply_workflow
 from frappe.utils.data import today
 from frappe.utils.image import optimize_image
 from dhananjaya.dhananjaya.utils import get_preachers
+from frappe.utils.nestedset import get_descendants_of
 
 
 @frappe.whitelist()
@@ -189,7 +190,12 @@ def search_receipts(filters, order_by, limit_start, limit):
         if "seva_type" in ftr:
             where_string += f""" AND {ftr[0]} {ftr[1]} '{ftr[2]}' """
         if "seva_subtype" in ftr:
-            where_string += f""" AND {ftr[0]} {ftr[1]} '{ftr[2]}' """
+            descendants = get_descendants_of("Seva Subtype", ftr[2])
+            types = [ftr[2]]
+            if descendants:
+                types = types.extend(descendants)
+            types_str = ",".join([f"'{t}'" for t in types])
+            where_string += f""" AND seva_subtype IN ({types_str}) """
         if "workflow_state" in ftr:
             where_string += f""" AND {ftr[0]} {ftr[1]} {ftr_value} """
         if "payment_method" in ftr:

@@ -12,6 +12,7 @@
   "seva_code",
   "seva_name",
   "seva_amount",
+  "included_in_commitment_status",
   "facilites_section",
   "privilege_pujas"
  ],
@@ -48,11 +49,17 @@
    "fieldname": "privilege_pujas",
    "fieldtype": "Int",
    "label": "Privilege Pujas"
+  },
+  {
+   "default": "1",
+   "fieldname": "included_in_commitment_status",
+   "fieldtype": "Check",
+   "label": "Included in Commitment Status"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-08 11:39:52.088021",
+ "modified": "2024-08-07 16:27:59.711621",
  "modified_by": "Administrator",
  "module": "Dhananjaya",
  "name": "Patron Seva Type",

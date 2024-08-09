@@ -41,7 +41,7 @@ def prepare_email_body(dr_doc):
 </head>
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5;">
     <div class="email-container" style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-        <h1 style="color: #333;">Hello!</h1>
+        <h1 style="color: #333;">Hare Krishna!</h1>
 
         <p style="color: #555;">We deeply appreciate your recent contribution to {dr_doc.company}. Attached is your donation receipt for your records. 🙏</p>
 

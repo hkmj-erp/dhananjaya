@@ -278,7 +278,7 @@ def get_best_contact_address(docname):
 
     contact = None
     for ct in donor_doc.contacts:
-        cleaned_ct = re.sub("\D", "", ct.contact_no)
+        cleaned_ct = re.sub("[^0-9+ -]", "", ct.contact_no)
         if len(cleaned_ct) >= 10:
             contact = cleaned_ct
             break

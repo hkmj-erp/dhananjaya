@@ -66,7 +66,8 @@ def upload_donation():
                 "Please set the default Marketing Preacher in Dhananajaya Settings first."
             )
 
-    clean_contact = re.sub(r"\D", "", donation_raw.get(F_MOBILE, ""))[-10:]
+    clean_contact = donation_raw.get(F_MOBILE, "")
+    # clean_contact = re.sub(r"\D", "", donation_raw.get(F_MOBILE, "")) ## As there are international numbers also received
     # clean_email = None
     # if "email" in donation_raw:
     #     clean_email = re.sub(r"\s+", "", donation_raw.get(F_EMAIL, ""))
@@ -76,7 +77,11 @@ def upload_donation():
     resolved_address = get_address(donation_raw)
 
     donor = identify_donor(
-        contact=clean_contact, email=None, pan=clean_pan, aadhar=clean_aadhar
+        full_name_received=donation_raw.get(F_DONOR_NAME),
+        contact=clean_contact,
+        email=None,
+        pan=clean_pan,
+        aadhar=clean_aadhar,
     )  # We don't wish to identify a donor by email.
 
     patron = None
